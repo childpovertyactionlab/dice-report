@@ -1,4 +1,4 @@
-// cpal 0.0.2
+// cpal 1.0.3
 // Bootswatch
 
 /*-- scss:defaults --*/
@@ -75,7 +75,6 @@ $link-color:                $success !default;
 
 // Fonts
 
-// stylelint-disable-next-line value-keyword-case
 $font-family-sans-serif:      Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 $headings-font-weight:        600 !default;
 $font-family-monospace:       'Fira Code' !default;
@@ -179,6 +178,7 @@ $breadcrumb-bg:                     $pagination-bg !default;
 $breadcrumb-border-radius:          .25rem !default;
 
 // Code blocks
+
 $code-block-bg-alpha:               -0.8 !default;
 $code-block-bg-color:               $gray-000 !default;
 $code-color:                        $magenta-700 !default;
@@ -190,9 +190,9 @@ $btn-close-color:            $white !default;
 $btn-close-opacity:          .8 !default;
 $btn-close-hover-opacity:    1 !default;
 
-// Test
-div.shadecontent
-{
+// Custom Styles
+
+div.shadecontent {
     padding: 10px;
     border-radius: 15px;
     font-family: $font-family-sans-serif;
@@ -201,10 +201,28 @@ div.shadecontent
     -moz-border-radius: 10px;
 }
 
-.navbar-title{
-  margin-left: 1rem;
-}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
+    .navbar-brand {
+        /* Your brand styles here */
+    }
+
+    .search-bar {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 20px; /* Adjust as needed */
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: row;
+        margin-left: auto; /* Pushes the menu to the right */
+    }
+}
 
 .centered {
     display: flex;
@@ -214,6 +232,8 @@ div.shadecontent
 html {
   scroll-behavior: smooth;
 }
+
+// Headings
 
 h1, h2, h3, h4, h5, h6 {
     position: relative;
@@ -229,13 +249,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 50px !important;
+    font-size: 35px !important; /* Adjusted font size to be smaller */
     width: 95%;
     height: 80px;
-    padding-left: 80px; /* Space for block and triangle. Adjust as needed. */
+    padding-left: 80px; /* Space for block and triangle. Adjust as needed */
     background: none;
     color: $teal-900;
-    font-size: 50px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1; /* Adjust the line-height for better alignment */
+    padding-top: 17px; /* Adjust the padding-top to lower the text */
 
     &::before {
         /* Block */
@@ -285,12 +309,18 @@ h4 {
 }
 
 h2#toc-title {
-    height: auto;
+    font-weight: bold;
+    background: none;
+    color: $teal-900;
     padding: 5px;
     padding-left: 10px;
+    border-radius: 0;
+    border: 0 !important;
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
 
-    &::after {
-        content: none;     /* Removes the ::after content, i.e., the triangle */
+    &::before, &::after {
+        content: none; /* Removes the ::before and ::after content */
     }
 }
 
@@ -350,17 +380,17 @@ h2 {
         border-top: calc(40px / 2 - 2px) solid transparent;
         border-bottom: calc(40px / 2 - 2px) solid transparent;
     }
-    
+
     &.slim {
-      margin-top: 0px;
-      margin-bottom: 10px;
+        margin-top: 0px;
+        margin-bottom: 10px;
     }
 }
 
 h5, h6 {
-  display: inline-block;
-  font-size: 20px !important;
-  vertical-align: middle;
+    display: inline-block;
+    font-size: 20px !important;
+    vertical-align: middle;
 }
 
 h6 {
@@ -370,220 +400,202 @@ h6 {
 }
 
 .box-of-map {
-  position: -webkit-sticky !important; /* Safari */
-  position: sticky !important;
-  top: 75px; /* Set to the top of the container */
-  z-index: 100; /* Ensure it sits above other content */
+    position: -webkit-sticky !important; /* Safari */
+    position: sticky !important;
+    top: 75px; /* Set to the top of the container */
+    z-index: 100; /* Ensure it sits above other content */
 }
 
+// DataTables
+
 .dataTables_wrapper {
-  // overflow: auto;
-  border: 4px solid $teal-900;
-  border-radius: 10px 10px 5px 5px;
+    border: 4px solid $teal-900;
+    border-radius: 10px 10px 5px 5px;
 
+    .dataTable {
+        .last-row {
+            background-color: $teal-900;
+        }
 
-  .dataTable {
+        overflow: hidden;
 
-    .last-row {
-      background-color: $teal-900;
+        tbody tr:hover {
+            background-color: rgba(4, 45, 51, 0.1);
+        }
+
+        thead th:hover {
+            color: #FFF; /* This sets the text color to white; adjust as needed */
+            cursor: pointer; /* Makes it clear to users they can interact with the headers */
+        }
+
+        th, td {
+            font-family: "Poppins", sans-serif;
+            text-align: left;
+        }
+
+        .th-hover-effect {
+            color: rgba(4, 45, 51, 0.05); /* teal-900 at 5% opacity */
+        }
+
+        td {
+            font-size: 15px;
+            padding-left: 15px;
+        }
+
+        th {
+            background-color: $teal-900;
+            color: #FFFFFF;
+            line-height: 1.2;
+            font-variant: small-caps;
+        }
     }
-
-    overflow: hidden;
-
-    tbody tr:hover {
-      background-color: rgba(4, 45, 51, 0.1);
-    }
-
-    thead th:hover {
-      color: #FFF; /* This sets the text color to white; adjust as needed */
-      cursor: pointer; /* Makes it clear to users they can interact with the headers */
-    }
-
-    th, td {
-      font-family: "Poppins", sans-serif;
-      // font-weight: bold;
-      text-align: left;
-      // border-radius: 15px;
-    }
-
-    .th-hover-effect {
-      color: rgba(4, 45, 51, 0.05); /* teal-900 at 5% opacity */
-    }
-
-    td {
-      font-size: 15px;
-      padding-left: 15px;
-    }
-
-    th {
-      background-color: $teal-900;
-      color: #FFFFFF;
-      line-height: 1.2;
-      font-style: none;
-      font-variant: small-caps;
-      // border-radius: 15px;
-    }
-
-    // tr:nth-child(odd) {
-    //  background-color: $gray-100;
-    // }
-  }
-
 }
 
 .table>:not(:first-child) {
     border-top: 0 !important;
 }
 
+// Custom Styles
 
 .indent {
-  margin-left: 65px;
+    margin-left: 65px;
 }
 
-
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .grid-link {
-  text-decoration: none !important;
-  border: none;
-  background-color: $teal-900;
-  color: white;
-  border-radius: 15px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  margin: 10px;
-  padding: 10px;
-  
-  p {
-    position: relative;
-    font-weight: $headings-font-weight;
-    font-family: $headings-font-family;
-    color: #FFFFFF;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 80px !important;
-    margin: 0;
-    padding: 5px;
-    line-height: 0;
-  }
-  
-  span {
-    font-size: 20px !important;
-    margin: 0;
-    padding: 0;
-  }
+    text-decoration: none !important;
+    border: none;
+    background-color: $teal-900;
+    color: white;
+    border-radius: 15px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    padding: 10px;
+
+    p {
+        position: relative;
+        font-weight: $headings-font-weight;
+        font-family: $headings-font-family;
+        color: #FFFFFF;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 80px !important;
+        margin: 0;
+        padding: 5px;
+        line-height: 0;
+    }
+
+    span {
+        font-size: 20px !important;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .grid-item-empty {
-  background-color: $teal-900;
-  color: white;
-  border-radius: 15px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  
+    background-color: $teal-900;
+    color: white;
+    border-radius: 15px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .grid-link.hovered {
-  background-color: $teal-700; /* Update to the lighter teal color when hovered */
-  p {
-    transform: scale(1.05); // Increase icon size on hover
-  }
+    background-color: $teal-700; /* Update to the lighter teal color when hovered */
+
+    p {
+        transform: scale(1.05); // Increase icon size on hover
+    }
 }
 
 a[role="button"] {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 i.bi-chevron-up {
-  display:inline-block;
+    display:inline-block;
 }
 
 a[aria-expanded="false"] {
-  i.bi-chevron-up {
-    transition: transform 0.3s ease;
-    transform: rotate(180deg) !important;
-  }
+    i.bi-chevron-up {
+        transition: transform 0.3s ease;
+        transform: rotate(180deg) !important;
+    }
 }
 
 a[aria-expanded="true"] {
-  i.bi-chevron-up {
-    transition: transform 0.3s ease;
-    transform: rotate(0deg) !important;
-  }
+    i.bi-chevron-up {
+        transition: transform 0.3s ease;
+        transform: rotate(0deg) !important;
+    }
 }
 
 .button-content {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .button-content-details {
-  display: flex;
-  max-height: 0;
-  overflow: hidden;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  transition: max-height 0.75s ease-out; /* Adjust time as needed */
+    display: flex;
+    max-height: 0;
+    overflow: hidden;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    transition: max-height 0.75s ease-out; /* Adjust time as needed */
 }
 
 .list-group-item[aria-expanded="true"] .button-content-details {
-  max-height: 1000px; /* Adjust max-height based on content size */
-  /* Keep the display:flex for layout, but it won't affect the transition */
-  display: flex; 
+    max-height: 1000px; /* Adjust max-height based on content size */
+    display: flex; /* Keep the display:flex for layout, but it won't affect the transition */
 }
 
 .left-content {
-  flex: 1;
-  text-align: left;
+    flex: 1;
+    text-align: left;
 }
 
 .left-content-indent {
-  flex: 1;
-  text-align: left;
-  text-indent: 7.5%;
+    flex: 1;
+    text-align: left;
+    text-indent: 7.5%;
 }
 
 .right-content {
-  flex: 1;
-  text-align: right;
-  font-weight: bold;
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
 }
 
 .right-chevron-down {
-  flex: 1;
-  text-align: right;
-  font-weight: bold;
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
 }
 
-.button-content hr {
-  width: 100%;
-}
-
-.button-content br {
-  width: 100%;
-  content: '';
+.button-content hr, .button-content br {
+    width: 100%;
+    content: '';
 }
 
 .list-group-item {
-  white-space: normal; /* Allow text to wrap to the next line if necessary */
+    white-space: normal; /* Allow text to wrap to the next line if necessary */
 }
 
-
-// Mermaid Theme;
+// Mermaid Theme
 
 $mermaid-bg-color: $body-bg;
 $mermaid-edge-color: $teal-700;

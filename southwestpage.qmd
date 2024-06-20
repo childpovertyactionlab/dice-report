@@ -17,7 +17,7 @@ library(geojsonsf)
 library(geojsonio)
 library(googlesheets4)
 library(leaflet)
-
+library(htmltools)
 ##### Map Data #####
 myhcmap <- st_read("data/dpd_divisions.geojson")
 
@@ -203,6 +203,27 @@ value_box(
   .main-image-container:hover {
     transform: scale(1.10); /* Slightly increase size on hover */
   }
+.tooltip {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; /* Position above the container */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+  .main-image-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }  
   
   /* Map image container */
     .map-container {
@@ -258,9 +279,9 @@ leaflet(data = filtered_point_data) %>%
     lng = ~st_coordinates(filtered_point_data)[,1],
     lat = ~st_coordinates(filtered_point_data)[,2],
     radius = 5,
-    color = "#042d33",
+    color = palette_cpal_main[6],
     fillOpacity = 0.5,
-    popup = ~paste("<b>Location:</b>", street_address)
+    label = ~HTML(paste("<b>Location:</b>", filtered_point_data$street_address))
   )
 ```
 :::
@@ -309,6 +330,9 @@ April
 :::
 
 ![](media/cleaning/SW_4-13_before.jpeg){.medium-image group="April"}
+```{=html}
+<div class="tooltip">Click to see more</div>
+```
 :::
 
 ::: g-col-1
@@ -571,7 +595,6 @@ March
 
 ::: hr
 :::
-
 
 ::: Grid
 ## Produce Drives
@@ -934,4 +957,3 @@ March
 
 ::: hr
 :::
-
