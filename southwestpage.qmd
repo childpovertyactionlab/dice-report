@@ -1,0 +1,937 @@
+---
+title: "South West Division"
+format: html
+lightbox: true
+---
+
+```{r include=FALSE}
+library(ggplot2)
+library(cpaltemplates)
+library(tidyverse)
+library(readr)
+library(bslib)
+library(bsicons)
+library(sf)
+library(highcharter)
+library(geojsonsf)
+library(geojsonio)
+library(googlesheets4)
+library(leaflet)
+
+##### Map Data #####
+myhcmap <- st_read("data/dpd_divisions.geojson")
+
+geojson <- geojson_json(myhcmap)
+
+point_data <- st_read("data/sw_clean_and_green.gpkg")
+
+point_data$date <- as.Date(point_data$date, format = "%m/%d/%Y")
+
+current_date <- Sys.Date()
+filtered_point_data <- point_data %>%
+  filter(date < current_date)
+  
+sw_boundaries <- myhcmap %>% 
+  filter(DIVISION == "SOUTHWEST")
+
+sw_geojson <- geojson_json(sw_boundaries)
+
+
+
+##### Data #####
+gs4_deauth()
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+impact$date <- ymd(impact$date)
+  
+impact <- impact |> 
+  mutate(
+    month = floor_date(date, "month"),
+    formatted_month = format(month, "%B, %Y")
+  ) |>
+  filter(date < current_date)
+
+impact$lbs_produce <- impact$bags * 10
+
+sw_impact <- impact |>
+ filter(district == "South West")
+
+total_lbs_trash <- sum(sw_impact$lbs_trash, na.rm = TRUE)
+
+total_bags <- sum(sw_impact$bags, na.rm = TRUE)
+cumulative_lbs_produce <- cumsum(sw_impact$lbs_produce)
+
+monthly_average_people_served <- sw_impact %>%
+  filter(people_served != 0) %>%
+  pull(people_served) %>%
+  mean(na.rm = TRUE) %>%
+  round()
+
+trash_data <- sw_impact %>%
+  select(formatted_month, lbs_trash) %>%
+  filter(lbs_trash != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
+
+produce_data <- sw_impact %>%
+  select(formatted_month, lbs_produce) %>%
+  filter(lbs_produce != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+  mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
+
+people_served_data <- sw_impact %>%
+  select(formatted_month, people_served) %>%
+  filter(people_served != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served))
+```
+
+```{=html}
+<style>
+.hr {
+    border: none;
+    height: 2px;
+    background-color: #042d33;
+    margin: 25px;
+}
+</style>
+```
+::: grid
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+   hc_chart(height = 425) %>%
+  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
+  hc_add_series(data = sw_boundaries, mapData = geojson, 
+                joinBy = "DIVISION", name = "South West Division", 
+                color = "#042d33", showInLegend = FALSE,
+                dataLabels = list(enabled = FALSE, format = '{point.DIVISION}'),
+                tooltip = list(enabled = TRUE)) %>%
+  hc_mapNavigation(enabled = FALSE)
+
+```
+:::
+
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Trash Collected",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+## Average # served/week
+value_box(
+  title = "Average Individuals Served ",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+
+::: hr
+:::
+
+```{=html}
+
+
+<style>
+  /* Custom CSS for smaller images */
+  .small-image {
+    max-height: 50px; /* Adjust the maximum height as needed */
+  }
+
+  /* Custom CSS for medium images */
+  .medium-image {
+    max-height: 250px; /* Adjust the maximum height as needed */
+  }
+
+  /* Hidden class */
+  .hidden {
+    display: none;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    margin-right: 130px;
+    margin-left: -60px;
+    }
+
+  /* Main image container */
+  .main-image-container {
+    position: relative;
+    display: inline-block;
+    border: 5px solid #042d33;
+    padding: 5px;
+    margin: 20px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+  }
+  
+  .main-image-container:hover {
+    transform: scale(1.10); /* Slightly increase size on hover */
+  }
+  
+  /* Map image container */
+    .map-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 400px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
+    }
+  
+  .graph-container {
+      position: relative;
+      display: inline-block;
+      border: none;
+      padding: 1px;
+      margin: 25px;
+      width: 400px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
+    }
+  /* Label for the main image */
+  .image-label {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: #042d33;
+    font-size: 12px;
+    background-color: white;
+  }
+</style>
+```
+::: grid
+::: g-col-12
+## Clean and Green Initiative
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+:::
+:::
+
+::: grid
+::: container
+::: g-col-6
+::: map-container
+```{r}
+leaflet(data = filtered_point_data) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addCircleMarkers(
+    lng = ~st_coordinates(filtered_point_data)[,1],
+    lat = ~st_coordinates(filtered_point_data)[,2],
+    radius = 5,
+    color = "#042d33",
+    fillOpacity = 0.5,
+    popup = ~paste("<b>Location:</b>", street_address)
+  )
+```
+:::
+:::
+
+::: g-col-6
+::: graph-container
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = trash_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
+  hc_title(text = "Pounds of Trash Collected by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) %>%
+  hc_legend(enabled = FALSE)
+```
+:::
+:::
+:::
+:::
+
+::: grid
+::: g-col-12
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+April
+:::
+
+![](media/cleaning/SW_4-13_before.jpeg){.medium-image group="April"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_4-13_working.jpg){.medium-image .hidden group="April"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+May
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="May"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="May"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+June
+:::
+
+![](media/cleaning/SW_6-8_before.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+July
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="July"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+August
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+September
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+October
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+November
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+December
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+January
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+February
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+March
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+:::
+
+::: hr
+:::
+
+
+::: Grid
+## Produce Drives
+
+Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+:::
+
+::: grid
+::: g-col-6
+```{r}
+highchart() %>%
+  hc_chart(type = "line", width = 500) %>%
+  hc_xAxis(categories = produce_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = produce_data$cumulative_lbs_produce, name = "Pounds", x = produce_data$formatted_month) %>%
+  hc_title(text = "Pounds of Produce Distributed by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+
+::: g-col-6
+```{r}
+highchart() %>%
+  hc_chart(type = "line", width = 500) %>%
+  hc_add_series(data = people_served_data$monthly_people_served, name = "Individuals", x =     people_served_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_xAxis(categories = people_served_data$formatted_month) |> 
+  hc_title(text = "Individuals Served by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_legend(align = 'center', verticalAlign = 'bottom', layout = 'horizontal') %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 4,         
+      fillColor = NULL,   
+      lineWidth = 4,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+::: column-margin
+Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
+:::
+
+::: grid
+::: g-col-12
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+April
+:::
+
+![](media/distribution/SW_4-27_distribution.jpeg){width="75" height="95" group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/distribution/SW_4-27_distribution.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/distribution/SW_4-27_distribution.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+May
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+June
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+July
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+August
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+September
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+October
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+November
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+December
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+January
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+February
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+March
+:::
+
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+
+::: col-md-1
+![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+:::
+:::
+:::
+:::
+
+::: hr
+:::
+

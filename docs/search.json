@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "DICE Website",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n\n[1] 2"
+  },
+  {
+    "objectID": "citywide.html",
+    "href": "citywide.html",
+    "title": "Report Title",
+    "section": "",
+    "text": "Here’s some text for you.\n\n\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org.\n\n\n\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nReveal Code\nlibrary(ggplot2)\nlibrary(cpaltemplates)\n# mtcars dataset is natively available in R\n# head(mtcars)\n \n# A basic scatterplot with color depending on Species\nggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + \n  geom_point(size=2) +\n  theme_cpal() +\n  scale_color_cpal(theme = \"factor\") +\n  labs(title = \"Chart Title\")\n\n\nError in theme_cpal(): could not find function \"theme_cpal\""
+  },
+  {
+    "objectID": "citywide.html#second-header",
+    "href": "citywide.html#second-header",
+    "title": "Report Title",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "citywide.html#running-code",
+    "href": "citywide.html#running-code",
+    "title": "Report Title",
+    "section": "",
+    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nReveal Code\nlibrary(ggplot2)\nlibrary(cpaltemplates)\n# mtcars dataset is natively available in R\n# head(mtcars)\n \n# A basic scatterplot with color depending on Species\nggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + \n  geom_point(size=2) +\n  theme_cpal() +\n  scale_color_cpal(theme = \"factor\") +\n  labs(title = \"Chart Title\")\n\n\nError in theme_cpal(): could not find function \"theme_cpal\""
+  },
+  {
+    "objectID": "southwestpage.html",
+    "href": "southwestpage.html",
+    "title": "South West Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n675\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n42\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-"
+  },
+  {
+    "objectID": "southwestpage.html#second-header",
+    "href": "southwestpage.html#second-header",
+    "title": "South West Division",
+    "section": "Second Header",
+    "text": "Second Header"
+  },
+  {
+    "objectID": "southwestpage.html#running-code",
+    "href": "southwestpage.html#running-code",
+    "title": "South West Division",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:"
+  },
+  {
+    "objectID": "southwestpage.html#section",
+    "href": "southwestpage.html#section",
+    "title": "South West Division",
+    "section": "",
+    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:"
+  },
+  {
+    "objectID": "southwestpage.html#first-column",
+    "href": "southwestpage.html#first-column",
+    "title": "South West Division",
+    "section": "First column",
+    "text": "First column\nWould like to put photos in this column\n\n\n\nApril 2024 Before\n\n\n ```"
+  },
+  {
+    "objectID": "southwestpage.html#second-column",
+    "href": "southwestpage.html#second-column",
+    "title": "South West Division",
+    "section": "Second column",
+    "text": "Second column\nColumn displaying visualizations of data."
+  },
+  {
+    "objectID": "southwestpage.html#value-boxes",
+    "href": "southwestpage.html#value-boxes",
+    "title": "South West Division",
+    "section": "Value Boxes",
+    "text": "Value Boxes\n\n\n\n\n\n\n\n\n\n\nPounds of Trash Collected\n650\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIndividuals Receiveing Produce\n85\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-"
+  },
+  {
+    "objectID": "southwestpage.html#photos",
+    "href": "southwestpage.html#photos",
+    "title": "South West Division",
+    "section": "Photos",
+    "text": "Photos\n\n\n\n\n\nApril\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMay\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJune\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nApril\nMay\nJune\nJuly"
+  },
+  {
+    "objectID": "southwestpage.html#data",
+    "href": "southwestpage.html#data",
+    "title": "South West Division",
+    "section": "Data",
+    "text": "Data"
+  },
+  {
+    "objectID": "southwestpage.html#map",
+    "href": "southwestpage.html#map",
+    "title": "South West Division",
+    "section": "Map",
+    "text": "Map"
+  },
+  {
+    "objectID": "southwestpage.html#data-1",
+    "href": "southwestpage.html#data-1",
+    "title": "South West Division",
+    "section": "Data",
+    "text": "Data\nColumn displaying visualizations of data."
+  },
+  {
+    "objectID": "southwestpage.html#photo-viewer",
+    "href": "southwestpage.html#photo-viewer",
+    "title": "South West Division",
+    "section": "Photo Viewer",
+    "text": "Photo Viewer\nSelect a photo from the dropdown to display it below.\n April 2024 June 2024 June 2024"
+  },
+  {
+    "objectID": "southwestpage.html#photo-gallery",
+    "href": "southwestpage.html#photo-gallery",
+    "title": "South West Division",
+    "section": "Photo Gallery",
+    "text": "Photo Gallery\n\n\n\n\n\nApril\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMay\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJune\n\n\n\n\n\n\n\n\n\n\n\n![]\n\n\n\n\n\n\nJuly\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nApril\nMay\nJune\nJuly"
+  },
+  {
+    "objectID": "southwestpage.html#impact",
+    "href": "southwestpage.html#impact",
+    "title": "South West Division",
+    "section": "Impact",
+    "text": "Impact\n\n\n\n\n\n\n\n\n\n\nPounds of Trash Collected\n675\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n42\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "southwestpage.html#impact-over-time",
+    "href": "southwestpage.html#impact-over-time",
+    "title": "South West Division",
+    "section": "Impact Over Time",
+    "text": "Impact Over Time\nColumn displaying visualizations"
+  },
+  {
+    "objectID": "southwestpage.html#clean-and-green-initiative",
+    "href": "southwestpage.html#clean-and-green-initiative",
+    "title": "South West Division",
+    "section": "Clean and Green Initiative",
+    "text": "Clean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "southwestpage.html#produce-drives",
+    "href": "southwestpage.html#produce-drives",
+    "title": "South West Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "photo gallery.html",
+    "href": "photo gallery.html",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "photo gallery.html#produce-drives",
+    "href": "photo gallery.html#produce-drives",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  }
+]
