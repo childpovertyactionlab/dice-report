@@ -1,31 +1,117 @@
 ---
-title: "Report Title"
+title: "citywide"
+format: html
+lightbox: true
 ---
 
-# Main Header
+```{=html}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carousel Photo Gallery</title>
+<style>
+  .carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 80%;
+    margin: auto;
+    position: relative;
+  }
 
-Here's some text for you.
+  .carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
 
-## Second Header
+  .carousel-item {
+    min-width: 50%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+  .carousel-item img {
+    width: 100%;
+    border-radius: 10px;
+  }
 
-## Running Code
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1;
+  }
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+  .arrow.left {
+    left: 10px;
+  }
 
-```{r}
-#| echo: TRUE
+  .arrow.right {
+    right: 10px;
+  }
+</style>
+</head>
+<body>
 
-library(ggplot2)
-library(cpaltemplates)
-# mtcars dataset is natively available in R
-# head(mtcars)
- 
-# A basic scatterplot with color depending on Species
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
-  geom_point(size=2) +
-  theme_cpal() +
-  scale_color_cpal(theme = "factor") +
-  labs(title = "Chart Title")
+<div class="carousel-container">
+  <button class="arrow left" onclick="prevSlide()">&#8249;</button>
+  <div class="carousel" id="carousel">
+    <div class="carousel-item">
+      <img src="before1.jpg" alt="Before 1">
+    </div>
+    <div class="carousel-item">
+      <img src="after1.jpg" alt="After 1">
+    </div>
+    <div class="carousel-item">
+      <img src="before2.jpg" alt="Before 2">
+    </div>
+    <div class="carousel-item">
+      <img src="after2.jpg" alt="After 2">
+    </div>
+    <!-- Add more items as needed -->
+  </div>
+  <button class="arrow right" onclick="nextSlide()">&#8250;</button>
+</div>
+
+<script>
+  let currentIndex = 0;
+
+  function showSlide(index) {
+    const carousel = document.getElementById('carousel');
+    const totalItems = carousel.children.length;
+    const slideWidth = carousel.children[0].offsetWidth;
+
+    currentIndex = (index + totalItems) % totalItems;
+
+    carousel.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+  }
+
+  function nextSlide() {
+    showSlide(currentIndex + 2);
+  }
+
+  function prevSlide() {
+    showSlide(currentIndex - 2);
+  }
+
+  function autoScroll() {
+    nextSlide();
+    setTimeout(autoScroll, 3000);
+  }
+
+  window.onload = function() {
+    autoScroll();
+  };
+</script>
+
+</body>
+</html>
+
+
+
 ```

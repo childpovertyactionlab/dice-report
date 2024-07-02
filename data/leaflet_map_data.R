@@ -18,7 +18,7 @@ merged_data <- df %>%
 sf_data <- st_as_sf(merged_data, coords = c("long", "lat"), crs = 4269)
 
 sw_data <- sf_data %>%
-  filter(district == "South West") %>%
+  filter(district == "North West") %>%
   filter(event_type == "clean")
 
-st_write(sw_data, "data/sw_clean_and_green.gpkg", layer = "geocoded_addresses", delete_layer = TRUE)
+st_write(sw_data, "data/nw_clean_and_green.gpkg", layer = "geocoded_addresses", delete_layer = TRUE)

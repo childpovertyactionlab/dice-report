@@ -1,11 +1,79 @@
 ---
-title: "DICE Website"
+title: "DICE Web Report"
+format: html
+lightbox: true
 ---
 
-This is a Quarto website.
+```{r include=FALSE}
+library(cpaltemplates)
+library(tidyverse)
+library(bslib)
+library(bsicons)
+library(sf)
+library(highcharter)
+library(geojsonsf)
+library(geojsonio)
+library(googlesheets4)
+library(leaflet)
+library(htmltools)
+##### Map Data #####
+mapdata <- st_read("data/dpd_divisions.geojson")
+myhcmap<- mapdata %>% filter(DIVISION != "CENTRAL") %>%
+          mutate(DIVISION = str_to_title(DIVISION))
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+geojson <- geojson_json(myhcmap)
+
+point_data <- st_read("data/ne_clean_and_green.gpkg")
+
+point_data$date <- as.Date(point_data$date, format = "%m/%d/%Y")
+
+```
+
+This is the DICE website.
 
 ```{r}
-1 + 1
+highchart(type = "map") %>%
+  hc_add_series(
+    mapData = geojson, 
+    showInLegend = FALSE
+  ) %>%
+  hc_add_series(
+    data = myhcmap, 
+    mapData = geojson, 
+    joinBy = "DIVISION", 
+    name = 'Click for more about:', 
+    color = "#FFFFFF", 
+    showInLegend = FALSE,
+    dataLabels = list(
+      enabled = TRUE, 
+      format = '{point.DIVISION}', 
+      style = list(fontWeight = 'bold', color = "#3F3F3F")
+    ),
+    tooltip = list(pointFormat = '{point.DIVISION} Division'),
+    states = list(
+      hover = list(
+        color = "#042d33"
+      )
+    ),
+    point = list(
+      events = list(
+        click = JS("function() { 
+          var urlMap = {
+            'Northwest': 'northwestpage.html',
+            'North Central': 'northcentralpage.html',
+            'Northeast': 'northeastpage.html',
+            'South Central': 'southcentralpage.html',
+            'Southwest': 'southwestpage.html',
+            'Southeast': 'southeastpage.html'
+          };
+          var divisionName = this.DIVISION;
+          var url = urlMap[divisionName];
+          if (url) {
+            window.open(url, '_blank');
+          }
+        }")
+      )
+    )
+  ) %>%
+  hc_mapNavigation(enabled = FALSE)
 ```

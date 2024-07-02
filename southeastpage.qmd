@@ -1,0 +1,947 @@
+---
+title: "South East Division"
+format: html
+lightbox: true
+---
+
+```{r include=FALSE}
+library(cpaltemplates)
+library(tidyverse)
+library(bslib)
+library(bsicons)
+library(sf)
+library(highcharter)
+library(geojsonsf)
+library(geojsonio)
+library(googlesheets4)
+library(leaflet)
+library(htmltools)
+##### Map Data #####
+myhcmap <- st_read("data/dpd_divisions.geojson")
+
+geojson <- geojson_json(myhcmap)
+
+point_data <- st_read("data/se_clean_and_green.gpkg")
+
+point_data$date <- as.Date(point_data$date, format = "%m/%d/%Y")
+
+current_date <- Sys.Date()
+filtered_point_data <- point_data %>%
+  filter(date < current_date)
+  
+se_boundaries <- myhcmap %>% 
+  filter(DIVISION == "SOUTHEAST")
+
+se_geojson <- geojson_json(se_boundaries)
+
+
+
+##### Data #####
+gs4_deauth()
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+impact$date <- ymd(impact$date)
+  
+impact <- impact |> 
+  mutate(
+    month = floor_date(date, "month"),
+    formatted_month = format(month, "%B, %Y")
+  ) |>
+  filter(date < current_date)
+
+impact$lbs_produce <- impact$bags * 10
+
+se_impact <- impact |>
+ filter(district == "South East")
+
+total_lbs_trash <- sum(se_impact$lbs_trash, na.rm = TRUE)
+
+total_bags <- sum(se_impact$bags, na.rm = TRUE)
+cumulative_lbs_produce <- cumsum(se_impact$lbs_produce)
+
+monthly_average_people_served <- se_impact %>%
+  filter(people_served != 0) %>%
+  pull(people_served) %>%
+  mean(na.rm = TRUE) %>%
+  round()
+
+trash_data <- se_impact %>%
+  select(formatted_month, lbs_trash) %>%
+  filter(lbs_trash != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
+
+produce_data <- se_impact %>%
+  select(formatted_month, lbs_produce) %>%
+  filter(lbs_produce != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+  mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
+
+people_served_data <- se_impact %>%
+  select(formatted_month, people_served) %>%
+  filter(people_served != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served))
+```
+
+```{=html}
+<style>
+.hr {
+    border: none;
+    height: 2px;
+    background-color: #042d33;
+    margin: 25px;
+}
+</style>
+```
+::: grid
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+   hc_chart(height = 425) %>%
+  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
+  hc_add_series(data = se_boundaries,    
+                    mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
+  hc_mapNavigation(enabled = FALSE)
+```
+:::
+
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Trash Collected",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+## Average # served/week
+value_box(
+  title = "Average Individuals Served ",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+
+::: hr
+:::
+
+```{=html}
+<style>
+h5 {
+        color: #FFFFFF;
+        height: 10%
+}
+/* Image Sizing */
+   
+  .small-image {
+    max-height: 50px; /* Adjust the maximum height as needed */
+  }
+  
+  .medium-image {
+    max-height: 250px; /* Adjust the maximum height as needed */
+  }
+  
+  .pt-image {
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+/* Image Borders and Formatting */
+  
+  .container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    margin-right: 130px;
+    margin-left: -60px;
+    }
+    
+  .pt-container {
+    position: relative;
+    display: grid;
+    border: 5px solid #042d33;
+    padding: 0px;
+    width: 100%;  /* Set the desired width */
+    height: 150px;
+    margin: 30px;
+    overflow: hidden;
+    }  
+
+  .main-image-container {
+    position: relative;
+    display: inline-block;
+    border: 5px solid #042d33;
+    padding: 5px;
+    margin: 20px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+  }
+
+/* Image Effects */
+  
+  .main-image-container:hover {
+    transform: scale(1.10); /* Slightly increase size on hover */
+  }
+  
+  .tooltip {
+   visibility: hidden;
+   background-color: black;
+   color: #fff;
+   text-align: center;
+   border-radius: 5px;
+   padding: 5px;
+   position: absolute;
+   z-index: 1;
+   bottom: 100%; /* Position above the container */
+   left: 50%;
+   transform: translateX(-50%);
+   opacity: 0;
+   transition: opacity 0.3s ease-in-out;
+   white-space: nowrap;
+  }
+
+  .main-image-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }  
+  
+  .image-label {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: #042d33;
+    font-size: 12px;
+    background-color: white;
+  }
+  
+/* Formatting for Quotations */  
+
+  .long-quote-container {
+    width: 100%; 
+  }
+  .quote-container {
+    width: 100%; 
+    height: 80%
+  }
+  .small-quote-container {
+    width: 100%; 
+    height: 45%
+  }
+.quote-container p, .long-quote-container p, .small-quote-container p {
+    margin: 0; /* Removes default paragraph margin */
+    padding: 0;
+    line-height: 1.5;
+  }
+.quote-container, .long-quote-container, .small-quote-container {
+    border: none;
+    outline: none;
+    margin: 20px auto; /* Centers the container and maintains margin on the top and bottom */
+    padding: 20px 10%; /* 20px padding on top and bottom, 10% on left and right */
+    background-color: #f9f9f9; /* Light grey background */
+    font-size: 18px;
+    color: #042d33; /* Dark grey text color */
+    text-align: center;
+    box-sizing: border-box; /* Includes padding in width calculation */
+  }
+.quote-container cite, .long-quote-container cite, .small-quote-container cite {
+ display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #042d33; /* Lighter grey for citation */
+    text-align: right;
+    font-style: normal; /* Overrides default italic style of cite */
+  }
+
+/* Figure Border and Formatting */
+ 
+  .map-container, .graph-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 400px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
+  }
+    
+</style>
+```
+::: grid
+::: g-col-12
+# Proposed Transformations
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+:::
+:::
+
+::: grid
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
+:::
+:::
+
+::: g-col-1
+:::
+
+::: g-col-5
+##### Fence Repair
+
+```{=html}
+<blockquote class="small-quote-container">
+    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+:::
+:::
+
+::: grid
+::: g-col-5
+##### Trash Support
+
+```{=html}
+<blockquote class="small-quote-container">
+    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
+:::
+
+::: g-col-1
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
+:::
+:::
+:::
+
+::: grid
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+:::
+
+::: g-col-1
+:::
+
+::: g-col-5
+##### Improved Bus Stops
+
+```{=html}
+<blockquote class="quote-container">
+    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+# Clean and Green Initiative
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+:::
+:::
+
+::: grid
+::: container
+::: g-col-6
+::: map-container
+```{r}
+leaflet(data = filtered_point_data) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addCircleMarkers(
+    lng = ~st_coordinates(filtered_point_data)[,1],
+    lat = ~st_coordinates(filtered_point_data)[,2],
+    radius = 5,
+    color = palette_cpal_main[6],
+    fillOpacity = 0.5,
+       label = ~paste("<b>Location:</b>", filtered_point_data$street_address) %>%
+      lapply(htmltools::HTML)
+  )
+```
+:::
+:::
+
+::: g-col-6
+::: graph-container
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = trash_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
+  hc_title(text = "Pounds of Trash Collected by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) %>%
+  hc_legend(enabled = FALSE)
+```
+:::
+:::
+:::
+:::
+
+::: grid
+::: g-col-12
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+April
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="April"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+May
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="May"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+June
+:::
+
+![](media/cleaning/SE_6-8_before.jpg){.medium-image group="June"}
+
+```{=html}
+<div class="tooltip">Click to see more</div>
+```
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_6-8_before_2.jpg){.small-image .hidden group="June"}
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_6%20-8_working.jpg){.small-image .hidden group="June"}
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_6-8_working_2.jpg){.small-image .hidden group="June"}
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_6-8_after.jpg){.small-image .hidden group="June"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+July
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="July"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+August
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="August"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+September
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="September"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+October
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="October"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+November
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="November"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+December
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="December"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+January
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="January"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+February
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="February"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+March
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="March"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+:::
+
+::: Grid
+# Produce Drives
+
+Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+:::
+
+::: grid
+::: g-col-6
+```{r}
+highchart() %>%
+  hc_chart(type = "line", width = 500) %>%
+  hc_xAxis(categories = produce_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = produce_data$cumulative_lbs_produce, name = "Pounds", x = produce_data$formatted_month) %>%
+  hc_title(text = "Pounds of Produce Distributed by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+
+::: g-col-6
+```{r}
+highchart() %>%
+  hc_chart(type = "line", width = 500) %>%
+  hc_add_series(data = people_served_data$monthly_people_served, name = "Individuals", x =     people_served_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_xAxis(categories = people_served_data$formatted_month) |> 
+  hc_title(text = "Individuals Served by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_legend(align = 'center', verticalAlign = 'bottom', layout = 'horizontal') %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 4,         
+      fillColor = NULL,   
+      lineWidth = 4,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+::: column-margin
+Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
+:::
+
+::: grid
+::: g-col-12
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+April
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="April2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+May
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="May2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+June
+:::
+
+![](media/distribution/SE_6-22_distribution_1.jpg){.medium-image group="June2"} \`{=html}
+
+::: tooltip
+Click to see more
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_6-22_distribution_2.jpg){.small-image .hidden group="June2"}
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_6-22_distribution_3.jpg){.small-image .hidden group="June2"}
+:::
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+July
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="July2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+August
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="August2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+September
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="September2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+:::
+
+::: grid
+::: g-col-2
+::: main-image-container
+::: image-label
+October
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="October2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+November
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="November2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+December
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="December2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+January
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="January2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+February
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="February2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+
+::: g-col-2
+::: main-image-container
+::: image-label
+March
+:::
+
+![](media/coming_soon.jpeg){.medium-image group="March2"}
+
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
+:::
+:::
+:::

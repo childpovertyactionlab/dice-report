@@ -2,16 +2,16 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "DICE Website",
+    "title": "DICE Web Report",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n\n[1] 2"
+    "text": "This is the DICE website."
   },
   {
     "objectID": "citywide.html",
     "href": "citywide.html",
-    "title": "Report Title",
+    "title": "citywide",
     "section": "",
-    "text": "Here’s some text for you.\n\n\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org.\n\n\n\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nReveal Code\nlibrary(ggplot2)\nlibrary(cpaltemplates)\n# mtcars dataset is natively available in R\n# head(mtcars)\n \n# A basic scatterplot with color depending on Species\nggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + \n  geom_point(size=2) +\n  theme_cpal() +\n  scale_color_cpal(theme = \"factor\") +\n  labs(title = \"Chart Title\")\n\n\nError in theme_cpal(): could not find function \"theme_cpal\""
+    "text": "Carousel Photo Gallery\n\n\n\n\n\n  ‹\n  \n    \n      \n    \n    \n      \n    \n    \n      \n    \n    \n      \n    \n    \n  \n  ›"
   },
   {
     "objectID": "citywide.html#second-header",
@@ -32,7 +32,7 @@
     "href": "southwestpage.html",
     "title": "South West Division",
     "section": "",
-    "text": "Pounds of Trash Collected\n675\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n42\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-"
+    "text": "Pounds of Trash Collected\n675\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n42\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\nCommunity Observations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nMay\n\n\nComing Soon\n\n\n\n\n\nJune\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\n\nClick to see more\n\n\n\n\n\n\nMay\n\n\nComing Soon\n\n\n\n\n\nJune\n\n\nComing Soon\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
   },
   {
     "objectID": "southwestpage.html#second-header",
@@ -159,5 +159,159 @@
     "title": "Photo Gallery",
     "section": "",
     "text": "Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "southcentralpage.html",
+    "href": "southcentralpage.html",
+    "title": "South Central Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n320\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n162\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n68\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\nCommunity Observations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nJune\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\nJune\n\n\n\nComing Soon\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
+  },
+  {
+    "objectID": "southcentralpage.html#clean-and-green-initiative",
+    "href": "southcentralpage.html#clean-and-green-initiative",
+    "title": "South Central Division",
+    "section": "Clean and Green Initiative",
+    "text": "Clean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "southcentralpage.html#produce-drives",
+    "href": "southcentralpage.html#produce-drives",
+    "title": "South Central Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "southeastpage.html",
+    "href": "southeastpage.html",
+    "title": "South East Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n660\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n442\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n290\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProposed Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nComing Soon\n\n\n\n\n\nMay\n\n\nComing Soon\n\n\n\n\n\nJune\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nComing Soon\n\n\n\n\n\nMay\n\n\nComing Soon\n\n\n\n\n\nJune\n\n `{=html}\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
+  },
+  {
+    "objectID": "southeastpage.html#clean-and-green-initiative",
+    "href": "southeastpage.html#clean-and-green-initiative",
+    "title": "South East Division",
+    "section": "Clean and Green Initiative",
+    "text": "Clean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "southeastpage.html#produce-drives",
+    "href": "southeastpage.html#produce-drives",
+    "title": "South East Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "northcentralpage.html",
+    "href": "northcentralpage.html",
+    "title": "North Central Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n30\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n151\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n104\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\nCommunity Observations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nJune\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n    \"Most of the families I deal with could use food, groceries and consistent meals.\"\n    Local Apartment Manager\n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\nJune\n\n\n\nComing Soon\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
+  },
+  {
+    "objectID": "northcentralpage.html#clean-and-green-initiative",
+    "href": "northcentralpage.html#clean-and-green-initiative",
+    "title": "North Central Division",
+    "section": "Clean and Green Initiative",
+    "text": "Clean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "northcentralpage.html#produce-drives",
+    "href": "northcentralpage.html#produce-drives",
+    "title": "North Central Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "northcentralpage.html#blight-remidiation",
+    "href": "northcentralpage.html#blight-remidiation",
+    "title": "North Central Division",
+    "section": "Blight Remidiation",
+    "text": "Blight Remidiation\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "northcentralpage.html#blight-remediation",
+    "href": "northcentralpage.html#blight-remediation",
+    "title": "North Central Division",
+    "section": "Blight Remediation",
+    "text": "Blight Remediation\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut."
+  },
+  {
+    "objectID": "northcentralpage.html#property-transformations",
+    "href": "northcentralpage.html#property-transformations",
+    "title": "North Central Division",
+    "section": "Property Transformations",
+    "text": "Property Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."
+  },
+  {
+    "objectID": "northcentralpage.html#property-transformations-1",
+    "href": "northcentralpage.html#property-transformations-1",
+    "title": "North Central Division",
+    "section": "Property Transformations",
+    "text": "Property Transformations\n\nProperty Transformations"
+  },
+  {
+    "objectID": "northcentralpage.html#proposed-transformations",
+    "href": "northcentralpage.html#proposed-transformations",
+    "title": "North Central Division",
+    "section": "Proposed Transformations",
+    "text": "Proposed Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."
+  },
+  {
+    "objectID": "northcentralpage.html#heading",
+    "href": "northcentralpage.html#heading",
+    "title": "North Central Division",
+    "section": "Heading",
+    "text": "Heading\n\nFencing Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents."
+  },
+  {
+    "objectID": "northwestpage.html",
+    "href": "northwestpage.html",
+    "title": "North West Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n90\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n75\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n75\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\nCommunity Observations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJune\n\n\nComing Soon\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n    \"Most of the families I deal with could use food, groceries and consistent meals.\"\n    Local Apartment Manager\n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nComing Soon\n\n\n\n\n\nMay\n\n\nComing Soon\n\n\n\n\n\nJune\n\n\nComing Soon\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
+  },
+  {
+    "objectID": "northwestpage.html#proposed-transformations",
+    "href": "northwestpage.html#proposed-transformations",
+    "title": "North West Division",
+    "section": "Proposed Transformations",
+    "text": "Proposed Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."
+  },
+  {
+    "objectID": "northwestpage.html#produce-drives",
+    "href": "northwestpage.html#produce-drives",
+    "title": "North West Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "northeastpage.html",
+    "href": "northeastpage.html",
+    "title": "North East Division",
+    "section": "",
+    "text": "Pounds of Trash Collected\n87\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBags of Produce Distributed\n162\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAverage Individuals Served \n81\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProperties Transformed\n-\n\n\n\n\n\n\n\n\n\n\n\n\nCommunity Observations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFence Repair\n\n    \"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue.\"\n    Community Resident\n    \nFencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.\n\n\n\n\nTrash Support\n\n    \"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.\"\n    Community Resident\n    \nTrash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImproved Bus Stops\n\n    \"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate.\"\n    Community Resident\n    \n\n\n\n\nClean and Green Initiative\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\n\n\n\n\n\nJune\n\n\nComing Soon\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon\n\n\n\n\nProduce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.\n\n\n    \"Most of the families I deal with could use food, groceries and consistent meals.\"\n    Local Apartment Manager\n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n\n\n\n\n\nApril\n\n\nClick to see more\n\n\n\n\n\nMay\n\n\nClick to see more\n\n\n\n\n\nJune\n\n\nComing Soon\n\n\n\n\n\nJuly\n\n\nComing Soon\n\n\n\n\n\nAugust\n\n\nComing Soon\n\n\n\n\n\nSeptember\n\n\nComing Soon\n\n\n\n\n\n\n\nOctober\n\n\nComing Soon\n\n\n\n\n\nNovember\n\n\nComing Soon\n\n\n\n\n\nDecember\n\n\nComing Soon\n\n\n\n\n\nJanuary\n\n\nComing Soon\n\n\n\n\n\nFebruary\n\n\nComing Soon\n\n\n\n\n\nMarch\n\n\nComing Soon"
+  },
+  {
+    "objectID": "northeastpage.html#proposed-transformations",
+    "href": "northeastpage.html#proposed-transformations",
+    "title": "North East Division",
+    "section": "Proposed Transformations",
+    "text": "Proposed Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."
+  },
+  {
+    "objectID": "northeastpage.html#produce-drives",
+    "href": "northeastpage.html#produce-drives",
+    "title": "North East Division",
+    "section": "Produce Drives",
+    "text": "Produce Drives\nElit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis."
+  },
+  {
+    "objectID": "southwestpage.html#proposed-transformations",
+    "href": "southwestpage.html#proposed-transformations",
+    "title": "South West Division",
+    "section": "Proposed Transformations",
+    "text": "Proposed Transformations\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."
   }
 ]

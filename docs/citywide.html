@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Report Title</title>
+<title>citywide</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -136,6 +102,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">South West Division</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./northwestpage.html"><i class="bi bi-house-door-fill" role="img">
+</i> 
+ <span class="dropdown-text">North West Division</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./northeastpage.html"><i class="bi bi-house-door-fill" role="img">
+</i> 
+ <span class="dropdown-text">North East Division</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./northcentralpage.html"><i class="bi bi-house-door-fill" role="img">
+</i> 
+ <span class="dropdown-text">North Central Division</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./southeastpage.html"><i class="bi bi-house-door-fill" role="img">
+</i> 
+ <span class="dropdown-text">South East Division</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./southcentralpage.html"><i class="bi bi-house-door-fill" role="img">
+</i> 
+ <span class="dropdown-text">South Central Division</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="https://github.com/childpovertyactionlab/"><i class="bi bi-github" role="img">
 </i> 
  <span class="dropdown-text">Github</span></a>
@@ -154,24 +145,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Contents</h2>
-   
-  <ul class="collapse">
-  <li><a href="#main-header" id="toc-main-header" class="nav-link active" data-scroll-target="#main-header">Main Header</a>
-  <ul class="collapse">
-  <li><a href="#second-header" id="toc-second-header" class="nav-link" data-scroll-target="#second-header">Second Header</a></li>
-  <li><a href="#running-code" id="toc-running-code" class="nav-link" data-scroll-target="#running-code">Running Code</a></li>
-  </ul></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Report Title</h1>
+<h1 class="title">citywide</h1>
 </div>
 
 
@@ -188,39 +169,117 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="main-header" class="level1">
-<h1>Main Header</h1>
-<p>Here’s some text for you.</p>
-<section id="second-header" class="level2">
-<h2 data-anchor-id="second-header">Second Header</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-</section>
-<section id="running-code" class="level2">
-<h2 data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Reveal Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cpaltemplates)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mtcars dataset is natively available in R</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># head(mtcars)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># A basic scatterplot with color depending on Species</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length, <span class="at">y=</span>Sepal.Width, <span class="at">color=</span>Species)) <span class="sc">+</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cpal</span>() <span class="sc">+</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_cpal</span>(<span class="at">theme =</span> <span class="st">"factor"</span>) <span class="sc">+</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Chart Title"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-error">
-<pre><code>Error in theme_cpal(): could not find function "theme_cpal"</code></pre>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carousel Photo Gallery</title>
+<style>
+  .carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 80%;
+    margin: auto;
+    position: relative;
+  }
+
+  .carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .carousel-item {
+    min-width: 50%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .arrow.left {
+    left: 10px;
+  }
+
+  .arrow.right {
+    right: 10px;
+  }
+</style>
+
+
+
+<div class="carousel-container">
+  <button class="arrow left" onclick="prevSlide()">‹</button>
+  <div class="carousel" id="carousel">
+    <div class="carousel-item">
+      <img src="before1.jpg" alt="Before 1">
+    </div>
+    <div class="carousel-item">
+      <img src="after1.jpg" alt="After 1">
+    </div>
+    <div class="carousel-item">
+      <img src="before2.jpg" alt="Before 2">
+    </div>
+    <div class="carousel-item">
+      <img src="after2.jpg" alt="After 2">
+    </div>
+    <!-- Add more items as needed -->
+  </div>
+  <button class="arrow right" onclick="nextSlide()">›</button>
 </div>
-</div>
+
+<script>
+  let currentIndex = 0;
+
+  function showSlide(index) {
+    const carousel = document.getElementById('carousel');
+    const totalItems = carousel.children.length;
+    const slideWidth = carousel.children[0].offsetWidth;
+
+    currentIndex = (index + totalItems) % totalItems;
+
+    carousel.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+  }
+
+  function nextSlide() {
+    showSlide(currentIndex + 2);
+  }
+
+  function prevSlide() {
+    showSlide(currentIndex - 2);
+  }
+
+  function autoScroll() {
+    nextSlide();
+    setTimeout(autoScroll, 3000);
+  }
+
+  window.onload = function() {
+    autoScroll();
+  };
+</script>
+
+
+
+
+
+
 <b><b>
 
-</b></b></section><b><b>
-</b></b></section><b><b>
 
 </b></b></main><b><b> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

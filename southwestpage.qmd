@@ -5,10 +5,8 @@ lightbox: true
 ---
 
 ```{r include=FALSE}
-library(ggplot2)
 library(cpaltemplates)
 library(tidyverse)
-library(readr)
 library(bslib)
 library(bsicons)
 library(sf)
@@ -104,13 +102,17 @@ people_served_data <- sw_impact %>%
 highchart(type = "map") %>%
    hc_chart(height = 425) %>%
   hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
-  hc_add_series(data = sw_boundaries, mapData = geojson, 
-                joinBy = "DIVISION", name = "South West Division", 
-                color = "#042d33", showInLegend = FALSE,
-                dataLabels = list(enabled = FALSE, format = '{point.DIVISION}'),
-                tooltip = list(enabled = TRUE)) %>%
+  hc_add_series(data = sw_boundaries,
+                    mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
   hc_mapNavigation(enabled = FALSE)
-
 ```
 :::
 
@@ -160,27 +162,33 @@ value_box(
 :::
 :::
 
-::: hr
-:::
-
 ```{=html}
-
-
 <style>
-  /* Custom CSS for smaller images */
+h5 {
+        color: #FFFFFF;
+        height: 10%
+}
+/* Image Sizing */
+   
   .small-image {
     max-height: 50px; /* Adjust the maximum height as needed */
   }
-
-  /* Custom CSS for medium images */
+  
   .medium-image {
     max-height: 250px; /* Adjust the maximum height as needed */
   }
-
-  /* Hidden class */
+  
+  .pt-image {
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+  }
+  
   .hidden {
     display: none;
   }
+  
+/* Image Borders and Formatting */
   
   .container {
     display: flex;
@@ -189,8 +197,18 @@ value_box(
     margin-right: 130px;
     margin-left: -60px;
     }
+    
+  .pt-container {
+    position: relative;
+    display: grid;
+    border: 5px solid #042d33;
+    padding: 0px;
+    width: 100%;  /* Set the desired width */
+    height: 150px;
+    margin: 30px;
+    overflow: hidden;
+    }  
 
-  /* Main image container */
   .main-image-container {
     position: relative;
     display: inline-block;
@@ -199,53 +217,35 @@ value_box(
     margin: 20px;
     transition: transform 0.3s ease-in-out; /* Smooth transition */
   }
+
+/* Image Effects */
   
   .main-image-container:hover {
     transform: scale(1.10); /* Slightly increase size on hover */
   }
-.tooltip {
-  visibility: hidden;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 5px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 100%; /* Position above the container */
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-  white-space: nowrap;
-}
+  
+  .tooltip {
+   visibility: hidden;
+   background-color: black;
+   color: #fff;
+   text-align: center;
+   border-radius: 5px;
+   padding: 5px;
+   position: absolute;
+   z-index: 1;
+   bottom: 100%; /* Position above the container */
+   left: 50%;
+   transform: translateX(-50%);
+   opacity: 0;
+   transition: opacity 0.3s ease-in-out;
+   white-space: nowrap;
+  }
 
   .main-image-container:hover .tooltip {
     visibility: visible;
     opacity: 1;
   }  
   
-  /* Map image container */
-    .map-container {
-      position: relative;
-      display: inline-block;
-      border: 5px solid #042d33;
-      padding: 1px;
-      margin: 25px;
-      width: 400px;  /* Set the desired width */
-      height: 515px; /* Set the desired height */
-    }
-  
-  .graph-container {
-      position: relative;
-      display: inline-block;
-      border: none;
-      padding: 1px;
-      margin: 25px;
-      width: 400px;  /* Set the desired width */
-      height: 515px; /* Set the desired height */
-    }
-  /* Label for the main image */
   .image-label {
     position: absolute;
     top: 80px;
@@ -257,11 +257,180 @@ value_box(
     font-size: 12px;
     background-color: white;
   }
+  
+/* Formatting for Quotations */  
+
+  .long-quote-container {
+    width: 100%; 
+  }
+  .quote-container {
+    width: 100%; 
+    height: 80%
+  }
+  .small-quote-container {
+    width: 100%; 
+    height: 45%
+  }
+.quote-container p, .long-quote-container p, .small-quote-container p {
+    margin: 0; /* Removes default paragraph margin */
+    padding: 0;
+    line-height: 1.5;
+  }
+.quote-container, .long-quote-container, .small-quote-container {
+    border: none;
+    outline: none;
+    margin: 20px auto; /* Centers the container and maintains margin on the top and bottom */
+    padding: 20px 10%; /* 20px padding on top and bottom, 10% on left and right */
+    background-color: #f9f9f9; /* Light grey background */
+    font-size: 18px;
+    color: #042d33; /* Dark grey text color */
+    text-align: center;
+    box-sizing: border-box; /* Includes padding in width calculation */
+  }
+.quote-container cite, .long-quote-container cite, .small-quote-container cite {
+ display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #042d33; /* Lighter grey for citation */
+    text-align: right;
+    font-style: normal; /* Overrides default italic style of cite */
+  }
+
+/* Figure Border and Formatting */
+ 
+  .map-container, .graph-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 400px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
+  }
+    
 </style>
 ```
 ::: grid
 ::: g-col-12
-## Clean and Green Initiative
+# Community Observations
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+:::
+:::
+
+::: grid
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
+:::
+:::
+
+::: g-col-1
+:::
+
+::: g-col-5
+##### Fence Repair
+
+```{=html}
+<blockquote class="small-quote-container">
+    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+:::
+:::
+
+::: grid
+::: g-col-5
+##### Trash Support
+
+```{=html}
+<blockquote class="small-quote-container">
+    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
+:::
+
+::: g-col-1
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
+:::
+:::
+:::
+
+::: grid
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+:::
+
+::: g-col-3
+::: pt-container
+![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+
+::: pt-container
+![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
+:::
+:::
+
+::: g-col-1
+:::
+
+::: g-col-5
+##### Improved Bus Stops
+
+```{=html}
+<blockquote class="quote-container">
+    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+# Clean and Green Initiative
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
 :::
@@ -281,7 +450,8 @@ leaflet(data = filtered_point_data) %>%
     radius = 5,
     color = palette_cpal_main[6],
     fillOpacity = 0.5,
-    label = ~HTML(paste("<b>Location:</b>", filtered_point_data$street_address))
+       label = ~paste("<b>Location:</b>", filtered_point_data$street_address) %>%
+      lapply(htmltools::HTML)
   )
 ```
 :::
@@ -330,6 +500,7 @@ April
 :::
 
 ![](media/cleaning/SW_4-13_before.jpeg){.medium-image group="April"}
+
 ```{=html}
 <div class="tooltip">Click to see more</div>
 ```
@@ -348,13 +519,11 @@ April
 May
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="May"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="May"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="May"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -364,7 +533,11 @@ May
 June
 :::
 
-![](media/cleaning/SW_6-8_before.jpeg){.medium-image group="June"}
+![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
+
+```{=html}
+<div class="tooltip">Click to see more</div>
+```
 :::
 
 ::: g-col-1
@@ -380,21 +553,11 @@ June
 July
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="July"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="July"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="July"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -404,21 +567,11 @@ July
 August
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="August"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -428,21 +581,11 @@ August
 September
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="September"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 :::
@@ -454,21 +597,11 @@ September
 October
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="October"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -478,21 +611,11 @@ October
 November
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="November"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -502,21 +625,11 @@ November
 December
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="December"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -526,21 +639,11 @@ December
 January
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="January"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -550,21 +653,11 @@ January
 February
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="February"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -574,30 +667,17 @@ February
 March
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="March"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
-:::
-:::
-
-::: hr
 :::
 
 ::: Grid
-## Produce Drives
+# Produce Drives
 
 Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
 :::
@@ -675,15 +755,9 @@ April
 :::
 
 ![](media/distribution/SW_4-27_distribution.jpeg){width="75" height="95" group="June"}
-:::
 
-::: g-col-1
-::: col-md-1
-![](media/distribution/SW_4-27_distribution.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/distribution/SW_4-27_distribution.jpeg){.small-image .hidden group="June"}
+::: tooltip
+Click to see more
 :::
 :::
 :::
@@ -694,21 +768,11 @@ April
 May
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="May"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -718,21 +782,11 @@ May
 June
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="June"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -742,21 +796,11 @@ June
 July
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="July"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -766,21 +810,11 @@ July
 August
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="August"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -790,21 +824,11 @@ August
 September
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="September"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 :::
@@ -816,21 +840,11 @@ September
 October
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="October"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -840,21 +854,11 @@ October
 November
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="November"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -864,21 +868,11 @@ November
 December
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="December"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -888,21 +882,11 @@ December
 January
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="January"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -912,21 +896,11 @@ January
 February
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="February"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
 
@@ -936,24 +910,11 @@ February
 March
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="June"}
-:::
+![](media/coming_soon.jpeg){.medium-image group="March"}
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
+```{=html}
+<div class="tooltip">Coming Soon</div>
+```
 :::
 :::
-:::
-:::
-
-::: hr
 :::
