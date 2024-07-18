@@ -2,9 +2,11 @@ library(readr)
 library(tidygeocoder)
 library(dplyr)
 library(sf)
-data <- read.csv("data/map_point_data.csv")
+library(googlesheets4)
 
-df <- data %>%
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+df <- impact %>%
   mutate(full_address = paste(street_address, city, state, zip_code, sep = ", ")) 
 
 distinct_address <- df %>%
@@ -15,10 +17,8 @@ geodata <- geo(address = distinct_address$full_address, method = "arcgis", full_
 merged_data <- df %>%
   left_join(geodata, by = c("full_address" = "address"))
 
-sf_data <- st_as_sf(merged_data, coords = c("long", "lat"), crs = 4269)
+sf_data <- st_as_sf(merged_data, coords = c("location.x", "location.y"), crs = 4269)
 
-sw_data <- sf_data %>%
-  filter(district == "North West") %>%
-  filter(event_type == "clean")
+city_data <- sf_data
 
-st_write(sw_data, "data/nw_clean_and_green.gpkg", layer = "geocoded_addresses", delete_layer = TRUE)
+st_write(city_data, "data/location.gpkg", layer = "geocoded_addresses", delete_layer = TRUE)

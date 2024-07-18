@@ -6,7 +6,7 @@ format:
     theme: www/web_report.scss
     toc-title: Contents
     toc: true
-    toc-depth: 1
+    toc-depth: 3
     toc-location: right
     anchor-sections: false
     code-summary: "Reveal Code"
@@ -46,10 +46,10 @@ website:
         - text: "<b>Menu<b>"
           menu:
             - icon: house-door-fill
-              text: "Home"
+              text: "Citywide"
               href: index.html
             - icon: house-door-fill
-              text: "Citywide"
+              text: "OIPSS"
               href: citywide.html
             - icon: house-door-fill
               text: "South West Division"
@@ -73,5 +73,5 @@ website:
               text: "Github"
               href: "https://github.com/childpovertyactionlab/"
   page-footer:
-    center: Copyright 2023 <b>[The Child Poverty Action Lab](https://childpovertyactionlab.org/).</b>
+    center: Copyright 2024 <b>[The Child Poverty Action Lab](https://childpovertyactionlab.org/).</b>
     background: "#042d33"

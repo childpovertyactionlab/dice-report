@@ -41,15 +41,20 @@ gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
 
 impact$date <- ymd(impact$date)
-  
-impact <- impact |> 
+
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < end_date) %>%
   mutate(
-    month = floor_date(date, "month"),
-    formatted_month = format(month, "%B, %Y")
-  ) |>
-  filter(date < current_date)
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 impact$lbs_produce <- impact$bags * 10
+
 
 nc_impact <- impact |>
  filter(district == "North Central")
@@ -66,106 +71,28 @@ monthly_average_people_served <- nc_impact %>%
   round()
 
 trash_data <- nc_impact %>%
-  select(formatted_month, lbs_trash) %>%
-  filter(lbs_trash != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- nc_impact %>%
-  select(formatted_month, lbs_produce) %>%
-  filter(lbs_produce != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 
 people_served_data <- nc_impact %>%
-  select(formatted_month, people_served) %>%
-  filter(people_served != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  select(formatted_month, people_served, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
+  ungroup
 ```
-
-```{=html}
-<style>
-.hr {
-    border: none;
-    height: 2px;
-    background-color: #042d33;
-    margin: 25px;
-}
-</style>
-```
-::: grid
-::: g-col-6
-```{r}
-highchart(type = "map") %>%
-  hc_chart(height = 425) %>%
-  hc_add_series(
-    mapData = geojson, 
-    showInLegend = FALSE
-  ) %>%
-  hc_add_series(
-    data = nc_boundaries, 
-                    mapData = geojson, 
-                    joinBy = "DIVISION", 
-                    color = "#042d33", 
-                    showInLegend = FALSE,
-                    dataLabels = list(enabled = FALSE),
-                    tooltip = list(enabled = FALSE),
-                    name = "",
-                    enableMouseTracking = FALSE
-                 ) %>%
-  hc_mapNavigation(enabled = FALSE)
-
-```
-:::
-
-::: g-col-3
-```{r}
-value_box(
-  value = total_lbs_trash,
-  title = "Pounds of Trash Collected",
-  showcase = bsicons::bs_icon("trash"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Bags of Produce Distributed",
-  value = total_bags,
-  showcase = bsicons::bs_icon("basket2"),
- theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-
-::: g-col-3
-```{r}
-## Average # served/week
-value_box(
-  title = "Average Individuals Served ",
-  value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Properties Transformed",
-  value = "-",
-  showcase = bsicons::bs_icon("hammer"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-:::
 
 ```{=html}
 <style>
@@ -197,10 +124,9 @@ h5 {
   
   .container {
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-    margin-right: 130px;
-    margin-left: -60px;
+    justify-content: center; 
+    align-items: center;
+    margin-top: 5%
     }
     
   .pt-container {
@@ -312,14 +238,97 @@ h5 {
       width: 400px;  /* Set the desired width */
       height: 515px; /* Set the desired height */
   }
+  
+  h3 {
+  color: '#FFFFFF';
+}
     
 </style>
 ```
 ::: grid
-::: g-col-12
-# Community Observations
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+  hc_chart(height = 425) %>%
+  hc_add_series(
+    mapData = geojson, 
+    showInLegend = FALSE
+  ) %>%
+  hc_add_series(
+    data = nc_boundaries, 
+                    mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
+  hc_mapNavigation(enabled = FALSE)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+```
+:::
+
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Debris Removed",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Average Individuals Served Monthly",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+::: column-margin
+Impact data updated monthly, last update 7/10/24.
+:::
+::: grid
+::: g-col-12
+The North Central division has the focus area neighborhood of Esperanza. The Esperanza neighborhood is on the border of two cities, Dallas and Richardson. The neighborhood is a mix of housing and apartment complex residential living. There are five schools within a half mile radius and a very high concentration of families in the area. The area historically has been problematic, Esperanza Rd used to be called Maham Rd (pronounced Mayhem) until a name change came in 2017 as part of the revitalization of the area. Statistically it's one of the higher crime areas in Dallas, but that's often overlooked and overshaded due to the area around it being primarily business towers, company campuses and at the corner of two major Dallas freeways. The area recently has had major issues with homelessness and houseless encampments, especially in the Cottonwood Creek/Park area. As a result of the neglect, the area has continued to see spikes in violent crimes and especially violent gun crimes over the past few years.
+:::
+:::
+
+
+::: grid
+::: g-col-12
+# Community Needs Assessment
+
+
 :::
 :::
 
@@ -363,16 +372,10 @@ Fencing is heavily damaged along properties. This includes overgrown plants and 
 ::: grid
 ::: g-col-5
 ##### Trash Support
-
-```{=html}
-<blockquote class="small-quote-container">
-    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
-Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
+::: container
+Trash services need support in the area. Esperanza is primarily residential, housing several families in close proximity. The build up and overflow of trash in and around residences poses an extreme health safety risk for the residents, particularly the children. Monthly clean ups by local partners Not My Son, United Peoples Coalition, and activated community members will occur over a six month period.
 :::
-
+:::
 ::: g-col-1
 :::
 
@@ -433,18 +436,21 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 :::
 
+# Urban Blight Abatement
+
 ::: grid
 ::: g-col-12
-# Clean and Green Initiative
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+### Cleaning and Greening {style="color: white"}
 :::
 :::
-
+```{=html}
+<blockquote class="long-quote-container">
+    <p>"Sed enim ut sem viverra aliquet eget sit amet tellus."</p>
+    <cite>Local Apartment Manager</cite>
+    </blockquote>
+```
 ::: grid
-::: container
 ::: g-col-6
-::: map-container
 ```{r}
 leaflet(data = filtered_point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
@@ -460,17 +466,14 @@ leaflet(data = filtered_point_data) %>%
   )
 ```
 :::
-:::
-
 ::: g-col-6
-::: graph-container
 ```{r}
 highchart() %>%
-  hc_chart(type = "line") %>%
+   hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
-  hc_title(text = "Pounds of Trash Collected by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Trash Collected by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -488,12 +491,9 @@ highchart() %>%
 ```
 :::
 :::
-:::
-:::
-
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over map markers for address information.
 :::
 :::
 
@@ -524,7 +524,7 @@ April
 May
 :::
 
-![](media/cleaning/SW_6-8_after.jpeg){.medium-image group="May"}
+![](media/coming_soon.jpeg){.medium-image group="May"}
 
 ```{=html}
 <div class="tooltip">Click to see more</div>
@@ -533,7 +533,7 @@ May
 
 ::: g-col-1
 ::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="May"}
+![](media/coming_soon.jpeg){.small-image .hidden group="May"}
 :::
 :::
 :::
@@ -544,7 +544,7 @@ May
 June
 :::
 
-![](media/cleaning/NC_6-8_before.jpeg){.medium-image group="June"}
+![](media/cleaning/NC_6-8_before.jpeg){.medium-image width="75" height="95" group="June"}
 
 ```{=html}
 <div class="tooltip">Click to see more</div>
@@ -688,9 +688,7 @@ March
 :::
 
 ::: Grid
-# Produce Drives
-
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+### Produce Drives {style="color: white"}
 :::
 
 ```{=html}
@@ -703,11 +701,11 @@ Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverr
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = produce_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = produce_data$cumulative_lbs_produce, name = "Pounds", x = produce_data$formatted_month) %>%
-  hc_title(text = "Pounds of Produce Distributed by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Produce Distributed by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -729,11 +727,11 @@ highchart() %>%
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_add_series(data = people_served_data$monthly_people_served, name = "Individuals", x =     people_served_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_xAxis(categories = people_served_data$formatted_month) |> 
-  hc_title(text = "Individuals Served by DICE") %>%
+  hc_title(text = "Individuals Served by DICE Monthly") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_legend(align = 'center', verticalAlign = 'bottom', layout = 'horizontal') %>%
@@ -754,13 +752,8 @@ highchart() %>%
 :::
 :::
 
-::: column-margin
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
-:::
-
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 :::
 :::
 
@@ -771,7 +764,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 April
 :::
 
-![](media/distribution/SC_4-27_distribution.jpeg){group="April2"}
+![](media/distribution/NC_4-27_distribution.jpg){.medium-image width="75" height="95" group="produce"}
 
 ```{=html}
 <div class="tooltip">Click to see more</div>
@@ -785,10 +778,10 @@ April
 May
 :::
 
-![](media/distribution/SC_5-25_distribution_4oakcliff.jpg){.medium-image group="May2"}
+![](media/coming_soon.jpeg){.medium-image group="May2"}
 
 ```{=html}
-<div class="tooltip">Click to see more</div>
+<div class="tooltip">Coming Soon</div>
 ```
 :::
 :::
@@ -799,11 +792,11 @@ May
 June
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="June2"}
+![](media/distribution/NC_6-29_distribution.jpg){.medium-image width="75" height="95" group="produce"}
 
-::: tooltip
-Coming Soon
-:::
+```{=html}
+<div class="tooltip">Click to See More</div>
+```
 :::
 :::
 

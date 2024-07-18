@@ -41,15 +41,20 @@ gs4_deauth()
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
 impact$date <- ymd(impact$date)
-  
-impact <- impact |> 
+
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < end_date) %>%
   mutate(
-    month = floor_date(date, "month"),
-    formatted_month = format(month, "%B, %Y")
-  ) |>
-  filter(date < current_date)
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 impact$lbs_produce <- impact$bags * 10
+
 
 se_impact <- impact |>
  filter(district == "South East")
@@ -66,104 +71,28 @@ monthly_average_people_served <- se_impact %>%
   round()
 
 trash_data <- se_impact %>%
-  select(formatted_month, lbs_trash) %>%
-  filter(lbs_trash != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- se_impact %>%
-  select(formatted_month, lbs_produce) %>%
-  filter(lbs_produce != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+  select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 
 people_served_data <- se_impact %>%
-  select(formatted_month, people_served) %>%
-  filter(people_served != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  select(formatted_month, people_served, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
+  ungroup
 ```
-
-```{=html}
-<style>
-.hr {
-    border: none;
-    height: 2px;
-    background-color: #042d33;
-    margin: 25px;
-}
-</style>
-```
-::: grid
-::: g-col-6
-```{r}
-highchart(type = "map") %>%
-   hc_chart(height = 425) %>%
-  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
-  hc_add_series(data = se_boundaries,    
-                    mapData = geojson, 
-                    joinBy = "DIVISION", 
-                    color = "#042d33", 
-                    showInLegend = FALSE,
-                    dataLabels = list(enabled = FALSE),
-                    tooltip = list(enabled = FALSE),
-                    name = "",
-                    enableMouseTracking = FALSE
-                 ) %>%
-  hc_mapNavigation(enabled = FALSE)
-```
-:::
-
-::: g-col-3
-```{r}
-value_box(
-  value = total_lbs_trash,
-  title = "Pounds of Trash Collected",
-  showcase = bsicons::bs_icon("trash"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Bags of Produce Distributed",
-  value = total_bags,
-  showcase = bsicons::bs_icon("basket2"),
- theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-
-::: g-col-3
-```{r}
-## Average # served/week
-value_box(
-  title = "Average Individuals Served ",
-  value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Properties Transformed",
-  value = "-",
-  showcase = bsicons::bs_icon("hammer"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-:::
-
-::: hr
-:::
 
 ```{=html}
 <style>
@@ -314,10 +243,85 @@ h5 {
 </style>
 ```
 ::: grid
-::: g-col-12
-# Proposed Transformations
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+   hc_chart(height = 425) %>%
+  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
+  hc_add_series(data = se_boundaries,    
+                    mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
+  hc_mapNavigation(enabled = FALSE)
+```
+:::
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Trash Collected",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+## Average # served/week
+value_box(
+  title = "Average Individuals Served ",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+
+::: column-margin
+Impact data updated monthly, last update 7/10/24. 
+:::
+::: grid
+::: g-col-12
+The focus areas in the South East are RL Thornton and Jim Miller, and Murdock and Loop 12. Both areas are entrenched heavily in food swamps. Both areas are also adjacent to major freeways in Dallas, I-30 and 175. In the RL Thornton and Jim Miller area there are three motels within a half mile radius that are utilized as extended stays. This area has a set of apartments near, with residential housing being within a quarter mile radius. Historically, the area has always been working and middle class. The area has recently succumbed to a lot of business and retail neglect. Places that were occupied three to five years ago aren't any longer. Those places not being occupied have harbored opportunities for gun related crimes to occur. Murdock and Loop 12 sits at the corner of a problematic convenience store and the parking lot of a grocery store. The area has three sets of apartment complexes within a quarter mile radius that's surrounded by residential housing. There are three schools serving this community within a half mile radius. Home to primarily working class people, this area has been historically neglected and severely affected by systematic divestment.
+:::
+:::
+
+::: grid
+::: g-col-12
+# Community Needs Assessment
+
+
 :::
 :::
 
@@ -431,18 +435,23 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 :::
 
+# Urban Blight Abatement
+
 ::: grid
 ::: g-col-12
-# Clean and Green Initiative
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+### Cleaning and Greening {style="color: white"}
 :::
 :::
 
+
+```{=html}
+<blockquote class="long-quote-container">
+    <p>"At the inaugural Clean and Green event, we successfully cleaned multiple parking lots and storefronts that were heavily littered, making a significant difference all the way up to the doors. The positive feedback from store managers, owners, and patrons underscores the impact and importance of our efforts in improving the local environment. In addition to the physical cleanup, our Clean and Green event fostered a strong sense of community within the neighborhood. By working together toward a common goal of beautification and environmental stewardship, we strengthened bonds among residents and businesses, creating a more connected and supportive community spirit."</p>
+    <cite> Tramonica Brown, founder of Not My Son </cite>
+    </blockquote>
+```
 ::: grid
-::: container
 ::: g-col-6
-::: map-container
 ```{r}
 leaflet(data = filtered_point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
@@ -458,13 +467,11 @@ leaflet(data = filtered_point_data) %>%
   )
 ```
 :::
-:::
 
 ::: g-col-6
-::: graph-container
 ```{r}
 highchart() %>%
-  hc_chart(type = "line") %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
@@ -486,12 +493,10 @@ highchart() %>%
 ```
 :::
 :::
-:::
-:::
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over map markers for address information.
 :::
 :::
 
@@ -692,11 +697,14 @@ March
 :::
 
 ::: Grid
-# Produce Drives
-
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+### Produce Drives {style="color: white"}
 :::
 
+::: Grid
+::: g-col-12
+Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+:::
+:::
 ::: grid
 ::: g-col-6
 ```{r}

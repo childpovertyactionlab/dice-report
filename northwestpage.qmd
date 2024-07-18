@@ -41,15 +41,20 @@ gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
 
 impact$date <- ymd(impact$date)
-  
-impact <- impact |> 
+
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < end_date) %>%
   mutate(
-    month = floor_date(date, "month"),
-    formatted_month = format(month, "%B, %Y")
-  ) |>
-  filter(date < current_date)
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 impact$lbs_produce <- impact$bags * 10
+
 
 nw_impact <- impact |>
  filter(district == "North West")
@@ -66,101 +71,28 @@ monthly_average_people_served <- nw_impact %>%
   round()
 
 trash_data <- nw_impact %>%
-  select(formatted_month, lbs_trash) %>%
-  filter(lbs_trash != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- nw_impact %>%
-  select(formatted_month, lbs_produce) %>%
-  filter(lbs_produce != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 
 people_served_data <- nw_impact %>%
-  select(formatted_month, people_served) %>%
-  filter(people_served != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  select(formatted_month, people_served, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
+  ungroup
 ```
-
-```{=html}
-<style>
-.hr {
-    border: none;
-    height: 2px;
-    background-color: #042d33;
-    margin: 25px;
-}
-</style>
-```
-::: grid
-::: g-col-6
-```{r}
-highchart(type = "map") %>%
-   hc_chart(height = 425) %>%
-  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
-  hc_add_series(data = nw_boundaries,
-                mapData = geojson, 
-                    joinBy = "DIVISION", 
-                    color = "#042d33", 
-                    showInLegend = FALSE,
-                    dataLabels = list(enabled = FALSE),
-                    tooltip = list(enabled = FALSE),
-                    name = "",
-                    enableMouseTracking = FALSE
-                 ) %>%
-  hc_mapNavigation(enabled = FALSE)
-```
-:::
-
-::: g-col-3
-```{r}
-value_box(
-  value = total_lbs_trash,
-  title = "Pounds of Trash Collected",
-  showcase = bsicons::bs_icon("trash"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Bags of Produce Distributed",
-  value = total_bags,
-  showcase = bsicons::bs_icon("basket2"),
- theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-
-::: g-col-3
-```{r}
-## Average # served/week
-value_box(
-  title = "Average Individuals Served ",
-  value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Properties Transformed",
-  value = "-",
-  showcase = bsicons::bs_icon("hammer"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-:::
 
 ```{=html}
 <style>
@@ -307,14 +239,87 @@ h5 {
       width: 400px;  /* Set the desired width */
       height: 515px; /* Set the desired height */
   }
+  
+  h3 {
+  color: '#FFFFFF';
+}
     
 </style>
 ```
 ::: grid
-::: g-col-12
-# Community Observations
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+   hc_chart(height = 425) %>%
+  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
+  hc_add_series(data = nw_boundaries,
+                mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
+  hc_mapNavigation(enabled = FALSE)
+```
+:::
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Trash Collected",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+## Average # served/week
+value_box(
+  title = "Average Individuals Served ",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+::: column-margin
+Impact data updated monthly, last update 7/10/24. 
+:::
+
+::: grid
+::: g-col-12
+# Community Needs Assessment
+
+The North West division focus areas are the Wycliff and Hondo St, Crown Hill Memorial Park area and Bolivar Ln and Larga Rd. Crown Hill Memorial Park and Bolivar and Larga Rd areas are very high density apartment areas. The neighborhood has a very large immigrant population from a plethora of countries. Most of the residents live near or around Dallas Love Field Airport, which in turn subjects the community at large to an inordinate amount of noise pollution. The focus areas of Bolivar and Larga, and Crown Hill Memorial Park struggle with homelessness, which has become a major issue for both residents and business owners in the area. The area has six schools in a quarter mile radius and is currently a food swamp. The violent crime in the area often goes under and unreported due to the immigrant population being afraid of not only the community repercussions, but the legal ones as well. The area has historically always been working and lower middle class but constant neglect, and divestment from that community have made conditions exponentially worse over the past five to six years.
 :::
 :::
 
@@ -428,18 +433,22 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 :::
 
+# Urban Blight Abatement
+
 ::: grid
 ::: g-col-12
-# Clean and Green Initiative
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+### Cleaning and Greening {style="color: white"}
 :::
 :::
 
 ::: grid
-::: container
+::: g-col-12
+
+:::
+:::
+
+::: grid
 ::: g-col-6
-::: map-container
 ```{r}
 leaflet(data = filtered_point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
@@ -455,13 +464,10 @@ leaflet(data = filtered_point_data) %>%
   )
 ```
 :::
-:::
-
 ::: g-col-6
-::: graph-container
 ```{r}
 highchart() %>%
-  hc_chart(type = "line") %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
@@ -483,12 +489,10 @@ highchart() %>%
 ```
 :::
 :::
-:::
-:::
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over map markers for address information.
 :::
 :::
 
@@ -545,10 +549,10 @@ May
 June
 :::
 
-![](media/cleaning/NW_6-8_before.jpg){width="75" height="95".medium-image group="June"}
+![](media/cleaning/NW_6-8_before.jpg){.medium-image width="75" height="95" group="June"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
 :::
 
@@ -695,17 +699,19 @@ March
 :::
 
 ::: Grid
-# Produce Drives
-
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+### Produce Drives {style="color: white"}
 :::
 
+::: Grid
+::: g-col-12
 ```{=html}
 <blockquote class="long-quote-container">
     <p>"Most of the families I deal with could use food, groceries and consistent meals."</p>
     <cite>Local Apartment Manager</cite>
     </blockquote>
 ```
+:::
+:::
 ::: grid
 ::: g-col-6
 ```{r}
@@ -767,7 +773,7 @@ Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverr
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Explore the gallery below to see DICE's produce distributions in action.
 :::
 :::
 
@@ -778,7 +784,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 April
 :::
 
-![](media/distribution/NW_4-27_distribution.jpg){width="75" height="95".medium-image group="April2"}
+![](media/distribution/NW_4-27_distribution.jpg){.medium-image width="75" height="95" group="produce"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -806,7 +812,7 @@ May
 June
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="June2"}
+![](media/distribution/NW_6-29_distribution.jpeg){.medium-image width="75" height="95" group="produce"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>

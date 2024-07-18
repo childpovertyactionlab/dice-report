@@ -1,117 +1,143 @@
 ---
-title: "citywide"
+title: "OIPSS"
 format: html
-lightbox: true
 ---
 
+```{r include=FALSE}
+library(cpaltemplates)
+library(tidyverse)
+library(sf)
+library(leaflet)
+
+point_data <- st_read("data/CPTED_assessment_location.gpkg")
+
+geojson_data <- st_read("data/dpd_divisions.geojson")
+
+polygons <- st_transform(geojson_data, crs = 4269)
+
+date_format <- "%m/%d/%Y"
+
+point_data$Date.Deployed <- as.Date(point_data$Date.Deployed, format = date_format)
+
+# Calculate days since deployment
+current_date <- Sys.Date()
+
+point_data$Days.Since.Deployed <- as.numeric(difftime(current_date, point_data$Date.Deployed, units = "days"))
+
+point_data$Days.Since.Deployed[is.na(point_data$Days.Since.Deployed)] <- 0
+
+camera_towers <- point_data %>%
+  filter(Days.Since.Deployed != 0 )
+
+camera_towers_30 <-camera_towers %>%
+  filter(Days.Since.Deployed <= 30 )
+
+camera_towers_60 <- camera_towers %>%
+  filter(Days.Since.Deployed <= 60 )
+
+camera_towers_90 <- camera_towers %>%
+  filter(Days.Since.Deployed <= 90 )
+
+camera_towers_over_90 <- camera_towers %>%
+  filter(Days.Since.Deployed > 90 )
+```
+
 ```{=html}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carousel Photo Gallery</title>
 <style>
-  .carousel-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    width: 80%;
-    margin: auto;
-    position: relative;
+  .map-container, .graph-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 600px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
   }
-
-  .carousel {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .carousel-item {
-    min-width: 50%;
-    box-sizing: border-box;
-    padding: 10px;
-  }
-
-  .carousel-item img {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  .arrow.left {
-    left: 10px;
-  }
-
-  .arrow.right {
-    right: 10px;
-  }
+    
 </style>
-</head>
-<body>
+```
+::: g-col-6 
+::: map-container 
+```{r}
 
-<div class="carousel-container">
-  <button class="arrow left" onclick="prevSlide()">&#8249;</button>
-  <div class="carousel" id="carousel">
-    <div class="carousel-item">
-      <img src="before1.jpg" alt="Before 1">
-    </div>
-    <div class="carousel-item">
-      <img src="after1.jpg" alt="After 1">
-    </div>
-    <div class="carousel-item">
-      <img src="before2.jpg" alt="Before 2">
-    </div>
-    <div class="carousel-item">
-      <img src="after2.jpg" alt="After 2">
-    </div>
-    <!-- Add more items as needed -->
-  </div>
-  <button class="arrow right" onclick="nextSlide()">&#8250;</button>
-</div>
+leaflet(data = point_data) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addPolygons(data = polygons,
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(polygons)) %>%
+  addAwesomeMarkers(
+    lng = ~st_coordinates(point_data)[,1],
+    lat = ~st_coordinates(point_data)[,2],
+    group = "Assessment Locations",
+    label = ~paste("<b>Location:</b>", point_data$Location) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "building",
+      iconColor = '#FFFFFF',
+      markerColor = 'cadetblue'
+    )) %>%
+   addAwesomeMarkers(
+    lng = ~st_coordinates(camera_towers_30)[,1],
+    lat = ~st_coordinates(camera_towers_30)[,2],
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_30$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_30$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'yellow')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~st_coordinates(camera_towers_60)[,1],
+    lat = ~st_coordinates(camera_towers_60)[,2],
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_60$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_60$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'orange')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~st_coordinates(camera_towers_90)[,1],
+    lat = ~st_coordinates(camera_towers_90)[,2],
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_90$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_90$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'red')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~st_coordinates(camera_towers_over_90)[,1],
+    lat = ~st_coordinates(camera_towers_over_90)[,2],
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_over_90$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_over_90$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'brown')
+   ) %>%
+  addLayersControl(
+    overlayGroups = c("Assessment Locations", "Camera Towers"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  hideGroup("Assessment Locations") %>%
+  hideGroup("Camera Towers") 
 
-<script>
-  let currentIndex = 0;
-
-  function showSlide(index) {
-    const carousel = document.getElementById('carousel');
-    const totalItems = carousel.children.length;
-    const slideWidth = carousel.children[0].offsetWidth;
-
-    currentIndex = (index + totalItems) % totalItems;
-
-    carousel.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
-  }
-
-  function nextSlide() {
-    showSlide(currentIndex + 2);
-  }
-
-  function prevSlide() {
-    showSlide(currentIndex - 2);
-  }
-
-  function autoScroll() {
-    nextSlide();
-    setTimeout(autoScroll, 3000);
-  }
-
-  window.onload = function() {
-    autoScroll();
-  };
-</script>
-
-</body>
-</html>
-
-
+  
 
 ```
+:::
+:::

@@ -16,6 +16,7 @@ library(geojsonio)
 library(googlesheets4)
 library(leaflet)
 library(htmltools)
+library(htmlwidgets)
 ##### Map Data #####
 myhcmap <- st_read("data/dpd_divisions.geojson")
 
@@ -41,15 +42,20 @@ gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
 
 impact$date <- ymd(impact$date)
-  
-impact <- impact |> 
+
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < end_date) %>%
   mutate(
-    month = floor_date(date, "month"),
-    formatted_month = format(month, "%B, %Y")
-  ) |>
-  filter(date < current_date)
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 impact$lbs_produce <- impact$bags * 10
+
 
 ne_impact <- impact |>
  filter(district == "North East")
@@ -66,101 +72,28 @@ monthly_average_people_served <- ne_impact %>%
   round()
 
 trash_data <- ne_impact %>%
-  select(formatted_month, lbs_trash) %>%
-  filter(lbs_trash != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- ne_impact %>%
-  select(formatted_month, lbs_produce) %>%
-  filter(lbs_produce != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 
 people_served_data <- ne_impact %>%
-  select(formatted_month, people_served) %>%
-  filter(people_served != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  select(formatted_month, people_served, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
+  ungroup
 ```
-
-```{=html}
-<style>
-.hr {
-    border: none;
-    height: 2px;
-    background-color: #042d33;
-    margin: 25px;
-}
-</style>
-```
-::: grid
-::: g-col-6
-```{r}
-highchart(type = "map") %>%
-   hc_chart(height = 425) %>%
-  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
-  hc_add_series(data = ne_boundaries, 
-                mapData = geojson, 
-                    joinBy = "DIVISION", 
-                    color = "#042d33", 
-                    showInLegend = FALSE,
-                    dataLabels = list(enabled = FALSE),
-                    tooltip = list(enabled = FALSE),
-                    name = "",
-                    enableMouseTracking = FALSE
-                 ) %>%
-  hc_mapNavigation(enabled = FALSE)
-```
-:::
-
-::: g-col-3
-```{r}
-value_box(
-  value = total_lbs_trash,
-  title = "Pounds of Trash Collected",
-  showcase = bsicons::bs_icon("trash"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Bags of Produce Distributed",
-  value = total_bags,
-  showcase = bsicons::bs_icon("basket2"),
- theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-
-::: g-col-3
-```{r}
-## Average # served/week
-value_box(
-  title = "Average Individuals Served ",
-  value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-
-```{r}
-value_box(
-  title = "Properties Transformed",
-  value = "-",
-  showcase = bsicons::bs_icon("hammer"),
-  theme = "primary",
-  style = "height: 200px;"
-)
-```
-:::
-:::
 
 ```{=html}
 <style>
@@ -311,10 +244,79 @@ h5 {
 </style>
 ```
 ::: grid
-::: g-col-12
-# Community Observations
+::: g-col-6
+```{r}
+highchart(type = "map") %>%
+   hc_chart(height = 425) %>%
+  hc_add_series(mapData = geojson, showInLegend = FALSE) %>%
+  hc_add_series(data = ne_boundaries, 
+                mapData = geojson, 
+                    joinBy = "DIVISION", 
+                    color = "#042d33", 
+                    showInLegend = FALSE,
+                    dataLabels = list(enabled = FALSE),
+                    tooltip = list(enabled = FALSE),
+                    name = "",
+                    enableMouseTracking = FALSE
+                 ) %>%
+  hc_mapNavigation(enabled = FALSE)
+```
+:::
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+::: g-col-3
+```{r}
+value_box(
+  value = total_lbs_trash,
+  title = "Pounds of Debris Removed",
+  showcase = bsicons::bs_icon("trash"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Bags of Produce Distributed",
+  value = total_bags,
+  showcase = bsicons::bs_icon("basket2"),
+ theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+
+::: g-col-3
+```{r}
+## Average # served/week
+value_box(
+  title = "Average Individuals Served ",
+  value = monthly_average_people_served,
+  showcase = bsicons::bs_icon("person"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+
+```{r}
+value_box(
+  title = "Properties Transformed",
+  value = "-",
+  showcase = bsicons::bs_icon("hammer"),
+  theme = "primary",
+  style = "height: 200px;"
+)
+```
+:::
+:::
+::: column-margin
+Impact data updated monthly, last update 7/10/24. 
+:::
+
+::: grid
+::: g-col-12
+# Community Needs Assessment
+
+The North East division focus area is Walnut St and Audelia Lane and extends to Forest Lane and Audelia. The area has been historically, and remains somewhat, economically middle on one side (Walnut St)  and poor working class on the other (Forest Lane) . The particular focus area of Walnut and Audelia was formerly a bustling Asian based shopping center catering to the demographic that used to live in the neighborhood. The Walnut Mall, a large component of the shopping center, sits empty today. The area consists primarily of apartment complexes extending from Forest Lane to Walnut St. Gangs used to operate heavily in the area and have died off since about 2018, but gun related crimes from robberies to carjackings still remain an issue for both residents and business owners in the area. The neglect that historically existed in the Forest Lane Audelia area seems to have extended into the Walnut and Audelia area. A common theme amongst the Northern divisions of Dallas.
 :::
 :::
 
@@ -427,19 +429,26 @@ Trash services need support in the area. The build up and overflow of trash pose
 ```
 :::
 :::
+# Urban Blight Abatement
 
 ::: grid
 ::: g-col-12
-# Clean and Green Initiative
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
+### Cleaning and Greening {style="color: white"}
+:::
+:::
+::: grid
+::: g-col-12
+```{=html}
+<blockquote class="long-quote-container">
+    <p>"I've determined my location has needed less and less attention on the trash pick up. The apartments have noticed the work we're doing and are making an effort to keep it clean"</p>
+    <cite>Community Partner, July 2024</cite>
+    </blockquote>
+```
 :::
 :::
 
 ::: grid
-::: container
 ::: g-col-6
-::: map-container
 ```{r}
 leaflet(data = filtered_point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
@@ -452,16 +461,13 @@ leaflet(data = filtered_point_data) %>%
     fillOpacity = 0.5,
        label = ~paste("<b>Location:</b>", filtered_point_data$street_address) %>%
       lapply(htmltools::HTML)
-  )
+    ) 
 ```
 :::
-:::
-
 ::: g-col-6
-::: graph-container
 ```{r}
 highchart() %>%
-  hc_chart(type = "line") %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
@@ -483,12 +489,10 @@ highchart() %>%
 ```
 :::
 :::
-:::
-:::
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over map markers for address information.
 :::
 :::
 
@@ -677,11 +681,12 @@ March
 :::
 
 ::: Grid
-# Produce Drives
-
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+### Produce Drives {style="color: white"}
 :::
-
+::: grid
+::: g-col-12
+:::
+:::
 ```{=html}
 <blockquote class="long-quote-container">
     <p>"Most of the families I deal with could use food, groceries and consistent meals."</p>
@@ -743,15 +748,6 @@ highchart() %>%
 :::
 :::
 
-::: column-margin
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
-:::
-
-::: grid
-::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-:::
-:::
 
 ::: grid
 ::: g-col-2

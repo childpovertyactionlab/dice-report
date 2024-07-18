@@ -41,15 +41,20 @@ gs4_deauth()
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
 impact$date <- ymd(impact$date)
-  
-impact <- impact |> 
+
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < end_date) %>%
   mutate(
-    month = floor_date(date, "month"),
-    formatted_month = format(month, "%B, %Y")
-  ) |>
-  filter(date < current_date)
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 impact$lbs_produce <- impact$bags * 10
+
 
 sw_impact <- impact |>
  filter(district == "South West")
@@ -66,36 +71,178 @@ monthly_average_people_served <- sw_impact %>%
   round()
 
 trash_data <- sw_impact %>%
-  select(formatted_month, lbs_trash) %>%
-  filter(lbs_trash != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_trash = sum(lbs_trash)) |> 
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- sw_impact %>%
-  select(formatted_month, lbs_produce) %>%
-  filter(lbs_produce != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) |> 
+select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
+  
 
 people_served_data <- sw_impact %>%
-  select(formatted_month, people_served) %>%
-  filter(people_served != 0) %>%
-  group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  select(formatted_month, people_served, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
+  ungroup
 ```
 
 ```{=html}
 <style>
-.hr {
-    border: none;
-    height: 2px;
-    background-color: #042d33;
-    margin: 25px;
+h5 {
+        color: #FFFFFF;
+        height: 10%
 }
+/* Image Sizing */
+   
+  .small-image {
+    max-height: 50px; /* Adjust the maximum height as needed */
+  }
+  
+  .medium-image {
+    max-height: 250px; /* Adjust the maximum height as needed */
+  }
+  
+  .pt-image {
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+/* Image Borders and Formatting */
+  
+  .container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    margin-top: 50px
+    }
+    
+  .pt-container {
+    position: relative;
+    display: grid;
+    border: 5px solid #042d33;
+    padding: 0px;
+    width: 100%;  /* Set the desired width */
+    height: 175px;
+    margin: 30px;
+    overflow: hidden;
+    }  
+
+  .main-image-container {
+    position: relative;
+    display: inline-block;
+    border: 5px solid #042d33;
+    padding: 5px;
+    margin: 20px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+  }
+
+/* Image Effects */
+  
+  .main-image-container:hover {
+    transform: scale(1.10); /* Slightly increase size on hover */
+  }
+  
+  .tooltip {
+   visibility: hidden;
+   background-color: black;
+   color: #fff;
+   text-align: center;
+   border-radius: 5px;
+   padding: 5px;
+   position: absolute;
+   z-index: 1;
+   bottom: 100%; /* Position above the container */
+   left: 50%;
+   transform: translateX(-50%);
+   opacity: 0;
+   transition: opacity 0.3s ease-in-out;
+   white-space: nowrap;
+  }
+
+  .main-image-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }  
+  
+  .image-label {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: #042d33;
+    font-size: 12px;
+    background-color: white;
+  }
+  
+/* Formatting for Quotations */  
+
+  .long-quote-container {
+    width: 100%; 
+  }
+  .quote-container {
+    width: 100%; 
+    height: 85%
+  }
+  .small-quote-container {
+    width: 100%; 
+    height: 50%
+  }
+.quote-container p, .long-quote-container p, .small-quote-container p {
+    margin: 0; /* Removes default paragraph margin */
+    padding: 0;
+    line-height: 1.5;
+  }
+.quote-container, .long-quote-container, .small-quote-container {
+    border: none;
+    outline: none;
+    margin: 30px auto; /* Centers the container and maintains margin on the top and bottom */
+    padding: 20px 10%; /* 20px padding on top and bottom, 10% on left and right */
+    background-color: #f9f9f9; /* Light grey background */
+    font-size: 18px;
+    color: #042d33; /* Dark grey text color */
+    text-align: center;
+    box-sizing: border-box; /* Includes padding in width calculation */
+  }
+.quote-container cite, .long-quote-container cite, .small-quote-container cite {
+ display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #042d33; /* Lighter grey for citation */
+    text-align: right;
+    font-style: normal; /* Overrides default italic style of cite */
+  }
+
+/* Figure Border and Formatting */
+ 
+  .map-container, .graph-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 400px;  /* Set the desired width */
+      height: 515px; /* Set the desired height */
+  }
+    
 </style>
 ```
+
 ::: grid
 ::: g-col-6
 ```{r}
@@ -158,288 +305,106 @@ value_box(
   theme = "primary",
   style = "height: 200px;"
 )
+
 ```
 :::
 :::
+::: column-margin
+Impact data updated monthly, last update 7/10/24. 
+:::
+:::grid
+::: g-col-12
+The focus areas in the South West are Chaucer Pl and Camp Wisdom, and Camp Wisdom and Preferred Place. Both areas are near the Redbird area of Dallas, a historically Black upper middle class and working class area. Chaucer Pl and Camp Wisdom has six apartment complexes near it within a thousand foot radius. The area also has a good mix of residential housing surrounding it. The areas have three schools within a half mile radius of each other, and the focal point of the community, Redbird Mall, has undergone massive upgrades and investment over the past few years. The investments have made the mall area better, but have no effect on the area outside of the mall like Camp Wisdom and Preferred Place directly across the street. Camp Wisdom and Preferred Place is plagued by open air drug sales, motels/hotels that harbor elements that lead to gun violence in the area, prostitution, illegal gaming rooms and a host of more criminal related activities that keep the area extremely unsafe for the families and residents that reside in it. The City Of Dallas also plans on opening up a houseless shelter, the first of its kind, near the problematic hotels/motels on Preferred Place sometime in 2024.
+:::
+:::
 
-```{=html}
-<style>
-h5 {
-        color: #FFFFFF;
-        height: 10%
-}
-/* Image Sizing */
-   
-  .small-image {
-    max-height: 50px; /* Adjust the maximum height as needed */
-  }
-  
-  .medium-image {
-    max-height: 250px; /* Adjust the maximum height as needed */
-  }
-  
-  .pt-image {
-    height: 100%; 
-    width: 100%; 
-    object-fit: cover;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-/* Image Borders and Formatting */
-  
-  .container {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-    margin-right: 130px;
-    margin-left: -60px;
-    }
-    
-  .pt-container {
-    position: relative;
-    display: grid;
-    border: 5px solid #042d33;
-    padding: 0px;
-    width: 100%;  /* Set the desired width */
-    height: 150px;
-    margin: 30px;
-    overflow: hidden;
-    }  
-
-  .main-image-container {
-    position: relative;
-    display: inline-block;
-    border: 5px solid #042d33;
-    padding: 5px;
-    margin: 20px;
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
-  }
-
-/* Image Effects */
-  
-  .main-image-container:hover {
-    transform: scale(1.10); /* Slightly increase size on hover */
-  }
-  
-  .tooltip {
-   visibility: hidden;
-   background-color: black;
-   color: #fff;
-   text-align: center;
-   border-radius: 5px;
-   padding: 5px;
-   position: absolute;
-   z-index: 1;
-   bottom: 100%; /* Position above the container */
-   left: 50%;
-   transform: translateX(-50%);
-   opacity: 0;
-   transition: opacity 0.3s ease-in-out;
-   white-space: nowrap;
-  }
-
-  .main-image-container:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-  }  
-  
-  .image-label {
-    position: absolute;
-    top: 80px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-    color: #042d33;
-    font-size: 12px;
-    background-color: white;
-  }
-  
-/* Formatting for Quotations */  
-
-  .long-quote-container {
-    width: 100%; 
-  }
-  .quote-container {
-    width: 100%; 
-    height: 80%
-  }
-  .small-quote-container {
-    width: 100%; 
-    height: 45%
-  }
-.quote-container p, .long-quote-container p, .small-quote-container p {
-    margin: 0; /* Removes default paragraph margin */
-    padding: 0;
-    line-height: 1.5;
-  }
-.quote-container, .long-quote-container, .small-quote-container {
-    border: none;
-    outline: none;
-    margin: 20px auto; /* Centers the container and maintains margin on the top and bottom */
-    padding: 20px 10%; /* 20px padding on top and bottom, 10% on left and right */
-    background-color: #f9f9f9; /* Light grey background */
-    font-size: 18px;
-    color: #042d33; /* Dark grey text color */
-    text-align: center;
-    box-sizing: border-box; /* Includes padding in width calculation */
-  }
-.quote-container cite, .long-quote-container cite, .small-quote-container cite {
- display: block;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #042d33; /* Lighter grey for citation */
-    text-align: right;
-    font-style: normal; /* Overrides default italic style of cite */
-  }
-
-/* Figure Border and Formatting */
- 
-  .map-container, .graph-container {
-      position: relative;
-      display: inline-block;
-      border: 5px solid #042d33;
-      padding: 1px;
-      margin: 25px;
-      width: 400px;  /* Set the desired width */
-      height: 515px; /* Set the desired height */
-  }
-    
-</style>
-```
 ::: grid
 ::: g-col-12
-# Community Observations
+# Community Needs Assessment
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae.
+
 :::
 :::
-
 ::: grid
-::: g-col-3
+::: g-col-5
+##### Public Space Improvements
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+![2800 Camp Wisdom Rd, Before](media/SC_transformation_before.png){group="Public Improvements"}
 :::
-
 ::: pt-container
-![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+![2800 Camp Wisdom Rd, After](media/SC_transformation_rendering.png){group="Public Improvements"}
 :::
 :::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
-:::
-:::
-
 ::: g-col-1
 :::
-
-::: g-col-5
-##### Fence Repair
+::: g-col-6
 
 ```{=html}
 <blockquote class="small-quote-container">
-    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
+    <p>“It's nothing for the kids, man. It's sad lowkey. It's a gang of apartments full of children and they get in trouble because there isn't anything to do. No park, no rec center, no court, nothing. We need to change that.”</p>
     <cite>Community Resident</cite>
     </blockquote>
 ```
-Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+The area lacks parks and public spaces for youth to convene. Without safe and fun spaces to spend their time, local youth are more likely to become involved in illegal activity. D.I.C.E plans to transform a vacant lot to meet this need. 
 :::
 :::
-
 ::: grid
 ::: g-col-5
-##### Trash Support
-
-```{=html}
-<blockquote class="small-quote-container">
-    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
-Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
-:::
-
-::: g-col-1
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
-:::
-:::
-:::
-
-::: grid
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-1
-:::
-
-::: g-col-5
-##### Improved Bus Stops
-
 ```{=html}
 <blockquote class="quote-container">
-    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
+    <p>“Economic development is all the talk, but I  don't see any of it happening on this side of 67. The young people over here carry guns, shoot at each other, kill each other, rob each other. It's insane. This area needs to be cleansed by jesus. I try my  best to guide the young folks around me as best as I can but there are so many misguided. We need help”</p>
     <cite>Community Resident</cite>
     </blockquote>
 ```
+:::
+::: g-col-1
+:::
+::: g-col-6
+##### Code Enforcement
+
+::: container
+Retail strip owners are complacent in the operation of illegal gambling rooms and the sale of unauthorized liquor. Local hotels are often the site of illegal sex work and open air drug sales. The risk of gun violence and crime in the area increases due to the presence of these elements.
+:::
+:::
+:::
+::: grid
+::: g-col-5
+##### Distribution of Fresh Food
+::: pt-container
+
+:::
+::: pt-container
+:::
+:::
+::: g-col-1
+:::
+::: g-col-6
+```{=html}
+<blockquote class="small-quote-container">
+    <p>“It used to be worse when gangs ran heavy over here. I would like to see more things for families to do come over here. It's good that Red Bird mall is being redone, but that's just the mall. The whole area needs to be redone.”</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Residents lack access to fresh, healthy food. The area is a food swamp, saturated with low quality, highly processed options. As the majority of residents rely on public transportation, traveling to obtain fresh food is an unrealistic option. Fresh food must be brought in and distributed locally.
+:::
+:::
+
+# Urban Blight Abatement
+
+::: grid
+::: g-col-12
+### Cleaning and Greening {style="color: white"}
 :::
 :::
 
 ::: grid
 ::: g-col-12
-# Clean and Green Initiative
-
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
 :::
 :::
 
 ::: grid
-::: container
 ::: g-col-6
-::: map-container
 ```{r}
 leaflet(data = filtered_point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
@@ -455,13 +420,11 @@ leaflet(data = filtered_point_data) %>%
   )
 ```
 :::
-:::
 
 ::: g-col-6
-::: graph-container
 ```{r}
 highchart() %>%
-  hc_chart(type = "line") %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
@@ -483,12 +446,10 @@ highchart() %>%
 ```
 :::
 :::
-:::
-:::
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over map markers for address information.
 :::
 :::
 
@@ -677,9 +638,13 @@ March
 :::
 
 ::: Grid
-# Produce Drives
+### Produce Drives {style="color: white"}
+:::
 
+::: grid
+::: g-col-12
 Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
+:::
 :::
 
 ::: grid
