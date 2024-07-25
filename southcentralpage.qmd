@@ -315,12 +315,7 @@ Impact data updated monthly, last update 7/10/24.
 ::: g-col-12
 
 The focus area in the South Central division is Bonnie View Rd and Springview, also known as Fruitdale. This area exists in a barren food desert. It is surrounded by residential houses with three sets of apartments within a quarter mile radius. W.W. Bushman is the elementary school closest to the focus area and is set to open as a brand new state of the art campus in the 2024 Fall semester. A high concentration of families and elderly residents reside in the area. Houseless residents are in the area and present unique issues for the nearby apartments that they frequent, causing nearby apartment complexes to unintentionally harbor elements that create issues around gun violence in the area. The area has been generationally neglected and plagued with a plethora of issues which is why the data lead directly to it.
-```{=html}
-<blockquote class="long-quote-container">
-    <p>“I lived here for forty years, me and my mama. Nothing has changed much at all. We never had anything over and never expected to get anything over here.”</p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
+
 :::
 :::
 
@@ -357,92 +352,60 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 :::
 
 ::: grid
-::: g-col-5
-##### Trash Support
-
-```{=html}
-<blockquote class="small-quote-container">
-    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
-Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
-:::
-
-::: g-col-1
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
-:::
-:::
-:::
-
-::: grid
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-1
-:::
-
-::: g-col-5
-##### Improved Bus Stops
+::: g-col-6
+##### OIPSS CEPTED Assessments
 
 ```{=html}
 <blockquote class="quote-container">
-    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
+    <p>“It’s not good at all, man. It's a cult that lives in the woods back there. Young kids shooting guns and shit and driving cars crazy. People doing dope all over the place. Its bad man”</p>
     <cite>Community Resident</cite>
     </blockquote>
 ```
+
+:::
+
+::: g-col-1
+:::
+
+::: g-col-5
+The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CEPTED) Assessments have been conducted, and camera towers have been installed where needed. 
+
+[Follow link for more information about CEPTED work.](citywide.html#Dallas-OIPSS)
+:::
+:::
+::: grid
+::: g-col-5
+::: pt-container
+![Local home in need of roof and fencing repairs.](media/blight/SC/2956_prosperity_ave.png){group="Blight Remediation"}
+:::
+::: pt-container
+![Local property with broken windows and inadequate fencing. ](media/blight/SC/Cedar_Gardens_Apts_Before.png){group="Blight Remediation"}
 :::
 :::
 
-# Urban Blight Abatement
+::: g-col-1
+:::
+
+::: g-col-6
+##### Housing Remediation 
+
+```{=html}
+<blockquote class="small-quote-container">
+    <p>“I lived here for forty years, me and my mama. Nothing has changed much at all. We never had anything over and never expected to get anything over here.”</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+Local buildings have been neglected. Fences, windows, and roofs are broken and in need of repairs.  
+
+:::
+:::
+# Urban Blight Abatement Initiatives
 
 ::: grid
 ::: g-col-12
 ### Cleaning and Greening {style="color: white"}
 :::
 :::
-
-::: grid
-::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
-:::
-:::
-
 ::: grid
 ::: g-col-6
 ```{r}
@@ -694,13 +657,6 @@ March
 ::: Grid
 ### Produce Drives {style="color: white"}
 :::
-
-::: grid
-::: g-col-12
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
-:::
-:::
-
 ::: grid
 ::: g-col-6
 ```{r}

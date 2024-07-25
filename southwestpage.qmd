@@ -315,6 +315,12 @@ Impact data updated monthly, last update 7/10/24.
 :::grid
 ::: g-col-12
 The focus areas in the South West are Chaucer Pl and Camp Wisdom, and Camp Wisdom and Preferred Place. Both areas are near the Redbird area of Dallas, a historically Black upper middle class and working class area. Chaucer Pl and Camp Wisdom has six apartment complexes near it within a thousand foot radius. The area also has a good mix of residential housing surrounding it. The areas have three schools within a half mile radius of each other, and the focal point of the community, Redbird Mall, has undergone massive upgrades and investment over the past few years. The investments have made the mall area better, but have no effect on the area outside of the mall like Camp Wisdom and Preferred Place directly across the street. Camp Wisdom and Preferred Place is plagued by open air drug sales, motels/hotels that harbor elements that lead to gun violence in the area, prostitution, illegal gaming rooms and a host of more criminal related activities that keep the area extremely unsafe for the families and residents that reside in it. The City Of Dallas also plans on opening up a houseless shelter, the first of its kind, near the problematic hotels/motels on Preferred Place sometime in 2024.
+```{=html}
+<blockquote class="long-quote-container">
+    <p>“The area is changing slowly. I grew up here so I've seen a lot and heard alot. I wish as a kid I had more to get into over here, I didn't realize how  little we had until I got older. The mall being revitalized is cool, I work there so i'm happy about that. But the mall aint gonna help the area get good. I'm interested in seeing the next wave of changes to come”</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
 :::
 :::
 
@@ -389,7 +395,7 @@ Residents lack access to fresh, healthy food. The area is a food swamp, saturate
 :::
 :::
 
-# Urban Blight Abatement
+# Urban Blight Abatement Initiatives 
 
 ::: grid
 ::: g-col-12
@@ -399,7 +405,6 @@ Residents lack access to fresh, healthy food. The area is a food swamp, saturate
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae. Vestibulum lectus mauris ultrices eros in cursus turpis massa. Enim blandit volutpat maecenas volutpat blandit aliquam. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Aliquet sagittis id consectetur purus ut.
 :::
 :::
 
@@ -643,7 +648,6 @@ March
 
 ::: grid
 ::: g-col-12
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
 :::
 :::
 
@@ -700,10 +704,6 @@ highchart() %>%
 
 ```
 :::
-:::
-
-::: column-margin
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
 :::
 
 ::: grid

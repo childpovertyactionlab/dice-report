@@ -335,21 +335,21 @@ The North Central division has the focus area neighborhood of Esperanza. The Esp
 ::: grid
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+![Fencing Before D.I.C.E. Intervention](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image width="100%" group="Fencing"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+![Fencing Before D.I.C.E. Intervention](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
 :::
 :::
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
+![Fencing after D.I.C.E. Intervention](media/blight/NC/nc_brazos_fence_after.jpeg){.pt-image fig-align="center" group="Fencing" width="120%"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
+![Fencing after D.I.C.E. Intervention](media/blight/NC/nc_esperanza_fence_after.jpeg){.pt-image group="Fencing" width="120%"}
 :::
 :::
 
@@ -365,7 +365,7 @@ The North Central division has the focus area neighborhood of Esperanza. The Esp
     <cite>Community Resident</cite>
     </blockquote>
 ```
-Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+Fencing was heavily damaged along properties, including overgrown plants and large holes. This was a huge safety risk for nearby residents. 
 :::
 :::
 
@@ -373,7 +373,7 @@ Fencing is heavily damaged along properties. This includes overgrown plants and 
 ::: g-col-5
 ##### Trash Support
 ::: container
-Trash services need support in the area. Esperanza is primarily residential, housing several families in close proximity. The build up and overflow of trash in and around residences poses an extreme health safety risk for the residents, particularly the children. Monthly clean ups by local partners Not My Son, United Peoples Coalition, and activated community members will occur over a six month period.
+Trash services needed support in the area. Esperanza is primarily residential, housing several families in close proximity. The build up and overflow of trash in and around residences posed an extreme health safety risk for the residents, particularly the children. Monthly clean ups by local partners Not My Son, United Peoples Coalition, and activated community members have been successful. Local properties have increased the size of their dumpsters and frequency of trash pick-ups. 
 :::
 :::
 ::: g-col-1
@@ -381,21 +381,21 @@ Trash services need support in the area. Esperanza is primarily residential, hou
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
+![Trash before D.I.C.E Intervention](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+![Trash After D.I.C.E Intervention](media/blight/NC/nc_brazos_trash_after.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
 :::
 :::
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+![Trash Before D.I.C.E Intervention](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
+![Trash After D.I.C.E Intervention](media/blight/NC/nc_trash_after.jpg){.pt-image width="100%" group="Trash"}
 :::
 :::
 :::
@@ -436,19 +436,13 @@ Trash services need support in the area. Esperanza is primarily residential, hou
 :::
 :::
 
-# Urban Blight Abatement
+# Urban Blight Abatement Initiatives
 
 ::: grid
 ::: g-col-12
 ### Cleaning and Greening {style="color: white"}
 :::
 :::
-```{=html}
-<blockquote class="long-quote-container">
-    <p>"Sed enim ut sem viverra aliquet eget sit amet tellus."</p>
-    <cite>Local Apartment Manager</cite>
-    </blockquote>
-```
 ::: grid
 ::: g-col-6
 ```{r}

@@ -314,14 +314,18 @@ Impact data updated monthly, last update 7/10/24.
 ::: grid
 ::: g-col-12
 The focus areas in the South East are RL Thornton and Jim Miller, and Murdock and Loop 12. Both areas are entrenched heavily in food swamps. Both areas are also adjacent to major freeways in Dallas, I-30 and 175. In the RL Thornton and Jim Miller area there are three motels within a half mile radius that are utilized as extended stays. This area has a set of apartments near, with residential housing being within a quarter mile radius. Historically, the area has always been working and middle class. The area has recently succumbed to a lot of business and retail neglect. Places that were occupied three to five years ago aren't any longer. Those places not being occupied have harbored opportunities for gun related crimes to occur. Murdock and Loop 12 sits at the corner of a problematic convenience store and the parking lot of a grocery store. The area has three sets of apartment complexes within a quarter mile radius that's surrounded by residential housing. There are three schools serving this community within a half mile radius. Home to primarily working class people, this area has been historically neglected and severely affected by systematic divestment.
+```{=html}
+<blockquote class="long-quote-container">
+    <p>“I’ve never felt safe over here, I'm just surviving. People's cars get broken into over here. There have been more houseless people in the area in the past year or so. The food options are bad, and the only grocery store nearby is WalMart. I heard a story recently about the RaceTrac almost getting robbed a couple weeks back. It's the wild west over here." </p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
 :::
 :::
 
 ::: grid
 ::: g-col-12
 # Community Needs Assessment
-
-
 :::
 :::
 
@@ -435,7 +439,7 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 :::
 
-# Urban Blight Abatement
+# Urban Blight Abatement Initiatives
 
 ::: grid
 ::: g-col-12
@@ -699,12 +703,6 @@ March
 ::: Grid
 ### Produce Drives {style="color: white"}
 :::
-
-::: Grid
-::: g-col-12
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus. Egestas erat imperdiet sed euismod nisi porta. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Eget est lorem ipsum dolor sit amet consectetur adipiscing elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus. Nec feugiat in fermentum posuere. Sit amet mauris commodo quis.
-:::
-:::
 ::: grid
 ::: g-col-6
 ```{r}
@@ -760,9 +758,6 @@ highchart() %>%
 :::
 :::
 
-::: column-margin
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
-:::
 
 ::: grid
 ::: g-col-12

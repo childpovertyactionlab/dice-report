@@ -1,0 +1,335 @@
+---
+title: "D.I.C.E Dashboard"
+format: 
+  dashboard:
+    orientation: columns
+---
+
+```{r include=FALSE}
+library(cpaltemplates)
+library(tidyverse)
+library(bslib)
+library(bsicons)
+library(sf)
+library(highcharter)
+library(geojsonsf)
+library(geojsonio)
+library(googlesheets4)
+library(leaflet)
+library(htmltools)
+
+##### Load Data #####
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+mapdata <- st_read("data/dpd_divisions.geojson")
+
+point_data <- st_read("data/location.gpkg")
+
+##### Division Map Data #####
+myhcmap<- mapdata %>% filter(DIVISION != "CENTRAL") %>%
+          mutate(DIVISION = str_to_title(DIVISION))
+
+geojson <- geojson_json(myhcmap)
+
+polygons <- st_transform(mapdata, crs = 4269)
+
+##### Filter/Transform Impact Data #####
+impact$date <- ymd(impact$date)
+
+start_date <- as.Date("2024-01-01")
+current_date <- as.Date("2024-06-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < current_date) %>%
+  mutate(
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
+
+impact$lbs_produce <- impact$bags * 10
+
+##### Value Box Data #####
+total_lbs_trash <- sum(impact$lbs_trash, na.rm = TRUE)
+  
+total_lbs_produce <- sum(impact$bags, na.rm = TRUE)
+cumulative_lbs_produce <- cumsum(impact$lbs_produce) 
+
+monthly_average_people_served <- impact %>%
+  filter(people_served != 0) %>%
+  pull(people_served) %>%
+  mean(na.rm = TRUE) %>%
+  round()
+
+properties_transformed <- sum(impact$completed == "TRUE", na.rm = TRUE)
+
+##### Graph Data #####
+trash_data <- impact %>%
+  select(formatted_month, lbs_trash, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
+ ungroup() %>%
+  mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
+
+trash_by_district<- impact %>%
+  select( lbs_trash, district) %>%
+  filter(lbs_trash != 0) %>%
+  group_by(district) %>%
+  summarise(district_lbs_trash = sum(lbs_trash))
+
+produce_by_month<- impact %>%
+  select(formatted_month, lbs_produce, month_year) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+ ungroup() %>%  
+  mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
+
+produce_by_district<- impact %>%
+  select( lbs_produce, district) %>%
+  group_by(district) %>%
+  summarise(district_lbs_produce = sum(lbs_produce)) 
+
+people_served_data <- impact %>%
+  select(formatted_month, people_served, district) %>%
+  filter(people_served != 0) %>%
+  group_by(formatted_month) %>%
+  summarise(monthly_people_served = sum(people_served))
+
+##### Leaflet Location Map Data #####
+current_date <- Sys.Date()
+  
+
+transformation_locations <- point_data %>%
+  filter(point_data$completed == "TRUE" )
+
+produce_locations <- point_data %>%
+  filter(point_data$event_type == "distribution") %>%
+  distinct(full_address, .keep_all = TRUE) %>%
+    mutate(
+    jittered_lat = jitter(lat.y, amount = 0.0001),
+    jittered_lon = jitter(long.y, amount = 0.0002)
+  ) %>%
+  ungroup()
+
+clean_locations <- point_data %>%
+  filter(point_data$event_type == "clean")
+```
+
+## Column {width="20%"}
+
+#### Row
+
+```{r}
+total_lbs_trash <- formatC(total_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  total_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+
+#### Row
+
+```{r}
+total_lbs_produce <- formatC(total_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  total_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+
+#### Row
+
+```{r}
+monthly_average_people_served <- formatC(monthly_average_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  monthly_average_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Average Individuals Served Monthly</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+
+#### Row
+
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  properties_transformed, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Properties Transformed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+
+## Column {width="40%"}
+
+#### Row {height="50%"}
+
+```{r}
+leaflet(data = point_data) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addPolygons(data = polygons,
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(polygons)) %>%
+  addAwesomeMarkers(
+    data = clean_locations,
+    group = "Cleaning and Greening",
+    label = ~paste("<b>Cleaning Location:</b>", clean_locations$street_address) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "trash",
+      iconColor = '#FFFFFF',
+      markerColor = 'cadetblue'
+    )) %>%
+   addAwesomeMarkers(
+    data = produce_locations,
+    lng = ~jittered_lon,
+    lat = ~jittered_lat,
+    group = "Produce Distributions",
+    label = ~paste("<b>Distribution Location:</b>", produce_locations$street_address) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "apple",
+      iconColor = '#FFFFFF',
+      markerColor = 'orange')
+   ) %>%
+  addAwesomeMarkers(
+    data = transformation_locations,
+    group = "Property Transformations",
+    label = ~paste("<b>Transformation Location:</b>", transformation_locations$street_address) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "wrench",
+      iconColor = '#FFFFFF',
+      markerColor = 'magenta')
+   ) %>%
+  addLayersControl(
+    overlayGroups = c("Cleaning and Greening", "Produce Distributions", "Property Transformations"),
+    options = layersControlOptions(collapsed = FALSE))
+
+  
+
+```
+
+#### Row {.tabset height="50%"}
+
+##### Clean and Green
+
+```{r}
+cumulative_lbs_trash <- formatC(trash_data$cumulative_lbs_trash, format = "d", big.mark = ",")
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = trash_data$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
+  hc_title(text = "Cumulative Pounds of Trash Collected by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) %>%
+  hc_legend(enabled = FALSE)
+```
+
+```{r}
+highchart() %>%
+  hc_chart(type = "column") %>%
+  hc_xAxis(categories = trash_by_district$district) %>%
+  hc_add_series(data = list_parse2(trash_by_district), name = "Pounds") %>%
+  hc_title(text = "Pounds of Trash Collected by District") %>%
+  hc_tooltip(pointFormat = "{point.y:.2f} Pounds" ) %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(
+    allowPointSelect = TRUE,
+    cursor = 'pointer',
+    dataLabels = list(
+      enabled = FALSE
+    )
+  ))
+```
+
+##### Produce Drive
+
+```{r}
+highchart() %>%
+  hc_chart(type = "column") %>%
+  hc_add_series(data = list_parse2(produce_by_district), name = "Pounds") %>%
+  hc_xAxis(categories = produce_by_district$district) %>%
+  hc_title(text = "Pounds of Produce Distributed by District") %>%
+ hc_tooltip(pointFormat = "{point.y:2f} Pounds" ) %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(
+    allowPointSelect = TRUE,
+    cursor = 'pointer',
+    dataLabels = list(
+      enabled = FALSE
+    )
+  ))
+
+```
+
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = produce_by_month$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = produce_by_month$cumulative_lbs_produce, name = "Pounds", x = produce_by_month$formatted_month) %>%
+  hc_title(text = "Cumulative Pounds of Produce Distributed by DICE") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```

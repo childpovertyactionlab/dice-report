@@ -311,63 +311,60 @@ value_box(
 ::: column-margin
 Impact data updated monthly, last update 7/10/24. 
 :::
-
+::: grid
+::: g-col-12
+The North East division focus area is Walnut St and Audelia Lane and extends to Forest Lane and Audelia. The area has been historically, and remains somewhat, economically middle on one side (Walnut St)  and poor working class on the other (Forest Lane) . The particular focus area of Walnut and Audelia was formerly a bustling Asian based shopping center catering to the demographic that used to live in the neighborhood. The Walnut Mall, a large component of the shopping center, sits empty today. The area consists primarily of apartment complexes extending from Forest Lane to Walnut St. Gangs used to operate heavily in the area and have died off since about 2018, but gun related crimes from robberies to carjackings still remain an issue for both residents and business owners in the area. The neglect that historically existed in the Forest Lane Audelia area seems to have extended into the Walnut and Audelia area. A common theme amongst the Northern divisions of Dallas.
+```{=html}
+<blockquote class="long-quote-container">
+    <p>“The area has changed immensely over the past few years. It's not as bad as the other end (Forest and Audelia). I've heard about the issues in the apartments regarding car break-ins and robberies, but not much in the houses where I live. It's usually quiet.”</p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
+:::
+:::
 ::: grid
 ::: g-col-12
 # Community Needs Assessment
 
-The North East division focus area is Walnut St and Audelia Lane and extends to Forest Lane and Audelia. The area has been historically, and remains somewhat, economically middle on one side (Walnut St)  and poor working class on the other (Forest Lane) . The particular focus area of Walnut and Audelia was formerly a bustling Asian based shopping center catering to the demographic that used to live in the neighborhood. The Walnut Mall, a large component of the shopping center, sits empty today. The area consists primarily of apartment complexes extending from Forest Lane to Walnut St. Gangs used to operate heavily in the area and have died off since about 2018, but gun related crimes from robberies to carjackings still remain an issue for both residents and business owners in the area. The neglect that historically existed in the Forest Lane Audelia area seems to have extended into the Walnut and Audelia area. A common theme amongst the Northern divisions of Dallas.
 :::
 :::
 
 ::: grid
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
-:::
+::: g-col-6
+```{=html}
+<blockquote class="quote-container">
+    <p>“I've been over here for about nine months now and it's terrible to me. I try to keep to myself and just go to work because I really don't feel safe over here. The shopping center across the street has some cool food options but I wouldn't be there past a certain time. Down the street (Forest Ln and Audelia Rd)  is worse. I've seen more police patrols lately but nothing really outside of that. The apartments around here need better security overall" </p>
+    <cite>Community Resident</cite>
+    </blockquote>
+```
 :::
 
 ::: g-col-1
 :::
 
 ::: g-col-5
-##### Fence Repair
-
+##### Security Improvements 
 ```{=html}
 <blockquote class="small-quote-container">
-    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
-    <cite>Community Resident</cite>
+    <p>“ We’ve dealt with our own issues in regards to car break ins. It isn't frequent but it does happen, similar to what other apartments in the area. Our residents are pretty vigilant about reporting things and notifying us and or the police when things happen."" </p>
+    <cite>Apartment Manager</cite>
     </blockquote>
 ```
-Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+This focus area is down the street from one of the most violent areas in Dallas, Forest lane and Audelia. Eight apartment complexes are within a quarter mile of the area, and are the site of car break-ins and robberies. Security improvements are necessarily to protect residents, as well as improve their well being.
 :::
 :::
 
 ::: grid
 ::: g-col-5
-##### Trash Support
+##### Nisl condimentum 
 
 ```{=html}
 <blockquote class="small-quote-container">
-    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
-    <cite>Community Resident</cite>
+    <p>"I would love to see more things for the kids in the area. We try to have things up here for them but the demand is so much its hard to keep up with"</p>
+    <cite>Apartment Manager</cite>
     </blockquote>
 ```
-Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
+
 :::
 
 ::: g-col-1
@@ -429,7 +426,7 @@ Trash services need support in the area. The build up and overflow of trash pose
 ```
 :::
 :::
-# Urban Blight Abatement
+# Urban Blight Abatement Initiatives
 
 ::: grid
 ::: g-col-12

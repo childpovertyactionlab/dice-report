@@ -314,12 +314,12 @@ value_box(
 ::: column-margin
 Impact data updated monthly, last update 7/10/24. 
 :::
-
+::: grid
+The North West division focus areas are the Wycliff and Hondo St, Crown Hill Memorial Park area and Bolivar Ln and Larga Rd. Crown Hill Memorial Park and Bolivar and Larga Rd areas are very high density apartment areas. The neighborhood has a very large immigrant population from a plethora of countries. Most of the residents live near or around Dallas Love Field Airport, which in turn subjects the community at large to an inordinate amount of noise pollution. The focus areas of Bolivar and Larga, and Crown Hill Memorial Park struggle with homelessness, which has become a major issue for both residents and business owners in the area. The area has six schools in a quarter mile radius and is currently a food swamp. The violent crime in the area often goes under and unreported due to the immigrant population being afraid of not only the community repercussions, but the legal ones as well. The area has historically always been working and lower middle class but constant neglect, and divestment from that community have made conditions exponentially worse over the past five to six years.
+:::
 ::: grid
 ::: g-col-12
 # Community Needs Assessment
-
-The North West division focus areas are the Wycliff and Hondo St, Crown Hill Memorial Park area and Bolivar Ln and Larga Rd. Crown Hill Memorial Park and Bolivar and Larga Rd areas are very high density apartment areas. The neighborhood has a very large immigrant population from a plethora of countries. Most of the residents live near or around Dallas Love Field Airport, which in turn subjects the community at large to an inordinate amount of noise pollution. The focus areas of Bolivar and Larga, and Crown Hill Memorial Park struggle with homelessness, which has become a major issue for both residents and business owners in the area. The area has six schools in a quarter mile radius and is currently a food swamp. The violent crime in the area often goes under and unreported due to the immigrant population being afraid of not only the community repercussions, but the legal ones as well. The area has historically always been working and lower middle class but constant neglect, and divestment from that community have made conditions exponentially worse over the past five to six years.
 :::
 :::
 
@@ -433,20 +433,13 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 :::
 
-# Urban Blight Abatement
+# Urban Blight Abatement Initiatives
 
 ::: grid
 ::: g-col-12
 ### Cleaning and Greening {style="color: white"}
 :::
 :::
-
-::: grid
-::: g-col-12
-
-:::
-:::
-
 ::: grid
 ::: g-col-6
 ```{r}
@@ -767,9 +760,6 @@ highchart() %>%
 :::
 :::
 
-::: column-margin
-Elit eget gravida cum sociis natoque penatibus et magnis. Sed enim ut sem viverra aliquet eget sit amet tellus.
-:::
 
 ::: grid
 ::: g-col-12

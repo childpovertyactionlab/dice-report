@@ -24,7 +24,7 @@ mapdata <- st_read("data/dpd_divisions.geojson")
 
 point_data <- st_read("data/location.gpkg")
 
-##### Map Data #####
+##### Division Map Data #####
 myhcmap<- mapdata %>% filter(DIVISION != "CENTRAL") %>%
           mutate(DIVISION = str_to_title(DIVISION))
 
@@ -50,8 +50,7 @@ impact$lbs_produce <- impact$bags * 10
 
 ##### Value Box Data #####
 total_lbs_trash <- sum(impact$lbs_trash, na.rm = TRUE)
-  
-total_lbs_produce <- sum(impact$bags, na.rm = TRUE)
+total_lbs_produce <- sum(impact$lbs_produce, na.rm = TRUE)
 cumulative_lbs_produce <- cumsum(impact$lbs_produce) 
 
 monthly_average_people_served <- impact %>%
@@ -96,7 +95,7 @@ people_served_data <- impact %>%
   group_by(formatted_month) %>%
   summarise(monthly_people_served = sum(people_served))
 
-##### DICE Location Map Data #####
+##### Leaflet Location Map Data #####
 current_date <- Sys.Date()
   
 
@@ -164,8 +163,8 @@ clean_locations <- point_data %>%
       border: 5px solid #042d33;
       padding: 1px;
       margin: 25px;
-      width: 800px;  /* Set the desired width */
-      height: 515px; /* Set the desired height */
+      width: 800px;  
+      height: 515px; 
   }
   
     
@@ -224,9 +223,21 @@ highchart(type = "map") %>%
 :::
 
 ::: g-col-6
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fermentum odio eu feugiat pretium. In cursus turpis massa tincidunt dui. Mattis nunc sed blandit libero. Aliquet risus feugiat in ante metus dictum at tempor. Nec feugiat in fermentum posuere urna nec. Condimentum mattis pellentesque id nibh. Sit amet consectetur adipiscing elit. Faucibus nisl tincidunt eget nullam non nisi est. Scelerisque in dictum non consectetur a erat nam at lectus.
+D.I.C.E (Data Informed Community Engagement), is the City Of Dallas's Office Of Integrated Public Safety Solutions (OIPSS) mission operationalized. OIPSS's mission is to enhance the general welfare and protection of Dallas residents from risks that affect persons, property and the collective well-being of residents. The DICE process guides crime prevention efforts by combining data analysis with community-led risk narratives to learn where and why people tend to commit crimes in certain settings. This plan describes how the use of risk modelling combines with community involvement to guide violence reduction efforts at places of highest risk. The highest risk locations for violent crime in the city¹ make up only 3% of the land area of the City of Dallas but account for 21% of the total violent gun crimes².
+:::
+:::
+::: column-margin
+Reference 1
+:::
+::: column-margin
+Reference 2
+:::
 
-Suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Etiam dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Posuere urna nec tincidunt praesent semper. Interdum posuere lorem ipsum dolor sit amet consectetur. Felis donec et odio pellentesque diam volutpat commodo sed.Et leo duis ut diam quam. Lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique. Consectetur adipiscing elit ut aliquam purus sit.
+::: grid
+::: g-col-12
+::: container
+Crime prevention efforts come in a wide array of solutions. Blight remediation, transformative change, and clean and green beautification efforts are just a few examples of how to heal a community or neighborhood, from historic and systematic neglect that harbors violent crime. Our community partners work vigilantly to apply the solution in the communities they themselves are already implemented in. This tool is a view of all of the work being done by CPAL's neighborhood and community partners, as well as OIPPS's efforts. 
+:::
 :::
 :::
 
