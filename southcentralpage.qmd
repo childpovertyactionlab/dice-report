@@ -353,7 +353,7 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 
 ::: grid
 ::: g-col-6
-##### OIPSS CEPTED Assessments
+##### OIPSS CPTED Assessments
 
 ```{=html}
 <blockquote class="quote-container">
@@ -368,9 +368,9 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 :::
 
 ::: g-col-5
-The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CEPTED) Assessments have been conducted, and camera towers have been installed where needed. 
+The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CPTED) Assessments have been conducted, and camera towers have been installed where needed. 
 
-[Follow link for more information about CEPTED work.](citywide.html#Dallas-OIPSS)
+[Follow link for more information about CPTED work.](citywide.html#Dallas-OIPSS)
 :::
 :::
 ::: grid

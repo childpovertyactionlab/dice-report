@@ -137,10 +137,10 @@ h5 {
     border: 5px solid #042d33;
     padding: 0px;
     width: 100%;  /* Set the desired width */
-    height: 150px;
+    height: 175px;
     margin: 30px;
     overflow: hidden;
-    }  
+    }   
 
   .main-image-container {
     position: relative;
@@ -331,84 +331,54 @@ The North East division focus area is Walnut St and Audelia Lane and extends to 
 
 ::: grid
 ::: g-col-6
-```{=html}
-<blockquote class="quote-container">
-    <p>“I've been over here for about nine months now and it's terrible to me. I try to keep to myself and just go to work because I really don't feel safe over here. The shopping center across the street has some cool food options but I wouldn't be there past a certain time. Down the street (Forest Ln and Audelia Rd)  is worse. I've seen more police patrols lately but nothing really outside of that. The apartments around here need better security overall" </p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
+::: pt-container
+![Empty Lot by Walnut Mall](media/blight/NE/walnut_mall_lot.png){group="Public Improvements"}
+:::
+::: pt-container
+![Empty Lot by Walnut Mall](media/blight/NE/walnut_mall_lot_street_view.png){group="Public Improvements"}
+:::
 :::
 
 ::: g-col-1
 :::
 
 ::: g-col-5
-##### Security Improvements 
+##### Public Space Improvements
+
+Walnut Mall sits in a large lot, abandoned. D.I.C.E plans to transform this vacant lot into a community activation space. 
+:::
+:::
+
+::: grid
+::: g-col-6
+##### OIPSS CPTED Assessments
+
 ```{=html}
 <blockquote class="small-quote-container">
     <p>“ We’ve dealt with our own issues in regards to car break ins. It isn't frequent but it does happen, similar to what other apartments in the area. Our residents are pretty vigilant about reporting things and notifying us and or the police when things happen."" </p>
     <cite>Apartment Manager</cite>
     </blockquote>
 ```
-This focus area is down the street from one of the most violent areas in Dallas, Forest lane and Audelia. Eight apartment complexes are within a quarter mile of the area, and are the site of car break-ins and robberies. Security improvements are necessarily to protect residents, as well as improve their well being.
-:::
-:::
-
-::: grid
-::: g-col-5
-##### Nisl condimentum 
-
-```{=html}
-<blockquote class="small-quote-container">
-    <p>"I would love to see more things for the kids in the area. We try to have things up here for them but the demand is so much its hard to keep up with"</p>
-    <cite>Apartment Manager</cite>
-    </blockquote>
-```
 
 :::
 
 ::: g-col-1
 :::
 
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
-:::
+::: g-col-5
+This focus area is down the street from one of the most violent areas in Dallas, Forest lane and Audelia. Eight apartment complexes are within a quarter mile of the area, and are the site of car break-ins and robberies. Security improvements are necessarily to protect residents, as well as business owners.The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CPTED) Assessments have been conducted, and camera towers have been installed where needed. 
+[Follow link for more information about CPTED work.](citywide.html#Dallas-OIPSS)
 :::
 :::
 
 ::: grid
-::: g-col-3
+::: g-col-6
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NE/bus_stop_1.png){.pt-image width="100%" group="Bus Stop"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NE/bus_stop_walnut_whisperinghills.png){.pt-image width="100%" group="Bus Stop"}
 :::
 :::
 
@@ -418,12 +388,7 @@ This focus area is down the street from one of the most violent areas in Dallas,
 ::: g-col-5
 ##### Improved Bus Stops
 
-```{=html}
-<blockquote class="quote-container">
-    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
-    <cite>Community Resident</cite>
-    </blockquote>
-```
+Public transportation is essential to residents in the area. Despite this, seven bus stops within a quarter mile radius of Walnut St lack adequate shading or covering. This present a safety hazard for local commuters utilizing public transport in cases of inclement weather and high temperatures. 
 :::
 :::
 # Urban Blight Abatement Initiatives

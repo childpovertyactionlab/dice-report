@@ -24,6 +24,8 @@ mapdata <- st_read("data/dpd_divisions.geojson")
 
 point_data <- st_read("data/location.gpkg")
 
+rtm_cells <- st_read("data/rtm_cells/citywide_rtm.shp")
+
 ##### Division Map Data #####
 myhcmap<- mapdata %>% filter(DIVISION != "CENTRAL") %>%
           mutate(DIVISION = str_to_title(DIVISION))
@@ -97,7 +99,6 @@ people_served_data <- impact %>%
 
 ##### Leaflet Location Map Data #####
 current_date <- Sys.Date()
-  
 
 transformation_locations <- point_data %>%
   filter(point_data$completed == "TRUE" )
@@ -223,20 +224,14 @@ highchart(type = "map") %>%
 :::
 
 ::: g-col-6
-D.I.C.E (Data Informed Community Engagement), is the City Of Dallas's Office Of Integrated Public Safety Solutions (OIPSS) mission operationalized. OIPSS's mission is to enhance the general welfare and protection of Dallas residents from risks that affect persons, property and the collective well-being of residents. The DICE process guides crime prevention efforts by combining data analysis with community-led risk narratives to learn where and why people tend to commit crimes in certain settings. This plan describes how the use of risk modelling combines with community involvement to guide violence reduction efforts at places of highest risk. The highest risk locations for violent crime in the city¹ make up only 3% of the land area of the City of Dallas but account for 21% of the total violent gun crimes².
+D.I.C.E (Data Informed Community Engagement), is the City Of Dallas's Office Of Integrated Public Safety Solutions (OIPSS) mission operationalized. OIPSS's mission is to enhance the general welfare and protection of Dallas residents from risks that affect persons, property and the collective well-being of residents. The DICE process guides crime prevention efforts by combining data analysis with community-led risk narratives to learn where and why people tend to commit crimes in certain settings. This plan describes how the use of risk modelling combines with community involvement to guide violence reduction efforts at places of highest risk. The highest risk locations for violent crime in the city¹ make up only 3% of the land area of the City of Dallas but account for 21% of the total violent gun crimes.
 :::
-:::
-::: column-margin
-Reference 1
-:::
-::: column-margin
-Reference 2
 :::
 
 ::: grid
 ::: g-col-12
 ::: container
-Crime prevention efforts come in a wide array of solutions. Blight remediation, transformative change, and clean and green beautification efforts are just a few examples of how to heal a community or neighborhood, from historic and systematic neglect that harbors violent crime. Our community partners work vigilantly to apply the solution in the communities they themselves are already implemented in. This tool is a view of all of the work being done by CPAL's neighborhood and community partners, as well as OIPPS's efforts. 
+Crime prevention efforts come in a wide array of solutions. Blight remediation, transformative change, and clean and green beautification efforts are just a few examples of how to heal a community or neighborhood, from historic and systematic neglect that harbors violent crime. Our community partners work vigilantly to apply the solution in the communities they themselves are already implemented in. This tool is a view of all of the work being done by CPAL's neighborhood and community partners, as well as OIPPS's efforts.
 :::
 :::
 :::
@@ -314,6 +309,14 @@ htmltools::HTML(html_code)
 
 ::: column-margin
 Impact data updated monthly, last update 7/10/24.
+:::
+
+::: grid
+::: g-col-12
+::: long-quote-container
+To view the individual contributions our community partners, visit our [Collaborators Page.](citywide.html#Community-Partners)
+:::
+:::
 :::
 
 ::: grid
@@ -464,7 +467,7 @@ highchart() %>%
 :::
 :::
 
-# Locations of D.I.C.E. Work 
+# Locations of D.I.C.E. Work
 
 ::: grid
 ::: g-col-12
@@ -474,11 +477,19 @@ leaflet(data = point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
            attribution = cpaltemplates::cpal_leaflet) %>%
   addPolygons(data = polygons,
+              group = "DPD Divisions",
               color = "#042d33",
               weight = 1.5,
               opacity = 1,
               fill = FALSE,
               layerId = ~row.names(polygons)) %>%
+    addPolygons(data = rtm_cells,
+              group = "RTM Risk Cells",
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(rtm_cells)) %>%
   addAwesomeMarkers(
     data = clean_locations,
     group = "Cleaning and Greening",
@@ -515,7 +526,7 @@ leaflet(data = point_data) %>%
       markerColor = 'magenta')
    ) %>%
   addLayersControl(
-    overlayGroups = c("Cleaning and Greening", "Produce Distributions", "Property Transformations"),
+    overlayGroups = c("Cleaning and Greening", "Produce Distributions", "Property Transformations", "RTM Risk Cells", "DPD Divisions"),
     options = layersControlOptions(collapsed = FALSE))
 
   

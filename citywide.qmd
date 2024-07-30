@@ -5,12 +5,11 @@ format:
     self-contained: true
 include-after: custom.js
 ---
-``` {=html}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
+```{=html}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 ```
-
 ```{r include=FALSE}
 library(cpaltemplates)
 library(tidyverse)
@@ -159,6 +158,22 @@ serun_cumsum <- serun %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
 
+### Bachman Lake Together ###
+bachman_lt <- impact %>%
+  filter(partner == "Bachman Lake Together") 
+blt_lbs_trash <- sum(bachman_lt$lbs_trash, na.rm = TRUE)
+blt_lbs_produce <- sum(bachman_lt$lbs_produce, na.rm = TRUE)
+blt_people_served <- sum(bachman_lt$people_served, na.rm = TRUE)
+blt_events <- nrow(bachman_lt)
+
+serun_cumsum <- serun %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
 ##### Map Data #####
 point_data <- st_read("data/CPTED_assessment_location.gpkg")
 
@@ -283,16 +298,30 @@ camera_towers_over_90 <- camera_towers %>%
 
       // Add event listener for download PDF button
       document.getElementById('download-pdf').addEventListener('click', function() {
-          var activeTab = document.querySelector('.tab-content .tab-pane.active');
-          var tabTitle = document.querySelector('.nav-tabs li.active a').textContent.trim();
+            // Get the active tab content
+            var activeTabContent = document.querySelector('.tab-pane.active');
 
-          html2canvas(activeTab).then(function(canvas) {
-              var imgData = canvas.toDataURL('image/png');
-              var pdf = new jsPDF('p', 'mm', 'a4');
-              pdf.setFontSize(18);
-              pdf.text(20, 20, tabTitle);
-              pdf.addImage(imgData, 'PNG', 10, 30, 190, 0);
-              pdf.save(tabTitle + '.pdf');
+            html2canvas(activeTabContent).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var pdf = new jsPDF('p', 'pt', 'a4');
+                var margin = 10;
+                var imgWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+                var pageHeight = pdf.internal.pageSize.getHeight(); 
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+                var position = margin;
+
+        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight + margin;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+                pdf.save('download.pdf');
           });
       });
   });
@@ -306,7 +335,7 @@ The Office of Integrated Public Safety Solutions (OIPSS) was created in April 20
 :::
 :::
 
-### CEPTED {style="color: white"}
+### CPTED {style="color: white"}
 
 ::: grid
 ::: {.g-col-12 style="color: black;"}
@@ -400,7 +429,7 @@ leaflet(data = point_data) %>%
 :::
 :::
 
-## Community Partners
+## Community Partners {#Community-Partners}
 
 ::: grid
 ::: g-col-12
@@ -840,7 +869,114 @@ highchart() %>%
 ```
 :::
 :::
+### Bachman Lake Together
 
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;">Contributions of Bachman Lake Together</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+upc_lbs_trash <- formatC(blt_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_lbs_produce <- formatC(blt_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_average_people_served <- formatC(blt_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = united_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = united_cumsum$cumulative_weight, name = "Pounds", x = united_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Bachman Lake Together") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
 ### Oak Cliff Veggie Project
 
 ::: grid
@@ -1141,7 +1277,6 @@ htmltools::HTML(html_code)
 ::: grid
 ::: g-col-12
 ```{r}
-
 highchart() %>%
   hc_chart(type = "line") %>%
   hc_xAxis(categories = pop_up_cumsum$formatted_month) %>%
@@ -1164,6 +1299,7 @@ highchart() %>%
   )) |> 
   hc_legend(enabled = FALSE)
 
+
 ```
 :::
 :::
@@ -1175,5 +1311,5 @@ highchart() %>%
 <button id="download-pdf" class="print-button">Download PDF</button>
 ```
 ::: column-margin
-Cumulative Weight of Impact combines weight of produce distributed and trash removed. 
+Cumulative Weight of Impact combines weight of produce distributed and trash removed.
 :::

@@ -337,17 +337,17 @@ The North Central division has the focus area neighborhood of Esperanza. The Esp
 ::: pt-container
 ![Fencing Before D.I.C.E. Intervention](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image width="100%" group="Fencing"}
 :::
-
-::: pt-container
-![Fencing Before D.I.C.E. Intervention](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
-:::
-:::
-
-::: g-col-3
 ::: pt-container
 ![Fencing after D.I.C.E. Intervention](media/blight/NC/nc_brazos_fence_after.jpeg){.pt-image fig-align="center" group="Fencing" width="120%"}
 :::
 
+:::
+
+::: g-col-3
+
+::: pt-container
+![Fencing Before D.I.C.E. Intervention](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+:::
 ::: pt-container
 ![Fencing after D.I.C.E. Intervention](media/blight/NC/nc_esperanza_fence_after.jpeg){.pt-image group="Fencing" width="120%"}
 :::
@@ -357,7 +357,7 @@ The North Central division has the focus area neighborhood of Esperanza. The Esp
 :::
 
 ::: g-col-5
-##### Fence Repair
+##### Security Improvements
 
 ```{=html}
 <blockquote class="small-quote-container">
@@ -365,7 +365,7 @@ The North Central division has the focus area neighborhood of Esperanza. The Esp
     <cite>Community Resident</cite>
     </blockquote>
 ```
-Fencing was heavily damaged along properties, including overgrown plants and large holes. This was a huge safety risk for nearby residents. 
+Fencing was heavily damaged along properties, including overgrown plants and large holes. Following D.I.C.E intervention, local properties have made repairs or installed new fencing. 
 :::
 :::
 
