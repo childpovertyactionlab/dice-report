@@ -1,5 +1,5 @@
 ---
-title: "South East Division"
+title: "Southeast Division"
 format: html
 lightbox: true
 ---
@@ -39,6 +39,8 @@ se_geojson <- geojson_json(se_boundaries)
 ##### Data #####
 gs4_deauth()
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+#impact <- read.csv("data/dice_data_july.csv")
 
 impact$date <- ymd(impact$date)
 
@@ -136,7 +138,7 @@ h5 {
     border: 5px solid #042d33;
     padding: 0px;
     width: 100%;  /* Set the desired width */
-    height: 150px;
+    height: 175px;
     margin: 30px;
     overflow: hidden;
     }  
@@ -290,7 +292,7 @@ value_box(
 value_box(
   title = "Average Individuals Served ",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -309,11 +311,13 @@ value_box(
 :::
 
 ::: column-margin
-Impact data updated monthly, last update 7/10/24. 
+Impact data updated monthly, last update 7/10/24.
 :::
+
 ::: grid
 ::: g-col-12
 The focus areas in the South East are RL Thornton and Jim Miller, and Murdock and Loop 12. Both areas are entrenched heavily in food swamps. Both areas are also adjacent to major freeways in Dallas, I-30 and 175. In the RL Thornton and Jim Miller area there are three motels within a half mile radius that are utilized as extended stays. This area has a set of apartments near, with residential housing being within a quarter mile radius. Historically, the area has always been working and middle class. The area has recently succumbed to a lot of business and retail neglect. Places that were occupied three to five years ago aren't any longer. Those places not being occupied have harbored opportunities for gun related crimes to occur. Murdock and Loop 12 sits at the corner of a problematic convenience store and the parking lot of a grocery store. The area has three sets of apartment complexes within a quarter mile radius that's surrounded by residential housing. There are three schools serving this community within a half mile radius. Home to primarily working class people, this area has been historically neglected and severely affected by systematic divestment.
+
 ```{=html}
 <blockquote class="long-quote-container">
     <p>“I’ve never felt safe over here, I'm just surviving. People's cars get broken into over here. There have been more houseless people in the area in the past year or so. The food options are bad, and the only grocery store nearby is WalMart. I heard a story recently about the RaceTrac almost getting robbed a couple weeks back. It's the wild west over here." </p>
@@ -330,44 +334,33 @@ The focus areas in the South East are RL Thornton and Jim Miller, and Murdock an
 :::
 
 ::: grid
-::: g-col-3
+::: g-col-5
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+![Site for community activation space at 3424 Julius Schepps Fwy](media/blight/SE/3424_schepps.png){.pt-image group="transformation"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
+![Site for pop-up community activation space at 6100 Samuell Blvd. Used for motnhly produce drives.](media/blight/SE/6100_Samuell.png){.pt-image fig-align="center" group="transformation"}
 :::
 :::
 
 ::: g-col-1
 :::
 
-::: g-col-5
-##### Fence Repair
+::: g-col-6
+##### Public Space Improvements
 
 ```{=html}
-<blockquote class="small-quote-container">
-    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
+<blockquote class="quote-container">
+    <p>"“I've worked here for about three years. The area is chill during the time im here. I've heard about places in the area dealing with robberies but I haven't experienced any of that, thank god. I think the city could put more into this area. I know they plan on making changes at Everglade Park, which is a good start, and hopefully more will follow.” </p>
     <cite>Community Resident</cite>
     </blockquote>
 ```
-Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
 :::
 :::
 
 ::: grid
-::: g-col-5
+::: g-col-6
 ##### Trash Support
 
 ```{=html}
@@ -382,60 +375,41 @@ Trash services need support in the area. The build up and overflow of trash pose
 ::: g-col-1
 :::
 
-::: g-col-3
+::: g-col-5
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
+![](media/blight/SE/thornton_miller_trash_3.jpg){.pt-image width="100%" group="Trash"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
+![](media/blight/SE/miller_thornton_trash.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
 :::
 :::
 :::
 
 ::: grid
-::: g-col-3
+::: g-col-5
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
+![Produce Drive Coordinated by Not My Son](media/distribution/SE_6-22_distribution_1.jpg){.pt-image group="transformation" style="top: -10px;" fig-align="center"}
+:::
+::: pt-container
+![Produce Drive Coordinated by Not My Son](media/distribution/SE_6-22_distribution_2.jpg){.pt-image group="transformation" style="top: -10px;" fig-align="center"}
 :::
 
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-:::
-
-::: g-col-3
-::: pt-container
-![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
-
-::: pt-container
-![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
-:::
 :::
 
 ::: g-col-1
 :::
 
-::: g-col-5
-##### Improved Bus Stops
+::: g-col-6
+##### Distribution of Fresh Food
 
 ```{=html}
-<blockquote class="quote-container">
-    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
+<blockquote class="small-quote-container">
+    <p>“It's cool over here, better than a lot of other places I've stayed. Sometimes the homeless people can be annoying but it's not that bad. I wish we had more places to shop other than WalMart, but it could be worse ”</p>
     <cite>Community Resident</cite>
     </blockquote>
 ```
+The area is a food swamp, saturated with low quality, highly processed foods. The area has one grocery store, but no other shopping options for fresh foods. Produce will be brought in and distributed locally for residents.
 :::
 :::
 
@@ -446,7 +420,6 @@ Trash services need support in the area. The build up and overflow of trash pose
 ### Cleaning and Greening {style="color: white"}
 :::
 :::
-
 
 ```{=html}
 <blockquote class="long-quote-container">
@@ -703,6 +676,7 @@ March
 ::: Grid
 ### Produce Drives {style="color: white"}
 :::
+
 ::: grid
 ::: g-col-6
 ```{r}
@@ -757,7 +731,6 @@ highchart() %>%
 ```
 :::
 :::
-
 
 ::: grid
 ::: g-col-12

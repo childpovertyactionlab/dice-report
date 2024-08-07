@@ -1,5 +1,5 @@
 ---
-title: "North East Division"
+title: "Northeast Division"
 format: html
 lightbox: true
 ---
@@ -40,6 +40,8 @@ ne_geojson <- geojson_json(ne_boundaries)
 ##### Data #####
 gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
+
+#impact <- read.csv("data/dice_data_july.csv")
 
 impact$date <- ymd(impact$date)
 
@@ -291,7 +293,7 @@ value_box(
 value_box(
   title = "Average Individuals Served ",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -350,11 +352,11 @@ Walnut Mall sits in a large lot, abandoned. D.I.C.E plans to transform this vaca
 :::
 
 ::: grid
-::: g-col-6
+::: g-col-5
 ##### OIPSS CPTED Assessments
 
 ```{=html}
-<blockquote class="small-quote-container">
+<blockquote class="quote-container">
     <p>“ We’ve dealt with our own issues in regards to car break ins. It isn't frequent but it does happen, similar to what other apartments in the area. Our residents are pretty vigilant about reporting things and notifying us and or the police when things happen."" </p>
     <cite>Apartment Manager</cite>
     </blockquote>
@@ -365,9 +367,9 @@ Walnut Mall sits in a large lot, abandoned. D.I.C.E plans to transform this vaca
 ::: g-col-1
 :::
 
-::: g-col-5
+::: g-col-6
 This focus area is down the street from one of the most violent areas in Dallas, Forest lane and Audelia. Eight apartment complexes are within a quarter mile of the area, and are the site of car break-ins and robberies. Security improvements are necessarily to protect residents, as well as business owners.The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CPTED) Assessments have been conducted, and camera towers have been installed where needed. 
-[Follow link for more information about CPTED work.](citywide.html#Dallas-OIPSS)
+[Follow link for more information about CPTED work.](collaborators.html#Dallas-OIPSS)
 :::
 :::
 

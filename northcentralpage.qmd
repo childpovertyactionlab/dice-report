@@ -40,6 +40,8 @@ nc_geojson <- geojson_json(nc_boundaries)
 gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
 
+#impact <- read.csv("data/dice_data_july.csv")
+
 impact$date <- ymd(impact$date)
 
 start_date <- as.Date("2024-01-01")
@@ -307,7 +309,7 @@ value_box(
 value_box(
   title = "Average Individuals Served Monthly",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -521,7 +523,7 @@ May
 ![](media/coming_soon.jpeg){.medium-image group="May"}
 
 ```{=html}
-<div class="tooltip">Click to see more</div>
+<div class="tooltip">Coming Soon</div>
 ```
 :::
 

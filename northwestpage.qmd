@@ -1,5 +1,5 @@
 ---
-title: "North West Division"
+title: "Northwest Division"
 format: html
 lightbox: true
 ---
@@ -39,6 +39,8 @@ nw_geojson <- geojson_json(nw_boundaries)
 ##### Data #####
 gs4_deauth()
 impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
+
+#impact <- read.csv("data/dice_data_july.csv")
 
 impact$date <- ymd(impact$date)
 
@@ -294,7 +296,7 @@ value_box(
 value_box(
   title = "Average Individuals Served ",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -328,21 +330,21 @@ The North West division focus areas are the Wycliff and Hondo St, Crown Hill Mem
 ::: grid
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_before.jpg){.pt-image width="100%" group="Fencing"}
+![Bolivar and Larga Intersection](media/blight/NW/bolivar_larga_intersection.jpg){.pt-image width="100%" group="Signage"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_esperanza_fence_before.jpg){.pt-image fig-align="center" width="100%" group="Fencing"}
+![Bolivar and Larga Intersection](media/blight/NW/bolivar_larga_intersection_2.jpg){.pt-image fig-align="center" width="100%" group="Signage"}
 :::
 :::
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_fence_hole.jpg){.pt-image fig-align="center" group="Fencing" width="120%"}
+![Retail Strip on the 9600 Block of Webb Chapel](media/blight/NW/bolivar_larga_signage_2.jpg){.pt-image fig-align="center" group="Signage" width="120%"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_tides_fence_before_2.jpg){.pt-image group="Fencing" width="120%"}
+![Retail Strip on the 9600 Block of Webb Chapel](media/blight/NW/bolivar_larga_signage.jpg){.pt-image fig-align="center" width="100%" group="Signage"}
 :::
 :::
 
@@ -350,15 +352,13 @@ The North West division focus areas are the Wycliff and Hondo St, Crown Hill Mem
 :::
 
 ::: g-col-5
-##### Fence Repair
-
+##### Improved Signage 
 ```{=html}
-<blockquote class="small-quote-container">
-    <p>"There's too much foot traffic in and out. Security is there but they dont do much. The park is really an issue."</p>
-    <cite>Community Resident</cite>
+<blockquote class="quote-container">
+    <p>Traffic signage at the Bolivar/Larga intersection is poor and not adequate considering the amount of traffic the area receives. Three streets meet at the intersection, but there is only one stop sign. Retail businesses would also benefit from improved singe, as it is currently in poor condition. </p>
     </blockquote>
 ```
-Fencing is heavily damaged along properties. This includes overgrown plants and large holes. Certain sections are dilapidated and literally falling down. This is a huge safety risk to nearby residents.
+ 
 :::
 :::
 
@@ -367,12 +367,11 @@ Fencing is heavily damaged along properties. This includes overgrown plants and 
 ##### Trash Support
 
 ```{=html}
-<blockquote class="small-quote-container">
-    <p>"Quam viverra orci sagittis eu volutpat odio. Nisl condimentum id venenatis a condimentum vitae."</p>
-    <cite>Community Resident</cite>
+<blockquote class="quote-container">
+    <p>The area around the Larga and Bolivar intersection is in need of frequent cleanups. Retail blocks and sidewalks are littered, and will be targeted as an intervention site over a six month period. Local businesses could also benefit from increased trash pick-ups, as dumpsters often overflow due to overuse.</p>
     </blockquote>
 ```
-Trash services need support in the area. The build up and overflow of trash poses an extreme health safety risk for the residents.
+  
 :::
 
 ::: g-col-1
@@ -380,21 +379,21 @@ Trash services need support in the area. The build up and overflow of trash pose
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before.jpg){.pt-image width="100%" group="Trash"}
+![](media/blight/NW/NW_trash_2.jpg){ group="Trash"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_2.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+![](media/blight/NW/nw_trash_3.jpg){.pt-image fig-align="center" group="Trash"}
 :::
 :::
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_before_3.jpg){.pt-image fig-align="center" width="100%" group="Trash"}
+![](media/blight/NW/bolivar_larga_street_trash.png){.pt-image fig-align="center" group="Trash"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_brazos_trash_4.jpg){.pt-image width="100%" group="Trash"}
+![](media/blight/NW/bolivar_larga_trash.jpg){.pt-image width="100%" group="Trash"}
 :::
 :::
 :::
@@ -402,21 +401,21 @@ Trash services need support in the area. The build up and overflow of trash pose
 ::: grid
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before_4.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NW/NW_security.jpg){.pt-image width="100%" group="Bus Stop"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NW/NW_security_2.jpg){.pt-image width="100%" group="Bus Stop"}
 :::
 :::
 
 ::: g-col-3
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_2_before.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NW/NW_lighting.jpg){.pt-image width="100%" group="Bus Stop"}
 :::
 
 ::: pt-container
-![](media/blight/NC/nc_bus_stop_before_3.jpg){.pt-image width="100%" group="Bus Stop"}
+![](media/blight/NW/NW_lighting_2.jpg){.pt-image width="100%" group="Bus Stop"}
 :::
 :::
 
@@ -424,12 +423,11 @@ Trash services need support in the area. The build up and overflow of trash pose
 :::
 
 ::: g-col-5
-##### Improved Bus Stops
+##### Improved Security
 
 ```{=html}
 <blockquote class="quote-container">
-    <p>"Public transportation is essential here. More covering for the bus stops and more adequate bus stops in general. There are about four or five stops within a five hundred foot radius of one another. None are adequate."</p>
-    <cite>Community Resident</cite>
+    <p> The Bolivar and Larga intersection has high foot and car traffic at night. However, there are no visible security measures in place,  and very little lighting. D.I.C.E plans to collaborate wth local businesses and the city to improve security in the area. </p>
     </blockquote>
 ```
 :::
@@ -501,7 +499,7 @@ April
 ![](media/coming_soon.jpeg){.medium-image group="April"}
 
 ```{=html}
-<div class="tooltip">Click to see more</div>
+<div class="tooltip">Coming Soon</div>
 ```
 :::
 
@@ -807,7 +805,7 @@ June
 ![](media/distribution/NW_6-29_distribution.jpeg){.medium-image width="75" height="95" group="produce"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to See More</div>
 ```
 :::
 :::

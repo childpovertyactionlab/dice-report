@@ -7,7 +7,7 @@ include-after: custom.js
 ---
 
 ```{=html}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 ```
 ```{r include=FALSE}
@@ -24,7 +24,7 @@ impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-
 impact$date <- ymd(impact$date)
 
 start_date <- as.Date("2024-01-01")
-current_date <- as.Date("2024-06-30")
+current_date <- as.Date("2024-07-30")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -179,7 +179,11 @@ point_data <- st_read("data/CPTED_assessment_location.gpkg")
 
 geojson_data <- st_read("data/dpd_divisions.geojson")
 
+rtm_cells_1 <- st_read("data/rtm_cells/citywide_rtm.shp")
+
 polygons <- st_transform(geojson_data, crs = 4269)
+
+rtm_cells <- st_transform(rtm_cells_1, crs = 4269)
 
 date_format <- "%m/%d/%Y"
 
@@ -266,6 +270,7 @@ camera_towers_over_90 <- camera_towers %>%
       background-color: #06414c;
   }
 </style>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
       var tabs = document.querySelectorAll('.nav-tabs li a');
@@ -277,8 +282,8 @@ camera_towers_over_90 <- camera_towers %>%
               var targetElement = document.getElementById(targetId);
 
               if (targetElement) {
-                  // Scroll to the target element smoothly
-                  targetElement.scrollIntoView({ behavior: 'smooth' });
+              // Scroll to the target element smoothly
+              targetElement.scrollIntoView({ behavior: 'smooth' });
               }
 
               // Activate the clicked tab
@@ -296,35 +301,37 @@ camera_towers_over_90 <- camera_towers %>%
           });
       });
 
-      // Add event listener for download PDF button
+               // Add event listener for download PDF button
       document.getElementById('download-pdf').addEventListener('click', function() {
-            // Get the active tab content
-            var activeTabContent = document.querySelector('.tab-pane.active');
+              // Get the active tab content
+              var activeTabContent = document.querySelector('.tab-pane.active');
 
             html2canvas(activeTabContent).then(function(canvas) {
                 var imgData = canvas.toDataURL('image/png');
                 var pdf = new jsPDF('p', 'pt', 'a4');
-                var margin = 10;
+                var margin = 20;
                 var imgWidth = pdf.internal.pageSize.getWidth() - margin * 2;
-                var pageHeight = pdf.internal.pageSize.getHeight(); 
+                var pageHeight = pdf.internal.pageSize.getHeight();  
                 var imgHeight = canvas.height * imgWidth / canvas.width;
                 var heightLeft = imgHeight;
+
                 var position = margin;
 
-        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
 
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight + margin;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight - margin;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
 
                 pdf.save('download.pdf');
           });
       });
   });
+      
 </script>
 ```
 ## Dallas OIPSS {#Dallas-OIPSS}
@@ -352,11 +359,19 @@ leaflet(data = point_data) %>%
   addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
            attribution = cpaltemplates::cpal_leaflet) %>%
   addPolygons(data = polygons,
+              group = "DPD Divisions",
               color = "#042d33",
               weight = 1.5,
               opacity = 1,
               fill = FALSE,
               layerId = ~row.names(polygons)) %>%
+  addPolygons(data = rtm_cells,
+              group = "RTM Risk Cells",
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(rtm_cells)) %>%
   addAwesomeMarkers(
     lng = ~location.x,
     lat = ~location.y,
@@ -418,7 +433,7 @@ leaflet(data = point_data) %>%
       markerColor = 'brown')
    ) %>%
   addLayersControl(
-    overlayGroups = c("Assessment Locations", "Camera Towers"),
+    overlayGroups = c("Assessment Locations", "Camera Towers", "RTM Risk Cells"),
     options = layersControlOptions(collapsed = FALSE)
   ) 
 
@@ -429,13 +444,12 @@ leaflet(data = point_data) %>%
 :::
 :::
 
-## Community Partners {#Community-Partners}
+## Community Partners
 
 ::: grid
 ::: g-col-12
 ::: panel-tabset
 ### Not My Son
-
 ::: grid
 ::: g-col-12
 ```{=html}
@@ -869,6 +883,7 @@ highchart() %>%
 ```
 :::
 :::
+
 ### Bachman Lake Together
 
 ::: grid
@@ -977,6 +992,7 @@ highchart() %>%
 ```
 :::
 :::
+
 ### Oak Cliff Veggie Project
 
 ::: grid

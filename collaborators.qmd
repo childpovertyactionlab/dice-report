@@ -1,0 +1,1390 @@
+---
+title: "Collaborators"
+format: 
+  html:
+    self-contained: true
+include-after: custom.js
+---
+
+```{=html}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+```
+```{r include=FALSE}
+library(cpaltemplates)
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(googlesheets4)
+library(highcharter)
+
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+##### Filter/Transform Impact Data #####
+impact$date <- ymd(impact$date)
+
+start_date <- as.Date("2024-01-01")
+current_date <- as.Date("2024-07-30")
+
+# Filter rows between January 1, 2024, and the current date
+impact <- impact %>%
+  filter(date >= start_date & date < current_date) %>%
+  mutate(
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
+
+impact$lbs_produce <- impact$bags * 10
+
+##### Organization Data #####
+
+### Oak Cliff Veggie ### 
+oak_cliff_veggie <- impact %>%
+  filter(partner == "Robbin Hood INC and Oak Cliff Veggie Project") 
+
+ocv_lbs_trash <- sum(oak_cliff_veggie$lbs_trash, na.rm = TRUE)
+ocv_lbs_produce <- sum(oak_cliff_veggie$lbs_produce, na.rm = TRUE)
+ocv_people_served <- sum(oak_cliff_veggie$people_served, na.rm = TRUE)
+ocv_events <- nrow(oak_cliff_veggie)
+ocv_distributed_produce <- sum(impact$lbs_produce, na.rm = TRUE)
+ocv_citywide_people_served <- sum(impact$people_served, na.rm = TRUE)
+
+oak_cliff_veggie_cumsum <- oak_cliff_veggie %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  group_by(month_year, formatted_month) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight))
+
+### Robin Hood INC ### 
+robin_hood_inc <- bind_rows(
+  impact %>% filter(partner == "Robbin Hood INC"),
+  oak_cliff_veggie) 
+
+rh_lbs_trash <- sum(robin_hood_inc$lbs_trash, na.rm = TRUE)
+rh_lbs_produce <- sum(robin_hood_inc$lbs_produce, na.rm = TRUE)
+rh_people_served <- sum(robin_hood_inc$people_served, na.rm = TRUE)
+rh_events <- nrow(robin_hood_inc)
+
+robin_hood_cumsum <- robin_hood_inc %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+  
+### Not My Son ### 
+not_my_son <- impact %>%
+  filter(partner == "Not My Son") 
+
+nms_lbs_trash <- sum(not_my_son$lbs_trash, na.rm = TRUE)
+nms_lbs_produce <- sum(not_my_son$lbs_produce, na.rm = TRUE)
+nms_people_served <- sum(not_my_son$people_served, na.rm = TRUE)
+nms_events <- nrow(not_my_son)
+
+not_my_son_cumsum <- not_my_son %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+### United Peoples Coalition ###
+united_peoples_coalition <- impact %>%
+  filter(partner == "United Peoples Coalition") 
+
+upc_lbs_trash <- sum(united_peoples_coalition$lbs_trash, na.rm = TRUE)
+upc_lbs_produce <- sum(united_peoples_coalition$lbs_produce, na.rm = TRUE)
+upc_people_served <- sum(united_peoples_coalition$people_served, na.rm = TRUE)
+upc_events <- nrow(united_peoples_coalition)
+
+united_cumsum <- united_peoples_coalition %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+### Goldmark Cultural Center ###
+goldmark_cultural <- impact %>%
+  filter(partner == "Goldmark Cultural Center") 
+
+gcc_lbs_trash <- sum(goldmark_cultural$lbs_trash, na.rm = TRUE)
+gcc_lbs_produce <- sum(goldmark_cultural$lbs_produce, na.rm = TRUE)
+gcc_people_served <- sum(goldmark_cultural$people_served, na.rm = TRUE)
+gcc_events <- nrow(goldmark_cultural)
+
+goldmark_cumsum <- goldmark_cultural %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+### Pop Up Comfortt ###
+pop_up_comfortt <- impact %>%
+  filter(partner == "Pop Up Comfortt") 
+
+pc_lbs_trash <- sum(pop_up_comfortt$lbs_trash, na.rm = TRUE)
+pc_lbs_produce <- sum(pop_up_comfortt$lbs_produce, na.rm = TRUE)
+pc_people_served <- sum(pop_up_comfortt$people_served, na.rm = TRUE)
+pc_events <- nrow(pop_up_comfortt)
+
+pop_up_cumsum <- pop_up_comfortt %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+### Serun Foundation ###
+serun <- impact %>%
+  filter(partner == "Serun Foundation") 
+sf_lbs_trash <- sum(serun$lbs_trash, na.rm = TRUE)
+sf_lbs_produce <- sum(serun$lbs_produce, na.rm = TRUE)
+sf_people_served <- sum(serun$people_served, na.rm = TRUE)
+sf_events <- nrow(serun)
+
+serun_cumsum <- serun %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+### Bachman Lake Together ###
+bachman_lt <- impact %>%
+  filter(partner == "Bachman Lake Together") 
+blt_lbs_trash <- sum(bachman_lt$lbs_trash, na.rm = TRUE)
+blt_lbs_produce <- sum(bachman_lt$lbs_produce, na.rm = TRUE)
+blt_people_served <- sum(bachman_lt$people_served, na.rm = TRUE)
+blt_events <- nrow(bachman_lt)
+
+serun_cumsum <- serun %>%
+  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  group_by(formatted_month, month_year) %>%
+  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  arrange(month_year) %>%
+  ungroup() %>%
+  mutate(cumulative_weight = cumsum(monthly_weight)) 
+
+##### OIPSS Map Data #####
+point_data <- st_read("data/CPTED_assessment_location.gpkg")
+
+org_point_data <- st_read("data/location.gpkg")
+
+geojson_data <- st_read("data/dpd_divisions.geojson")
+
+rtm_cells_1 <- st_read("data/rtm_cells/citywide_rtm.shp")
+
+org_point_data <- st_transform(org_point_data, crs = 4326)
+
+polygons <- st_transform(geojson_data, crs = 4269)
+
+rtm_cells <- st_transform(rtm_cells_1, crs = 4269)
+
+date_format <- "%m/%d/%Y"
+
+point_data$Date.Deployed <- as.Date(point_data$Date.Deployed, format = date_format)
+
+# Calculate days since deployment
+current_date <- Sys.Date()
+
+point_data$Days.Since.Deployed <- as.numeric(difftime(current_date, point_data$Date.Deployed, units = "days"))
+
+point_data$Days.Since.Deployed[is.na(point_data$Days.Since.Deployed)] <- 0
+
+camera_towers <- point_data %>%
+  filter(Days.Since.Deployed != 0 )
+
+camera_towers_30 <-camera_towers %>%
+  filter(Days.Since.Deployed <= 30 )
+
+camera_towers_60 <- camera_towers %>%
+  filter(Days.Since.Deployed <= 60 )
+
+camera_towers_90 <- camera_towers %>%
+  filter(Days.Since.Deployed <= 90 )
+
+camera_towers_over_90 <- camera_towers %>%
+  filter(Days.Since.Deployed > 90 )
+```
+
+```{=html}
+<style>
+  .map-container, .graph-container {
+      position: relative;
+      display: inline-block;
+      border: 5px solid #042d33;
+      padding: 1px;
+      margin: 25px;
+      width: 800px;  /* Set the desired width */
+  }
+
+  /* Add border to the entire tabset panel */
+  .panel-tabset {
+      border: 2px solid #ccc;
+      padding: 15px;
+      border-radius: 5px;
+  }
+
+  /* Add border to individual tabs */
+  .nav-tabs > li > a {
+      border: 1px solid #ccc;
+      border-radius: 5px 5px 0 0;
+      margin-right: 2px;
+  }
+
+  /* Add border and highlight to active tab */
+  .nav-tabs > li.active > a {
+      border-bottom-color: transparent;
+      background-color: #f0f0f0;  /* Highlight active tab */
+      color: #000;                /* Change text color of active tab */
+  }
+
+  /* Add border to tab content */
+  .tab-content {
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 15px;
+      border-radius: 0 0 5px 5px;
+  } 
+    /* Print button styles */
+  .print-button {
+      background-color: #042d33;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 20px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+  }
+
+  .print-button:hover {
+      background-color: #06414c;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var tabs = document.querySelectorAll('.nav-tabs li a');
+
+      tabs.forEach(function(tab) {
+          tab.addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent the default behavior
+              var targetId = this.getAttribute('href').substring(1);
+              var targetElement = document.getElementById(targetId);
+
+              if (targetElement) {
+              // Scroll to the target element smoothly
+              targetElement.scrollIntoView({ behavior: 'smooth' });
+              }
+
+              // Activate the clicked tab
+              tabs.forEach(function(t) {
+                  t.parentElement.classList.remove('active');
+              });
+              this.parentElement.classList.add('active');
+
+              // Show the corresponding tab content
+              var tabContents = document.querySelectorAll('.tab-content .tab-pane');
+              tabContents.forEach(function(content) {
+                  content.classList.remove('active');
+              });
+              targetElement.classList.add('active');
+          });
+      });
+
+               // Add event listener for download PDF button
+      document.getElementById('download-pdf').addEventListener('click', function() {
+              // Get the active tab content
+              var activeTabContent = document.querySelector('.tab-pane.active');
+
+            html2canvas(activeTabContent).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var pdf = new jsPDF('p', 'pt', 'a4');
+                var margin = 20;
+                var imgWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+                var pageHeight = pdf.internal.pageSize.getHeight();  
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+
+                var position = margin;
+
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight - margin;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save('download.pdf');
+          });
+      });
+  });
+      
+</script>
+```
+## Dallas OIPSS {#Dallas-OIPSS}
+
+::: grid
+::: g-col-12
+**The Office of Integrated Public Safety Solutions (OIPSS)** was created in April 2020. Under the R.E.A.L. Change Initiative. Implemented by the City Manager, the OIPSS works proactively to address systemic factors that contribute to criminal activity. By providing non-law enforcement solutions, OIPSS improves quality of life in the community and reduces the demand for police service.
+:::
+:::
+
+### CPTED {style="color: white"}
+
+::: grid
+::: {.g-col-12 style="color: black;"}
+**Crime Prevention Through Environmental Design or CPTED** (pronounced sep-ted) is an actionable interpretation of prior research suggesting the condition of the built environment impacts instances of crime in that area. Intentional selection of environmental features such as building design, landscaping, and outdoor environments results in decreased instances of violent crime. In addition to reducing crime rates, the proper design and effective use of the built environment contributes to increases in positive social interactions, feelings of security, and quality of life for users of the space.
+
+CPTED assessments have occurred at several locations throughout Dallas, and provide local buildings with recommendations based upon their level of risk. **Areas of assessment include:**
+
+**Territorial reinforcement-** Development of physical attributes contributing to a strong sense of ownership within a space.
+
+**Surveillance-** Placement of physical features impacting the perception that people can be seen in the area.
+
+**Access control-** Ensures people are physically guided through spaces by design of streets, sidewalks, entrances, and landscaping.
+
+**Maintenance and activity support-** Continued use of a space for its intended purposes.
+
+When used together, these elements strengthen total premise security and personal safety. Minimum standards of security have been codified into Dallas City Code, to be regularly enforced. Current progress is displayed on the map below.
+:::
+:::
+
+::: grid
+::: g-col-12
+::: map-container
+```{r}
+
+leaflet(data = point_data) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addPolygons(data = polygons,
+              group = "DPD Divisions",
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(polygons)) %>%
+  addPolygons(data = rtm_cells,
+              group = "RTM Risk Cells",
+              color = "#042d33",
+              weight = 1.5,
+              opacity = 1,
+              fill = FALSE,
+              layerId = ~row.names(rtm_cells)) %>%
+  addAwesomeMarkers(
+    lng = ~location.x,
+    lat = ~location.y,
+    group = "Assessment Locations",
+    label = ~paste("<b>Location:</b>", point_data$Location) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "building",
+      iconColor = '#FFFFFF',
+      markerColor = 'cadetblue'
+    )) %>%
+   addAwesomeMarkers(
+    lng = ~camera_towers_30$location.x,
+    lat = ~camera_towers_30$location.y,
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_30$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_30$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'yellow')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~camera_towers_60$location.x,
+    lat = ~camera_towers_60$location.y,
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_60$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_60$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'orange')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~camera_towers_90$location.x,
+    lat = ~camera_towers_90$location.y,
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_90$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_90$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'red')
+   ) %>%
+     addAwesomeMarkers(
+    lng = ~camera_towers_over_90$location.x,
+    lat = ~camera_towers_over_90$location.y,
+    group = "Camera Towers",
+    label = ~paste("<b>Location:</b>", camera_towers$Location, "<br><b>Date Deployed:</b>",  camera_towers_over_90$Date.Deployed, "<br><b>Days Since Deployed:</b>", camera_towers_over_90$Days.Since.Deployed) %>%
+      lapply(htmltools::HTML),
+    icon = awesomeIcons(
+      library = "fa",
+      icon = "camera",
+      iconColor = '#FFFFFF',
+      markerColor = 'brown')
+   ) %>%
+  addLayersControl(
+    overlayGroups = c("Assessment Locations", "Camera Towers", "RTM Risk Cells"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) 
+
+  
+
+```
+:::
+:::
+:::
+
+## Community Partners
+
+
+### Contributions of Partner Organizations {style="color: white"}
+
+::: grid
+::: g-col-12
+::: panel-tabset
+### Not My Son
+
+::: grid
+::: {.g-col-12 style="color: black"}
+```{=html}
+<p style="text-align: center;font-weight: bold; color: black">Contributions of Not My Son</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+nms_lbs_trash <- formatC(nms_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  nms_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+nms_lbs_produce <- formatC(nms_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  nms_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+nms_average_people_served <- formatC(nms_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  nms_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  nms_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = not_my_son_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = not_my_son_cumsum$cumulative_weight, name = "Pounds", x = not_my_son$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Not My Son") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+
+```
+:::
+:::
+
+### Robin Hood INC
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold; color: black">Contributions of Robin Hood INC</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+rh_lbs_trash <- formatC(rh_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  rh_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+rh_lbs_produce <- formatC(rh_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  rh_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+rh_average_people_served <- formatC(rh_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  rh_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  rh_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = robin_hood_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = robin_hood_cumsum$cumulative_weight, name = "Pounds", x = robin_hood_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Robin Hood INC") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+
+```
+:::
+:::
+
+### Serun Foundation
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of the Serun Foundation</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+sf_lbs_trash <- formatC(sf_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  sf_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+sf_lbs_produce <- formatC(sf_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  sf_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+sf_average_people_served <- formatC(sf_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  sf_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  sf_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = serun_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = serun_cumsum$cumulative_weight, name = "Pounds", x = serun_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by the Serun Foundation") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+### United Peoples Coalition
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of the United Peoples Coalition</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+upc_lbs_trash <- formatC(upc_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  upc_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_lbs_produce <- formatC(upc_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  upc_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_average_people_served <- formatC(upc_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  upc_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  upc_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = united_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = united_cumsum$cumulative_weight, name = "Pounds", x = united_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by the United Peoples Coalition") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+### Bachman Lake Together
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of Bachman Lake Together</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+upc_lbs_trash <- formatC(blt_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_lbs_produce <- formatC(blt_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+upc_average_people_served <- formatC(blt_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  blt_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = united_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = united_cumsum$cumulative_weight, name = "Pounds", x = united_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Bachman Lake Together") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+### Oak Cliff Veggie Project
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of the Oak Cliff Veggie Project</p>
+<p style= "text-align: center; color: black"> In addition to engaging in direct distributions, The Oak Cliff Veggie Project supplies all produce for D.I.C.E distribution events. Both amounts have been included, to convey the full scope of their work. </p>
+```
+:::
+:::
+
+::: grid
+::: g-col-6
+```{r}
+ocv_distributed_produce  <- formatC(ocv_distributed_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_distributed_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Supplied Citywide</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+::: g-col-6
+```{r}
+ocv_citywide_people_served <- formatC(ocv_citywide_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_citywide_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served with Supplied Produce  </div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+```{=html}
+<hr style= "border: 1px solid #042d33" >
+``` 
+::: grid
+::: g-col-3
+```{r}
+ocv_lbs_trash <- formatC(ocv_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+ocv_lbs_produce <- formatC(ocv_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+ocv_average_people_served <- formatC(ocv_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  ocv_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = oak_cliff_veggie_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = oak_cliff_veggie_cumsum$cumulative_weight, name = "Pounds", x = oak_cliff_veggie_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by the Oak Cliff Veggie Project") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+### Goldmark Cultural Center
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of Goldmark Cultural Center</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+gcc_lbs_trash <- formatC(gcc_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  gcc_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+gcc_lbs_produce <- formatC(gcc_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  gcc_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+gcc_people_served <- formatC(gcc_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  gcc_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  gcc_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = goldmark_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = goldmark_cumsum$cumulative_weight, name = "Pounds", x = goldmark_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Goldmark Cultural Center") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+```
+:::
+:::
+
+### Pop Up Comfortt
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold;color: black">Contributions of Pop Up Comfortt</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-3
+```{r}
+pc_lbs_trash <- formatC(pc_lbs_trash, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  pc_lbs_trash, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("trash"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Trash Removed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+pc_lbs_produce <- formatC(pc_lbs_produce, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  pc_lbs_produce, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("basket2"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Pounds of Produce Distributed</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+pc_average_people_served <- formatC(pc_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+pc_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served at Produce Drives</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-3
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  pc_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+:::
+
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = pop_up_cumsum$formatted_month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = pop_up_cumsum$cumulative_weight, name = "Pounds", x = pop_up_cumsum$formatted_month) %>%
+  hc_title(text = "Cumulative Weight of Impact") %>%
+  hc_subtitle(text = "by Pop Up Comfortt") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = FALSE)
+
+
+```
+:::
+:::
+:::
+:::
+:::
+
+```{=html}
+<button id="download-pdf" class="print-button">Download PDF</button>
+```
+::: column-margin
+Cumulative Weight of Impact combines weight of produce distributed and trash removed.
+:::

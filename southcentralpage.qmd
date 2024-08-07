@@ -40,6 +40,8 @@ sc_geojson <- geojson_json(sc_boundaries)
 gs4_deauth()
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
+#impact <- read.csv("data/dice_data_july.csv")
+
 impact$date <- ymd(impact$date)
 
 start_date <- as.Date("2024-01-01")
@@ -290,7 +292,7 @@ value_box(
 value_box(
   title = "Average Individuals Served ",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -331,10 +333,10 @@ The focus area in the South Central division is Bonnie View Rd and Springview, a
 ::: g-col-5
 
 ::: pt-container
-![3728 Bonnie View Rd, Before](media/SW_transformation_before.png){group="Public Improvements"}
+![3728 Bonnie View Rd, Before](media/blight/SC/SW_transformation_before.png){group="Public Improvements"}
 :::
 ::: pt-container
-![3728 Bonnie View Rd, After](media/SW_transformation_rendering.png){group="Public Improvements"}
+![3728 Bonnie View Rd, After](media/blight/SC/SW_transformation_rendering.png){group="Public Improvements"}
 :::
 :::
 ::: g-col-1
@@ -368,9 +370,9 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 :::
 
 ::: g-col-5
-The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CPTED) Assessments have been conducted, and camera towers have been installed where needed. 
+The Dallas Office of Integrated Public Safety Solutions (OIPSS) has been activated in the area to address inadequate property security. Crime Prevention Through Environmental Design (CPTED) Assessments have been conducted, and camera towers installed.
 
-[Follow link for more information about CPTED work.](citywide.html#Dallas-OIPSS)
+[Follow link for more information about CPTED work.](collaborators.html#Dallas-OIPSS)
 :::
 :::
 ::: grid
@@ -504,6 +506,9 @@ June
 :::
 
 ![](media/cleaning/SC_6-8_before.jpeg){.medium-image group="June"}
+```{=html}
+<div class="tooltip">Click to see more</div>
+```
 :::
 
 ::: g-col-1
@@ -752,7 +757,7 @@ May
 June
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="June"}
+![](media/coming_soon.jpeg){.medium-image group="June2"}
 
 ::: tooltip
 Coming Soon
@@ -766,7 +771,7 @@ Coming Soon
 July
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="July"}
+![](media/coming_soon.jpeg){.medium-image group="July2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -780,7 +785,7 @@ July
 August
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="August"}
+![](media/coming_soon.jpeg){.medium-image group="August2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -794,7 +799,7 @@ August
 September
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="September"}
+![](media/coming_soon.jpeg){.medium-image group="September2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -810,7 +815,7 @@ September
 October
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="October"}
+![](media/coming_soon.jpeg){.medium-image group="October2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -824,7 +829,7 @@ October
 November
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="November"}
+![](media/coming_soon.jpeg){.medium-image group="November2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -838,7 +843,7 @@ November
 December
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="December"}
+![](media/coming_soon.jpeg){.medium-image group="December2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -852,7 +857,7 @@ December
 January
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="January"}
+![](media/coming_soon.jpeg){.medium-image group="January2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -866,7 +871,7 @@ January
 February
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="February"}
+![](media/coming_soon.jpeg){.medium-image group="February2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -880,7 +885,7 @@ February
 March
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="March"}
+![](media/coming_soon.jpeg){.medium-image group="March2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>

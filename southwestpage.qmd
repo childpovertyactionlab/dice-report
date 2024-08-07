@@ -1,5 +1,5 @@
 ---
-title: "South West Division"
+title: "Southwest Division"
 format: html
 lightbox: true
 ---
@@ -39,6 +39,8 @@ sw_geojson <- geojson_json(sw_boundaries)
 ##### Data #####
 gs4_deauth()
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+#impact <- read.csv("data/dice_data_july.csv")
 
 impact$date <- ymd(impact$date)
 
@@ -291,7 +293,7 @@ value_box(
 value_box(
   title = "Average Individuals Served ",
   value = monthly_average_people_served,
-  showcase = bsicons::bs_icon("person"),
+  showcase = bsicons::bs_icon("person-fill"),
   theme = "primary",
   style = "height: 200px;"
 )
@@ -335,10 +337,10 @@ The focus areas in the South West are Chaucer Pl and Camp Wisdom, and Camp Wisdo
 ::: g-col-5
 ##### Public Space Improvements
 ::: pt-container
-![2800 Camp Wisdom Rd, Before](media/SC_transformation_before.png){group="Public Improvements"}
+![2800 Camp Wisdom Rd, Before](media/blight/SW/SC_transformation_before.png){group="Public Improvements"}
 :::
 ::: pt-container
-![2800 Camp Wisdom Rd, After](media/SC_transformation_rendering.png){group="Public Improvements"}
+![2800 Camp Wisdom Rd, After](media/blight/SW/SC_transformation_rendering.png){group="Public Improvements"}
 :::
 :::
 ::: g-col-1
@@ -355,7 +357,7 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 :::
 :::
 ::: grid
-::: g-col-5
+::: g-col-6
 ```{=html}
 <blockquote class="quote-container">
     <p>“Economic development is all the talk, but I  don't see any of it happening on this side of 67. The young people over here carry guns, shoot at each other, kill each other, rob each other. It's insane. This area needs to be cleansed by jesus. I try my  best to guide the young folks around me as best as I can but there are so many misguided. We need help”</p>
@@ -365,7 +367,7 @@ The area lacks parks and public spaces for youth to convene. Without safe and fu
 :::
 ::: g-col-1
 :::
-::: g-col-6
+::: g-col-5
 ##### Code Enforcement
 
 ::: container
@@ -377,9 +379,10 @@ Retail strip owners are complacent in the operation of illegal gambling rooms an
 ::: g-col-5
 ##### Distribution of Fresh Food
 ::: pt-container
-
+![Produce Drive](media/distribution/SE_6-22_distribution_3.jpg){group="produce"}
 :::
 ::: pt-container
+![Produce Drive](media/distribution/SW_5-25_distribution.png){group="produce"}
 :::
 :::
 ::: g-col-1
@@ -506,11 +509,6 @@ June
 ```
 :::
 
-::: g-col-1
-::: col-md-1
-![](media/cleaning/SW_6-8_after.jpeg){.small-image .hidden group="June"}
-:::
-:::
 :::
 
 ::: g-col-2
@@ -719,7 +717,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 April
 :::
 
-![](media/distribution/SW_4-27_distribution.jpeg){width="75" height="95" group="June"}
+![](media/distribution/SW_4-27_distribution.jpeg){width="75" height="95" group=April2"}
 
 ::: tooltip
 Click to see more
@@ -733,10 +731,10 @@ Click to see more
 May
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="May"}
+![](media/distribution/SW_5-25_distribution.png){width="75" height="95" group="May2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to See More</div>
 ```
 :::
 :::
@@ -747,7 +745,7 @@ May
 June
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="June"}
+![](media/coming_soon.jpeg){.medium-image group="June2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -761,7 +759,7 @@ June
 July
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="July"}
+![](media/coming_soon.jpeg){.medium-image group="July2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -775,7 +773,7 @@ July
 August
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="August"}
+![](media/coming_soon.jpeg){.medium-image group="August2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -789,7 +787,7 @@ August
 September
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="September"}
+![](media/coming_soon.jpeg){.medium-image group="September2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -805,7 +803,7 @@ September
 October
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="October"}
+![](media/coming_soon.jpeg){.medium-image group="October2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -819,7 +817,7 @@ October
 November
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="November"}
+![](media/coming_soon.jpeg){.medium-image group="November2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -833,7 +831,7 @@ November
 December
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="December"}
+![](media/coming_soon.jpeg){.medium-image group="December2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -847,7 +845,7 @@ December
 January
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="January"}
+![](media/coming_soon.jpeg){.medium-image group="January2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -861,7 +859,7 @@ January
 February
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="February"}
+![](media/coming_soon.jpeg){.medium-image group="February2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -875,7 +873,7 @@ February
 March
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="March"}
+![](media/coming_soon.jpeg){.medium-image group="March2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>

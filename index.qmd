@@ -20,6 +20,8 @@ library(htmltools)
 ##### Load Data #####
 impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
+#impact <- read.csv("data/dice_data_july.csv")
+
 mapdata <- st_read("data/dpd_divisions.geojson")
 
 point_data <- st_read("data/location.gpkg")
@@ -55,15 +57,12 @@ total_lbs_trash <- sum(impact$lbs_trash, na.rm = TRUE)
 total_lbs_produce <- sum(impact$lbs_produce, na.rm = TRUE)
 cumulative_lbs_produce <- cumsum(impact$lbs_produce) 
 
-monthly_average_people_served <- impact %>%
-  filter(people_served != 0) %>%
-  pull(people_served) %>%
-  mean(na.rm = TRUE) %>%
-  round()
-
 properties_transformed <- sum(impact$completed == "TRUE", na.rm = TRUE)
 
 ##### Graph Data #####
+dice_events <- impact %>%
+  nrow()
+
 trash_data <- impact %>%
   select(formatted_month, lbs_trash, month_year) %>%
   arrange(month_year) %>%
@@ -73,7 +72,7 @@ trash_data <- impact %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 trash_by_district<- impact %>%
-  select( lbs_trash, district) %>%
+  select(lbs_trash, district) %>%
   filter(lbs_trash != 0) %>%
   group_by(district) %>%
   summarise(district_lbs_trash = sum(lbs_trash))
@@ -96,6 +95,10 @@ people_served_data <- impact %>%
   filter(people_served != 0) %>%
   group_by(formatted_month) %>%
   summarise(monthly_people_served = sum(people_served))
+
+monthly_average_people_served <- people_served_data %>%
+  summarise(monthly_people_served = mean(monthly_people_served)) %>%
+  round()
 
 ##### Leaflet Location Map Data #####
 current_date <- Sys.Date()
@@ -224,14 +227,14 @@ highchart(type = "map") %>%
 :::
 
 ::: g-col-6
-D.I.C.E (Data Informed Community Engagement), is the City Of Dallas's Office Of Integrated Public Safety Solutions (OIPSS) mission operationalized. OIPSS's mission is to enhance the general welfare and protection of Dallas residents from risks that affect persons, property and the collective well-being of residents. The DICE process guides crime prevention efforts by combining data analysis with community-led risk narratives to learn where and why people tend to commit crimes in certain settings. This plan describes how the use of risk modelling combines with community involvement to guide violence reduction efforts at places of highest risk. The highest risk locations for violent crime in the city¹ make up only 3% of the land area of the City of Dallas but account for 21% of the total violent gun crimes.
+**Data Informed Community Engagement (D.I.C.E)**, is the City Of Dallas's Office Of Integrated Public Safety Solutions (OIPSS) mission operationalized. OIPSS strives to enhance the general welfare and safety of Dallas residents by offering non-law enforcement solutions to risks that affect persons, property and the collective well-being of residents. Through an innovative combination of risk terrain modeling (RTM) and community-led risk-narratives, the D.I.C.E process has isolated city locations at the greatest risk of violent crime. These locations make up only 3% of the land area of the City of Dallas, but account for 21% of the total violent gun crimes. Historically neglected and forgotten by the system, these areas lack adequate resources and harbor violent crime. 
 :::
 :::
 
 ::: grid
 ::: g-col-12
 ::: container
-Crime prevention efforts come in a wide array of solutions. Blight remediation, transformative change, and clean and green beautification efforts are just a few examples of how to heal a community or neighborhood, from historic and systematic neglect that harbors violent crime. Our community partners work vigilantly to apply the solution in the communities they themselves are already implemented in. This tool is a view of all of the work being done by CPAL's neighborhood and community partners, as well as OIPPS's efforts.
+Community data has yielded a wide array of solutions to support crime prevention efforts. Blight remediation, transformative change, and clean and green beautification efforts are just a few examples of how D.I.C.E plans to heal these communities. Our local partners work vigilantly to apply these solutions in the communities they themselves are already implemented in. This tool is a view of all of the work being done by CPAL's neighborhood and community partners, as well as OIPPS's efforts.
 :::
 :::
 :::
@@ -281,32 +284,31 @@ html_code <- paste0(
   '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
   '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
   monthly_average_people_served, 
-  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person"), '</span></div>',
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
   '</div>',
-  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Average Individuals Served Monthly</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Individuals Served Monthly</div>',
   '</div>'
 )
 htmltools::HTML(html_code)
 ```
 :::
-
 ::: g-col-3
 ```{r}
+total_events <- formatC(dice_events, format = "d", big.mark = ",")
 html_code <- paste0(
   '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
   '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
   '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
-  properties_transformed, 
-  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  total_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("clipboard-check"), '</span></div>',
   '</div>',
-  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Properties Transformed</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Completed </div>',
   '</div>'
 )
 htmltools::HTML(html_code)
 ```
 :::
 :::
-
 ::: column-margin
 Impact data updated monthly, last update 7/10/24.
 :::
@@ -314,7 +316,7 @@ Impact data updated monthly, last update 7/10/24.
 ::: grid
 ::: g-col-12
 ::: long-quote-container
-To view the individual contributions our community partners, visit our [Collaborators Page.](citywide.html#Community-Partners)
+To view the individual contributions our community partners, visit our [Collaborators Page.](collaborators.html#Community-Partners)
 :::
 :::
 :::
@@ -467,7 +469,7 @@ highchart() %>%
 :::
 :::
 
-# Locations of D.I.C.E. Work
+# D.I.C.E. Event Locations
 
 ::: grid
 ::: g-col-12
@@ -485,7 +487,7 @@ leaflet(data = point_data) %>%
               layerId = ~row.names(polygons)) %>%
     addPolygons(data = rtm_cells,
               group = "RTM Risk Cells",
-              color = "#042d33",
+              color = "red",
               weight = 1.5,
               opacity = 1,
               fill = FALSE,
@@ -523,10 +525,10 @@ leaflet(data = point_data) %>%
       library = "fa",
       icon = "wrench",
       iconColor = '#FFFFFF',
-      markerColor = 'magenta')
+      markerColor = 'pink')
    ) %>%
   addLayersControl(
-    overlayGroups = c("Cleaning and Greening", "Produce Distributions", "Property Transformations", "RTM Risk Cells", "DPD Divisions"),
+    overlayGroups = c("Cleaning and Greening", "Produce Distributions", "Property Transformations", "RTM Risk Cells"),
     options = layersControlOptions(collapsed = FALSE))
 
   
@@ -535,3 +537,4 @@ leaflet(data = point_data) %>%
 :::
 :::
 :::
+

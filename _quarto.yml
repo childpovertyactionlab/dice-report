@@ -45,28 +45,28 @@ website:
       right:
         - text: "<b>Menu<b>"
           menu:
-            - icon: house-door-fill
+            - icon: buildings-fill
               text: "Citywide"
               href: index.html
-            - icon: house-door-fill
+            - icon: people-fill
               text: "Collaborators"
-              href: citywide.html
-            - icon: house-door-fill
-              text: "South West Division"
+              href: collaborators.html
+            - icon: pin-map-fill
+              text: "Southwest Division"
               href: southwestpage.html 
-            - icon: house-door-fill
-              text: "North West Division"
+            - icon: pin-map-fill
+              text: "Northwest Division"
               href: northwestpage.html 
-            - icon: house-door-fill
-              text: "North East Division"
+            - icon: pin-map-fill
+              text: "Northeast Division"
               href: northeastpage.html 
-            - icon: house-door-fill
+            - icon: pin-map-fill
               text: "North Central Division"
               href: northcentralpage.html 
-            - icon: house-door-fill
-              text: "South East Division"
+            - icon: pin-map-fill
+              text: "Southeast Division"
               href: southeastpage.html     
-            - icon: house-door-fill
+            - icon: pin-map-fill
               text: "South Central Division"
               href: southcentralpage.html     
             - icon: github
