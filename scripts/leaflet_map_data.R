@@ -4,7 +4,8 @@ library(dplyr)
 library(sf)
 library(googlesheets4)
 
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/",
+                     sheet = "Sheet1")
 
 df <- impact %>%
   mutate(full_address = paste(street_address, city, state, zip_code, sep = ", ")) 

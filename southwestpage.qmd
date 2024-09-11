@@ -45,7 +45,7 @@ impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-
 impact$date <- ymd(impact$date)
 
 start_date <- as.Date("2024-01-01")
-end_date <- as.Date("2024-06-30")
+end_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -312,7 +312,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 7/10/24. 
+Impact data updated monthly, last update 9/10/24. 
 :::
 :::grid
 ::: g-col-12

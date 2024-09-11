@@ -18,7 +18,7 @@ library(leaflet)
 library(htmltools)
 
 ##### Load Data #####
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/")
 
 #impact <- read.csv("data/dice_data_july.csv")
 
@@ -40,7 +40,7 @@ polygons <- st_transform(mapdata, crs = 4269)
 impact$date <- ymd(impact$date)
 
 start_date <- as.Date("2024-01-01")
-current_date <- as.Date("2024-06-30")
+current_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -310,7 +310,7 @@ htmltools::HTML(html_code)
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 7/10/24.
+Impact data updated monthly, last update 9/10/24.
 :::
 
 ::: grid
