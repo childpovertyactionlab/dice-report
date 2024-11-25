@@ -18,11 +18,16 @@ library(leaflet)
 library(googlesheets4)
 library(highcharter)
 
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+##### Data #####
+#gs4_deauth()
+#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+
+impact <- st_read("data/dice_data_november_24.geojson") %>%
+  filter(event_type %in% c("Clean Up", "Produce Drive"))
+
+impact$DIVISION <- str_to_title(impact$DIVISION)
 
 ##### Filter/Transform Impact Data #####
-impact$date <- ymd(impact$date)
-
 start_date <- as.Date("2024-01-01")
 current_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
 
@@ -35,6 +40,11 @@ impact <- impact %>%
   )
 
 impact$lbs_produce <- impact$bags * 10
+
+impact[79,2] <- "Robbin Hood INC"
+impact[78,2] <- "United Peoples Coalition"
+impact[77,2] <- "Pop Up Comfortt"
+impact[76,2] <- "United Peoples Coalition"
 
 ##### Organization Data #####
 
@@ -50,17 +60,16 @@ ocv_distributed_produce <- sum(impact$lbs_produce, na.rm = TRUE)
 ocv_citywide_people_served <- sum(impact$people_served, na.rm = TRUE)
 
 oak_cliff_veggie_cumsum <- oak_cliff_veggie %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
-  group_by(month_year, formatted_month) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight))
-
 ### Robin Hood INC ### 
 robin_hood_inc <- bind_rows(
-  impact %>% filter(partner == "Robbin Hood INC"),
+  impact %>% filter(partner %in% c("Robbin Hood INC", "Robbin Hood Inc")),
   oak_cliff_veggie) 
 
 rh_lbs_trash <- sum(robin_hood_inc$lbs_trash, na.rm = TRUE)
@@ -69,16 +78,17 @@ rh_people_served <- sum(robin_hood_inc$people_served, na.rm = TRUE)
 rh_events <- nrow(robin_hood_inc)
 
 robin_hood_cumsum <- robin_hood_inc %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
   
 ### Not My Son ### 
 not_my_son <- impact %>%
-  filter(partner == "Not My Son") 
+  filter(partner %in% c("Not My Son", "Not My Son Limited")) 
 
 nms_lbs_trash <- sum(not_my_son$lbs_trash, na.rm = TRUE)
 nms_lbs_produce <- sum(not_my_son$lbs_produce, na.rm = TRUE)
@@ -86,26 +96,34 @@ nms_people_served <- sum(not_my_son$people_served, na.rm = TRUE)
 nms_events <- nrow(not_my_son)
 
 not_my_son_cumsum <- not_my_son %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+  mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
 
 ### United Peoples Coalition ###
 united_peoples_coalition <- impact %>%
-  filter(partner == "United Peoples Coalition") 
-
+  filter(partner %in% c(
+    "United Peoples Coalition", 
+    "United people’s coalition", 
+    "UPC", 
+    "UNITED PEOPLE'S COALITION", 
+    "United Peoples Coalition “Bonnie View”",
+    "United Peoples Coalition (UPC)"
+  )) 
 upc_lbs_trash <- sum(united_peoples_coalition$lbs_trash, na.rm = TRUE)
 upc_lbs_produce <- sum(united_peoples_coalition$lbs_produce, na.rm = TRUE)
 upc_people_served <- sum(united_peoples_coalition$people_served, na.rm = TRUE)
 upc_events <- nrow(united_peoples_coalition)
 
 united_cumsum <- united_peoples_coalition %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
@@ -120,16 +138,17 @@ gcc_people_served <- sum(goldmark_cultural$people_served, na.rm = TRUE)
 gcc_events <- nrow(goldmark_cultural)
 
 goldmark_cumsum <- goldmark_cultural %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
 
 ### Pop Up Comfortt ###
 pop_up_comfortt <- impact %>%
-  filter(partner == "Pop Up Comfortt") 
+  filter(partner %in% c("Pop Up Comfortt", "Pop Up Comfort")) 
 
 pc_lbs_trash <- sum(pop_up_comfortt$lbs_trash, na.rm = TRUE)
 pc_lbs_produce <- sum(pop_up_comfortt$lbs_produce, na.rm = TRUE)
@@ -137,25 +156,27 @@ pc_people_served <- sum(pop_up_comfortt$people_served, na.rm = TRUE)
 pc_events <- nrow(pop_up_comfortt)
 
 pop_up_cumsum <- pop_up_comfortt %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
 
 ### Serun Foundation ###
 serun <- impact %>%
-  filter(partner == "Serun Foundation") 
+  filter(partner %in% c("Serun Foundation", "Serun")) 
 sf_lbs_trash <- sum(serun$lbs_trash, na.rm = TRUE)
 sf_lbs_produce <- sum(serun$lbs_produce, na.rm = TRUE)
 sf_people_served <- sum(serun$people_served, na.rm = TRUE)
 sf_events <- nrow(serun)
 
 serun_cumsum <- serun %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
@@ -168,10 +189,11 @@ blt_lbs_produce <- sum(bachman_lt$lbs_produce, na.rm = TRUE)
 blt_people_served <- sum(bachman_lt$people_served, na.rm = TRUE)
 blt_events <- nrow(bachman_lt)
 
-serun_cumsum <- serun %>%
-  mutate(weight_of_impact = lbs_trash + lbs_produce) %>%
+blt_cumsum <- bachman_lt %>%
+   mutate(weight_of_impact = ifelse(is.na(lbs_trash), 0, lbs_trash) + 
+                            ifelse(is.na(lbs_produce), 0, lbs_produce)) %>%
   group_by(formatted_month, month_year) %>%
-  summarise(monthly_weight = sum(weight_of_impact)) %>%
+  summarise(monthly_weight = sum(weight_of_impact, na.rm = TRUE)) %>%
   arrange(month_year) %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
@@ -919,7 +941,7 @@ highchart() %>%
 ::: grid
 ::: g-col-3
 ```{r}
-upc_lbs_trash <- formatC(blt_lbs_trash, format = "d", big.mark = ",")
+blt_lbs_trash <- formatC(blt_lbs_trash, format = "d", big.mark = ",")
 html_code <- paste0(
   '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
   '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
@@ -936,7 +958,7 @@ htmltools::HTML(html_code)
 
 ::: g-col-3
 ```{r}
-upc_lbs_produce <- formatC(blt_lbs_produce, format = "d", big.mark = ",")
+blt_lbs_produce <- formatC(blt_lbs_produce, format = "d", big.mark = ",")
 html_code <- paste0(
   '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
   '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
@@ -953,7 +975,7 @@ htmltools::HTML(html_code)
 
 ::: g-col-3
 ```{r}
-upc_average_people_served <- formatC(blt_people_served, format = "d", big.mark = ",")
+blt_average_people_served <- formatC(blt_people_served, format = "d", big.mark = ",")
 html_code <- paste0(
   '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
   '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
@@ -991,9 +1013,9 @@ htmltools::HTML(html_code)
 
 highchart() %>%
   hc_chart(type = "line") %>%
-  hc_xAxis(categories = united_cumsum$formatted_month) %>%
+  hc_xAxis(categories = blt_cumsum$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
-  hc_add_series(data = united_cumsum$cumulative_weight, name = "Pounds", x = united_cumsum$formatted_month) %>%
+  hc_add_series(data = blt_cumsum$cumulative_weight, name = "Pounds", x = blt_cumsum$formatted_month) %>%
   hc_title(text = "Cumulative Weight of Impact") %>%
   hc_subtitle(text = "by Bachman Lake Together") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%

@@ -37,29 +37,21 @@ se_geojson <- geojson_json(se_boundaries)
 
 
 ##### Data #####
-gs4_deauth()
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+#gs4_deauth()
+#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-#impact <- read.csv("data/dice_data_july.csv")
-
-impact$date <- ymd(impact$date)
-
-start_date <- as.Date("2024-01-01")
-end_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
+impact <- st_read("data/dice_data_november_24.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
-  filter(date >= start_date & date < end_date) %>%
   mutate(
     month_year = floor_date(date, "month"),
     formatted_month = format(month_year, "%B, %Y")
   )
 
-impact$lbs_produce <- impact$bags * 10
-
 
 se_impact <- impact |>
- filter(district == "South East")
+ filter(DIVISION == "SOUTHEAST")
 
 total_lbs_trash <- sum(se_impact$lbs_trash, na.rm = TRUE)
 
@@ -94,6 +86,27 @@ people_served_data <- se_impact %>%
   group_by(month_year, formatted_month) %>%
   summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
   ungroup
+
+##### Crime Data #####
+by_type_prev_3 <- read.csv("data/crime/by_type_prev_3.csv")
+
+prev_3_yr_avg <- read.csv("data/crime/prev_3_avg_crime.csv")
+
+monthly_avg_2024 <- read.csv("data/monthly_avg_2024_crime.csv")
+
+by_type_24 <- read.csv("data/crime/by_type_24.csv")
+
+prev_3_yr_avg_SE <- prev_3_yr_avg %>%
+  filter(division == "Southeast")
+
+monthly_avg_2024_SE <- monthly_avg_2024 %>%
+  filter(division == "Southeast")
+
+prev_3_yr_type_SE <- by_type_prev_3 %>%
+  filter(division == "Southeast")
+
+by_type_24_SE <- by_type_24 %>%
+  filter(division == "Southeast")
 ```
 
 ```{=html}
@@ -311,7 +324,7 @@ value_box(
 :::
 
 ::: column-margin
-Impact data updated monthly, last update 9/10/24.
+Impact data updated monthly, last update 11/10/24.
 :::
 
 ::: grid
@@ -394,7 +407,6 @@ Trash services need support in the area. The build up and overflow of trash pose
 ::: pt-container
 ![Produce Drive Coordinated by Not My Son](media/distribution/SE_6-22_distribution_2.jpg){.pt-image group="transformation" style="top: -10px;" fig-align="center"}
 :::
-
 :::
 
 ::: g-col-1
@@ -452,7 +464,7 @@ highchart() %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
-  hc_title(text = "Pounds of Trash Collected by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Trash Collected by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -518,7 +530,6 @@ June
 <div class="tooltip">Click to see more</div>
 ```
 :::
-
 ::: g-col-1
 ::: col-md-1
 ![](media/cleaning/SE_6-8_before_2.jpg){.small-image .hidden group="June"}
@@ -578,15 +589,32 @@ August
 September
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="September"}
+![](media/cleaning/SE_9_14_before.jpg){.medium-image group="September"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
 :::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_9_14_after.jpg){.small-image .hidden group="September"}
 :::
 :::
 
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_9_14_before_2.jpg){.small-image .hidden group="September"}
+:::
+:::
+
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_9_14_after_2.jpg){.small-image .hidden group="September"}
+:::
+:::
+:::
+:::
 ::: grid
 ::: g-col-2
 ::: main-image-container
@@ -608,11 +636,16 @@ October
 November
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="November"}
+![](media/cleaning/SE_11_9_before.jpg){.medium-image width="75" height="95" group="November"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/cleaning/SE_11_9_after.jpg){.small-image .hidden group="November"}
+:::
 :::
 :::
 
@@ -681,11 +714,11 @@ March
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = produce_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = produce_data$cumulative_lbs_produce, name = "Pounds", x = produce_data$formatted_month) %>%
-  hc_title(text = "Pounds of Produce Distributed by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Produce Distributed by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -707,7 +740,7 @@ highchart() %>%
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_add_series(data = people_served_data$monthly_people_served, name = "Individuals", x =     people_served_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_xAxis(categories = people_served_data$formatted_month) |> 
@@ -734,7 +767,7 @@ highchart() %>%
 
 ::: grid
 ::: g-col-12
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 :::
 :::
 
@@ -773,11 +806,11 @@ May
 June
 :::
 
-![](media/distribution/SE_6-22_distribution_1.jpg){.medium-image group="June2"} \`{=html}
+![](media/distribution/SE_6-22_distribution_1.jpg){.medium-image group="June2"} {=html}
 
-::: tooltip
-Click to see more
-:::
+```{=html}
+<div class="tooltip">Click to see more</div>
+```
 :::
 
 ::: g-col-1
@@ -792,18 +825,22 @@ Click to see more
 :::
 :::
 :::
-
 ::: g-col-2
 ::: main-image-container
 ::: image-label
 July
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="July2"}
+![](media/distribution/SE_8_10_dist.png){.medium-image width="75" height="95" group="July2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_8_10_dist_2.png){.small-image .hidden group="July2"}
+:::
 :::
 :::
 
@@ -813,11 +850,15 @@ July
 August
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="August2"}
-
+![](media/distribution/SE_8_21_distribution.jpg){.medium-image group="August2"}
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_8_21_distribution_2.jpg){.small-image .hidden group="August2"}
+:::
+:::
 :::
 :::
 
@@ -843,11 +884,26 @@ September
 October
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="October2"}
+![](media/distribution/SE_10_26_distribution.jpg){.medium-image width="75" height="95" group="October2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_10_26_distribution_2.jpg){.small-image .hidden group="October2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_10_26_distribution_3.jpg){.small-image .hidden group="October2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/SE_10_26_distribution_4.jpg){.small-image .hidden group="October2"}
+:::
+:::
 :::
 :::
 
@@ -920,4 +976,56 @@ March
 ```
 :::
 :::
+:::
+
+# Crime 
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = prev_3_yr_avg_SE$Month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = prev_3_yr_avg_SE$mean, name = "Previous 3 Year Average" , x = prev_3_yr_avg_SE$Month) %>%
+  hc_add_series(data = monthly_avg_2024_SE$mean, name = "2024 Incidents", x = monthly_avg_2024_SE$Month) %>%
+  hc_title(text = "Incidents of Violent Crime in Southeast Division") %>%
+  hc_tooltip(pointFormat = "{series.x}:{point.y}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = TRUE )
+
+```
+:::
+:::
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "column") %>%
+  hc_title(text = "Violent Crime By Type") %>%
+  hc_xAxis(categories = by_type_24_SE$nibrs_crime) %>%
+  hc_yAxis(title = list(text = "Incidents")) %>%
+  hc_add_series(name = "2024", data = by_type_24_SE$yr_crime) %>%
+  hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_SE$prev_3) %>%
+  hc_plotOptions(column = list(
+    grouping = TRUE,
+    shadow = FALSE,
+    borderWidth = 0
+  ))
+
+```
+:::
+:::
+::: column-margin
+Crime data sourced from Dallas Police Department Open Data Portal. Last updated 11/10/2024.  
 :::

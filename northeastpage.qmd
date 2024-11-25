@@ -38,34 +38,25 @@ ne_geojson <- geojson_json(ne_boundaries)
 
 
 ##### Data #####
-gs4_deauth()
-impact <- read_sheet("https://https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit?gid=0#gid=0")
+#gs4_deauth()
+#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-#impact <- read.csv("data/dice_data_july.csv")
-
-impact$date <- ymd(impact$date)
-
-start_date <- as.Date("2024-01-01")
-end_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
+impact <- st_read("data/dice_data_november_24.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
-  filter(date >= start_date & date < end_date) %>%
   mutate(
     month_year = floor_date(date, "month"),
     formatted_month = format(month_year, "%B, %Y")
   )
 
-impact$lbs_produce <- impact$bags * 10
-
-
 ne_impact <- impact |>
- filter(district == "North East")
+ filter(DIVISION == "NORTHEAST")
 
 total_lbs_trash <- sum(ne_impact$lbs_trash, na.rm = TRUE)
 
 total_bags <- sum(ne_impact$bags, na.rm = TRUE)
-cumulative_lbs_produce <- cumsum(ne_impact$lbs_produce)
+cumulative_lbs_produce <- cumsum(ifelse(is.na(ne_impact$lbs_produce), 0, ne_impact$lbs_produce))
 
 monthly_average_people_served <- ne_impact %>%
   filter(people_served != 0) %>%
@@ -82,11 +73,11 @@ trash_data <- ne_impact %>%
   mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
 
 produce_data <- ne_impact %>%
-select(formatted_month, lbs_produce, month_year) %>%
+  select(formatted_month, lbs_produce, month_year) %>%
   arrange(month_year) %>%
   group_by(month_year, formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
- ungroup() %>%  
+  summarise(monthly_lbs_produce = sum(lbs_produce, na.rm = TRUE)) %>% # Handle NAs here
+  ungroup() %>%
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 
 people_served_data <- ne_impact %>%
@@ -95,6 +86,27 @@ people_served_data <- ne_impact %>%
   group_by(month_year, formatted_month) %>%
   summarise(monthly_people_served = sum(people_served, na.rm = TRUE))%>%
   ungroup
+
+##### Crime Data #####
+by_type_prev_3 <- read.csv("data/crime/by_type_prev_3.csv")
+
+prev_3_yr_avg <- read.csv("data/crime/prev_3_avg_crime.csv")
+
+monthly_avg_2024 <- read.csv("data/crime/monthly_avg_2024_crime.csv")
+
+by_type_24 <- read.csv("data/crime/by_type_24.csv")
+
+prev_3_yr_avg_NE <- prev_3_yr_avg %>%
+  filter(division == "Northeast")
+
+monthly_avg_2024_NE <- monthly_avg_2024 %>%
+  filter(division == "Northeast")
+
+prev_3_yr_type_NE <- by_type_prev_3 %>%
+  filter(division == "Northeast")
+
+by_type_24_NE <- by_type_24 %>%
+  filter(division == "Northeast")
 ```
 
 ```{=html}
@@ -311,7 +323,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 9/10/24. 
+Impact data updated monthly, last update 11/10/24. 
 :::
 ::: grid
 ::: g-col-12
@@ -435,7 +447,7 @@ highchart() %>%
   hc_xAxis(categories = trash_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
-  hc_title(text = "Pounds of Trash Collected by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Trash Collected by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -535,11 +547,26 @@ July
 August
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="August"}
+![](media/cleaning/NE_8_17_before.jpg){.medium-image group="August"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/cleaning/NE_8_17_before_2.jpg){.small-image .hidden group="May"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/cleaning/NE_8_17_after.jpg){.small-image .hidden group="May"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/cleaning/NE_8_17_after_2.jpg){.small-image .hidden group="May"}
+:::
 :::
 :::
 
@@ -661,11 +688,11 @@ March
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = produce_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = produce_data$cumulative_lbs_produce, name = "Pounds", x = produce_data$formatted_month) %>%
-  hc_title(text = "Pounds of Produce Distributed by DICE") %>%
+  hc_title(text = "Cumulative Pounds of Produce Distributed by DICE") %>%
   hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
@@ -687,7 +714,7 @@ highchart() %>%
 ::: g-col-6
 ```{r}
 highchart() %>%
-  hc_chart(type = "line", width = 500) %>%
+  hc_chart(type = "line", width = 400) %>%
   hc_add_series(data = people_served_data$monthly_people_served, name = "Individuals", x =     people_served_data$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
   hc_xAxis(categories = people_served_data$formatted_month) |> 
@@ -748,7 +775,7 @@ May
 June
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="June"}
+![](media/distribution/NE_6_29_distribution.jpg){.medium-image group="June"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
@@ -776,10 +803,10 @@ July
 August
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="August"}
+![](media/distribution/NE_8_10_dist.jpg){.medium-image group="August"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
 :::
 :::
@@ -790,11 +817,21 @@ August
 September
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="September"}
+![](media/distribution/NE_9_28_distribution.jpg){.medium-image group="September2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+::: g-col-1
+::: col-md-1
+![](media/distribution/NE_9_28_distribution_2.jpg){.small-image .hidden group="September2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/NE_9_28_distribution_3.jpg){.small-image .hidden group="September2"}
+:::
+:::
 :::
 :::
 :::
@@ -806,11 +843,20 @@ September
 October
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="October"}
-
+![](media/distribution/NE_10_27_dsitribution.jpg){.medium-image width="75" height="95" group="October2"}
+:::
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+::: g-col-1
+::: col-md-1
+![](media/distribution/NE_10_27_dsitribution_2.jpeg){.small-image .hidden group="October2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/NE_10_27_dsitribution_3.jpg){.small-image .hidden group="October2"}
+:::
 :::
 :::
 
@@ -883,4 +929,56 @@ March
 ```
 :::
 :::
+:::
+
+# Crime 
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = prev_3_yr_avg_NE$Month) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = prev_3_yr_avg_NE$mean, name = "Previous 3 Year Average" , x = prev_3_yr_avg_NE$Month) %>%
+  hc_add_series(data = monthly_avg_2024_NE$mean, name = "2024 Incidents", x = monthly_avg_2024_NE$Month) %>%
+  hc_title(text = "Incidents of Violent Crime in Northeast Division") %>%
+  hc_tooltip(pointFormat = "{series.x}:{point.y}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = TRUE )
+
+```
+:::
+:::
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "column") %>%
+  hc_title(text = "Violent Crime By Type") %>%
+  hc_xAxis(categories = by_type_24_NE$nibrs_crime) %>%
+  hc_yAxis(title = list(text = "Incidents")) %>%
+  hc_add_series(name = "2024", data = by_type_24_NE$yr_crime) %>%
+  hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_NE$prev_3) %>%
+  hc_plotOptions(column = list(
+    grouping = TRUE,
+    shadow = FALSE,
+    borderWidth = 0
+  ))
+
+```
+:::
+:::
+::: column-margin
+Crime data sourced from Dallas Police Department Open Data Portal. Last updated 11/10/2024.  
 :::

@@ -18,23 +18,18 @@ library(leaflet)
 library(googlesheets4)
 library(highcharter)
 
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+##### Data #####
+#gs4_deauth()
+#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-##### Filter/Transform Impact Data #####
-impact$date <- ymd(impact$date)
-
-start_date <- as.Date("2024-01-01")
-current_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
+impact <- st_read("data/dice_data_november_24.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
-  filter(date >= start_date & date < current_date) %>%
   mutate(
     month_year = floor_date(date, "month"),
     formatted_month = format(month_year, "%B, %Y")
   )
-
-impact$lbs_produce <- impact$bags * 10
 
 ##### Organization Data #####
 

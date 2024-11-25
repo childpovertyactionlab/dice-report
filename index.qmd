@@ -16,11 +16,21 @@ library(geojsonio)
 library(googlesheets4)
 library(leaflet)
 library(htmltools)
+library(stringr)
 
-##### Load Data #####
-impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/")
+##### Data #####
+#gs4_deauth()
+#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-#impact <- read.csv("data/dice_data_july.csv")
+impact <- st_read("data/dice_data_november_24.geojson")
+
+impact$DIVISION <- str_to_title(impact$DIVISION)
+
+impact <- impact %>%
+  mutate(
+    month_year = floor_date(date, "month"),
+    formatted_month = format(month_year, "%B, %Y")
+  )
 
 mapdata <- st_read("data/dpd_divisions.geojson")
 
@@ -35,22 +45,6 @@ myhcmap<- mapdata %>% filter(DIVISION != "CENTRAL") %>%
 geojson <- geojson_json(myhcmap)
 
 polygons <- st_transform(mapdata, crs = 4269)
-
-##### Filter/Transform Impact Data #####
-impact$date <- ymd(impact$date)
-
-start_date <- as.Date("2024-01-01")
-current_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
-
-# Filter rows between January 1, 2024, and the current date
-impact <- impact %>%
-  filter(date >= start_date & date < current_date) %>%
-  mutate(
-    month_year = floor_date(date, "month"),
-    formatted_month = format(month_year, "%B, %Y")
-  )
-
-impact$lbs_produce <- impact$bags * 10
 
 ##### Value Box Data #####
 total_lbs_trash <- sum(impact$lbs_trash, na.rm = TRUE)
@@ -68,36 +62,48 @@ trash_data <- impact %>%
   arrange(month_year) %>%
   group_by(month_year, formatted_month) %>%
   summarise(monthly_lbs_trash = sum(lbs_trash, na.rm = TRUE)) %>%
- ungroup() %>%
-  mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash))
+  ungroup() %>%
+  mutate(cumulative_lbs_trash = cumsum(monthly_lbs_trash)) %>%
+  slice(-n())
+
 
 trash_by_district<- impact %>%
-  select(lbs_trash, district) %>%
+  select(lbs_trash, DIVISION) %>%
   filter(lbs_trash != 0) %>%
-  group_by(district) %>%
+  group_by(DIVISION) %>%
   summarise(district_lbs_trash = sum(lbs_trash))
 
-produce_by_month<- impact %>%
+produce_by_month <- impact %>%
   select(formatted_month, lbs_produce, month_year) %>%
   arrange(month_year) %>%
   group_by(month_year, formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
- ungroup() %>%  
-  mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
+  summarise(monthly_lbs_produce = sum(lbs_produce, na.rm = TRUE)) %>%
+  ungroup() %>%  
+  mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce)) %>%
+  slice(-n())
+
+
 
 produce_by_district<- impact %>%
-  select( lbs_produce, district) %>%
-  group_by(district) %>%
-  summarise(district_lbs_produce = sum(lbs_produce)) 
+  select( lbs_produce, DIVISION) %>%
+  group_by(DIVISION) %>%
+  summarise(district_lbs_produce = sum(lbs_produce)) %>%
+  slice(-n())
+
 
 people_served_data <- impact %>%
-  select(formatted_month, people_served, district) %>%
+  select(formatted_month, people_served, DIVISION) %>%
   filter(people_served != 0) %>%
   group_by(formatted_month) %>%
-  summarise(monthly_people_served = sum(people_served))
+  summarise(monthly_people_served = sum(people_served)) 
 
-monthly_average_people_served <- people_served_data %>%
-  summarise(monthly_people_served = mean(monthly_people_served)) %>%
+# Drop geometry from people_served_data
+people_served_data_numeric <- people_served_data %>%
+  st_drop_geometry()
+
+# Calculate the monthly average of people served
+monthly_average_people_served <- people_served_data_numeric %>%
+  summarise(monthly_people_served = mean(monthly_people_served, na.rm = TRUE)) %>%
   round()
 
 ##### Leaflet Location Map Data #####
@@ -117,6 +123,34 @@ produce_locations <- point_data %>%
 
 clean_locations <- point_data %>%
   filter(point_data$event_type == "clean")
+
+##### Crime Data #####
+by_type_prev_3 <- read.csv("data/crime/by_type_prev_3.csv") %>%
+  group_by(nibrs_crime) %>%
+  summarise(prev_3 = sum(prev_3, na.rm = TRUE)) %>%
+  ungroup() %>%
+  filter(nibrs_crime != "AGG ASSAULT - FV") 
+
+prev_3_yr_avg <- read.csv("data/crime/prev_3_avg_crime.csv") %>%
+  group_by(Month) %>%
+  summarise(Year = sum(mean, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(Month = factor(Month, levels = c("January", "February", "March", "April", "May", "June", 
+                                          "July", "August", "September", "October", "November", "December")))
+  
+monthly_avg_2024 <- read.csv("data/monthly_avg_2024_crime.csv") %>%
+  group_by(Month) %>%
+  summarise(Year = sum(mean, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(Month = factor(Month, levels = c("January", "February", "March", "April", "May", "June", 
+                                          "July", "August", "September", "October", "November", "December")))
+
+by_type_24 <- read.csv("data/crime/by_type_24.csv") %>%
+  group_by(nibrs_crime) %>%
+  summarise(Year = sum(yr_crime, na.rm = TRUE)) %>%
+  ungroup() %>%
+  filter(nibrs_crime != "AGG ASSAULT - FV")
+
 ```
 
 ```{=html}
@@ -310,7 +344,7 @@ htmltools::HTML(html_code)
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 9/10/24.
+Impact data updated monthly, last update 11/10/24.
 :::
 
 ::: grid
@@ -343,7 +377,7 @@ highchart() %>%
   hc_yAxis(min = 0) %>% 
   hc_add_series(data = trash_data$cumulative_lbs_trash, name = "Pounds", x = trash_data$formatted_month) %>%
   hc_title(text = "Cumulative Pounds of Trash Collected by DICE") %>%
-  hc_tooltip(pointFormat = "{series.name}: {point.y:.2f}") %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:,.0f}" ) %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
     lineWidth = 4,  
@@ -364,10 +398,10 @@ highchart() %>%
 ```{r}
 highchart() %>%
   hc_chart(type = "column", width = 400) %>%
-  hc_xAxis(categories = trash_by_district$district) %>%
+  hc_xAxis(categories = trash_by_district$DIVISION) %>%
   hc_add_series(data = list_parse2(trash_by_district), name = "Pounds") %>%
   hc_title(text = "Pounds of Trash Collected by District") %>%
-  hc_tooltip(pointFormat = "{point.y:.2f} Pounds" ) %>%
+  hc_tooltip(pointFormat = "{series.name}: {point.y:,.0f}"  ) %>%
   hc_colors(palette_cpal_main) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(
@@ -396,10 +430,16 @@ highchart() %>%
   hc_chart(type = "line", width = 400) %>%
   hc_xAxis(categories = produce_by_month$formatted_month) %>%
   hc_yAxis(min = 0) %>% 
-  hc_add_series(data = produce_by_month$cumulative_lbs_produce, name = "Pounds", x = produce_by_month$formatted_month) %>%
+  hc_add_series(
+    data = produce_by_month$cumulative_lbs_produce, 
+    name = "Pounds", 
+    x = produce_by_month$formatted_month
+  ) %>%
   hc_title(text = "Cumulative Pounds of Produce Distributed") %>%
   hc_subtitle(text = "by DICE") %>%
-  hc_tooltip(pointFormat = "{series.name}: {point.y:2f}") %>%
+  hc_tooltip(
+    pointFormat = "{series.name}: {point.y:,.0f}"  
+  ) %>%
   hc_colors(palette_cpal_main) %>%
   hc_plotOptions(series = list(
     lineWidth = 4,  
@@ -411,7 +451,7 @@ highchart() %>%
       lineWidth = 2,
       lineColor = NULL    
     )
-  )) |> 
+  )) %>%
   hc_legend(enabled = FALSE)
 
 ```
@@ -422,10 +462,10 @@ highchart() %>%
 highchart() %>%
   hc_chart(type = "column", width = 400) %>%
   hc_add_series(data = list_parse2(produce_by_district), name = "Pounds") %>%
-  hc_xAxis(categories = produce_by_district$district) %>%
+  hc_xAxis(categories = produce_by_district$DIVISION) %>%
   hc_title(text = "Pounds of Produce Distributed") %>%
   hc_subtitle(text = "by District") %>%
- hc_tooltip(pointFormat = "{point.y:2f} Pounds" ) %>%
+ hc_tooltip(pointFormat = "{series.name}: {point.y:,.0f}"  ) %>%
   hc_colors(palette_cpal_main) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(
@@ -469,6 +509,59 @@ highchart() %>%
 :::
 :::
 
+# Crime 
+
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "line") %>%
+  hc_xAxis(categories = levels(prev_3_yr_avg$Month)) %>%
+  hc_yAxis(min = 0) %>% 
+  hc_add_series(data = prev_3_yr_avg$Year, name = "Previous 3 Year Average" , x = prev_3_yr_avg$Month) %>%
+  hc_add_series(data = monthly_avg_2024$Year, name = "2024 Incidents", x = monthly_avg_2024$Month) %>%
+  hc_title(text = "Incidents of Violent Crime in the City of Dallas") %>%
+  hc_tooltip(pointFormat = "{series.x}:{point.y}") %>%
+  hc_colors(palette_cpal_main) %>%
+  hc_plotOptions(series = list(
+    lineWidth = 4,  
+    marker = list(
+      enabled = TRUE,
+      symbol = "circle", 
+      radius = 6,         
+      fillColor = NULL,   
+      lineWidth = 2,
+      lineColor = NULL    
+    )
+  )) |> 
+  hc_legend(enabled = TRUE )
+
+```
+:::
+:::
+::: grid
+::: g-col-12
+```{r}
+highchart() %>%
+  hc_chart(type = "column") %>%
+  hc_title(text = "City of Dallas Violent Crime") %>%
+  hc_subtitle(text = "By Type") %>%
+  hc_xAxis(categories = by_type_24$nibrs_crime) %>%
+  hc_yAxis(title = list(text = "Incidents")) %>%
+  hc_add_series(name = "2024", data = by_type_24$Year) %>%
+  hc_add_series(name = "Previous 3 year average", data = by_type_prev_3$prev_3) %>%
+  hc_plotOptions(column = list(
+    grouping = TRUE,
+    shadow = FALSE,
+    borderWidth = 0
+  ))
+
+```
+:::
+:::
+::: column-margin
+Crime data sourced from Dallas Police Department Open Data Portal. Last updated 11/10/2024.  
+:::
 # D.I.C.E. Event Locations
 
 ::: grid
