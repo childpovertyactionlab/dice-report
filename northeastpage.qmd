@@ -41,7 +41,7 @@ ne_geojson <- geojson_json(ne_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_november_24.geojson")
+impact <- st_read("data/dice_data_jan6.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -51,7 +51,7 @@ impact <- impact %>%
   )
 
 ne_impact <- impact |>
- filter(DIVISION == "NORTHEAST")
+ filter(division == "NORTHEAST")
 
 total_lbs_trash <- sum(ne_impact$lbs_trash, na.rm = TRUE)
 
@@ -323,7 +323,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 11/10/24. 
+Impact data updated monthly, last update 01/06/2025. 
 :::
 ::: grid
 ::: g-col-12
@@ -620,11 +620,26 @@ November
 December
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="December"}
+![](media/Dec Update/64_01.jpg){.medium-image group="December2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/64_02.jpg){.small-image .hidden group="December2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/64_03.jpg){.small-image .hidden group="December2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/64_04.jpg){.small-image .hidden group="December2"}
+:::
+:::
 :::
 :::
 
@@ -747,7 +762,7 @@ highchart() %>%
 April
 :::
 
-![](media/distribution/NE_4-27_distribution.jpg){group="April2"}
+![](media/distribution/NE_4-27_distribution.jpg){.medium-image width="75" height="95" group="April2"}
 
 ```{=html}
 <div class="tooltip">Click to see more</div>
@@ -761,7 +776,7 @@ April
 May
 :::
 
-![](media/distribution/NE_5-25_distribution.jpg){.medium-image group="May2"}
+![](media/distribution/NE_5-25_distribution.jpg){.medium-image width="75" height="95" group="May2"}
 
 ```{=html}
 <div class="tooltip">Click to see more</div>
@@ -822,6 +837,7 @@ September
 ```{=html}
 <div class="tooltip">Click to see more</div>
 ```
+:::
 ::: g-col-1
 ::: col-md-1
 ![](media/distribution/NE_9_28_distribution_2.jpg){.small-image .hidden group="September2"}
@@ -830,7 +846,6 @@ September
 ::: g-col-1
 ::: col-md-1
 ![](media/distribution/NE_9_28_distribution_3.jpg){.small-image .hidden group="September2"}
-:::
 :::
 :::
 :::
@@ -844,10 +859,11 @@ October
 :::
 
 ![](media/distribution/NE_10_27_dsitribution.jpg){.medium-image width="75" height="95" group="October2"}
-:::
+
 ```{=html}
 <div class="tooltip">Click to see more</div>
 ```
+:::
 ::: g-col-1
 ::: col-md-1
 ![](media/distribution/NE_10_27_dsitribution_2.jpeg){.small-image .hidden group="October2"}
@@ -859,6 +875,7 @@ October
 :::
 :::
 :::
+
 
 ::: g-col-2
 ::: main-image-container
@@ -880,11 +897,21 @@ November
 December
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="December"}
+![](media/Dec Update/67_01.jpg){.medium-image group="December2"}
 
 ```{=html}
 <div class="tooltip">Coming Soon</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/67_02.jpg){.small-image .hidden group="December2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/67_03.jpg){.small-image .hidden group="December2"}
+:::
 :::
 :::
 
@@ -931,6 +958,7 @@ March
 :::
 :::
 
+
 # Crime 
 ::: grid
 ::: g-col-12
@@ -968,8 +996,9 @@ highchart() %>%
   hc_title(text = "Violent Crime By Type") %>%
   hc_xAxis(categories = by_type_24_NE$nibrs_crime) %>%
   hc_yAxis(title = list(text = "Incidents")) %>%
-  hc_add_series(name = "2024", data = by_type_24_NE$yr_crime) %>%
   hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_NE$prev_3) %>%
+  hc_add_series(name = "2024", data = by_type_24_NE$yr_crime) %>%
+  hc_colors(palette_cpal_main) %>%
   hc_plotOptions(column = list(
     grouping = TRUE,
     shadow = FALSE,

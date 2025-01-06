@@ -40,7 +40,7 @@ sw_geojson <- geojson_json(sw_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_november_24.geojson")
+impact <- st_read("data/dice_data_jan6.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -51,7 +51,7 @@ impact <- impact %>%
 
 
 sw_impact <- impact |>
- filter(DIVISION == "SOUTHWEST")
+ filter(division == "SOUTHWEST")
 
 total_lbs_trash <- sum(sw_impact$lbs_trash, na.rm = TRUE)
 
@@ -325,7 +325,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 11/10/24. 
+Impact data updated monthly, last update 01/06/2025.
 :::
 :::grid
 ::: g-col-12
@@ -829,11 +829,26 @@ October
 November
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="November2"}
+![](media/distribution/sw_11_1.jpg){.medium-image group="November2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/sw_11_@.jpg){.small-image .hidden group="November2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/sw_11_3.jpg){.small-image .hidden group="November2"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/sw_11_4.jpg){.small-image .hidden group="November2"}
+:::
 :::
 :::
 
@@ -931,8 +946,9 @@ highchart() %>%
   hc_title(text = "Violent Crime By Type") %>%
   hc_xAxis(categories = by_type_24_SW$nibrs_crime) %>%
   hc_yAxis(title = list(text = "Incidents")) %>%
-  hc_add_series(name = "2024", data = by_type_24_SW$yr_crime) %>%
   hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_SW$prev_3) %>%
+  hc_add_series(name = "2024", data = by_type_24_SW$yr_crime) %>%
+  hc_colors(palette_cpal_main) %>%
   hc_plotOptions(column = list(
     grouping = TRUE,
     shadow = FALSE,

@@ -40,7 +40,7 @@ nc_geojson <- geojson_json(nc_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_november_24.geojson")
+impact <- st_read("data/dice_data_jan6.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -51,7 +51,7 @@ impact <- impact %>%
 
 
 nc_impact <- impact |>
- filter(DIVISION == "NORTH CENTRAL")
+ filter(division == "NORTH CENTRAL")
 
 total_lbs_trash <- sum(nc_impact$lbs_trash, na.rm = TRUE)
 
@@ -330,7 +330,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 11/10/24.
+Impact data updated monthly, last update 01/06/2025.
 :::
 ::: grid
 ::: g-col-12
@@ -904,11 +904,16 @@ October
 November
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="November2"}
+![](media/distribution/NC_11_1.jpg){.medium-image group="November2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/distribution/NC_11_2.jpg){.small-image .hidden group="November2"}
+:::
 :::
 :::
 
@@ -918,13 +923,19 @@ November
 December
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="December2"}
+![](media/Dec Update/65_01.jpg){.medium-image .medium-image width="75" height="95" group="December2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
 :::
+::: g-col-1
+::: col-md-1
+![](media/Dec Update/65_02){.small-image .hidden group="December2"}
 :::
+:::
+:::
+
 
 ::: g-col-2
 ::: main-image-container
@@ -1006,8 +1017,9 @@ highchart() %>%
   hc_title(text = "Violent Crime By Type") %>%
   hc_xAxis(categories = by_type_24_NC$nibrs_crime) %>%
   hc_yAxis(title = list(text = "Incidents")) %>%
-  hc_add_series(name = "2024", data = by_type_24_NC$yr_crime) %>%
   hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_NC$prev_3) %>%
+  hc_add_series(name = "2024", data = by_type_24_NC$yr_crime) %>%
+  hc_colors(palette_cpal_main) %>%
   hc_plotOptions(column = list(
     grouping = TRUE,
     shadow = FALSE,

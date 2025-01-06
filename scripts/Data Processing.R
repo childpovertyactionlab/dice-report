@@ -38,7 +38,11 @@ impact <- st_read("data/pre_arcgis_data.geojson") %>%
   )) %>%
   filter(event_type %in% c("Clean Up", "Produce Drive"))
 
-data <- st_read("data/DICE November Update Data.geojson")
+##### CHANGE FOR NEW UPDATE FILE #####
+
+olddata <- st_read("data/dice_data_dec_24.geojson")
+
+newdata <- st_read("data/DecUpdate.geojson")
 
 divisions <- st_read("data/dpd_divisions.geojson") %>%
   st_transform(4269) %>%
@@ -46,12 +50,17 @@ divisions <- st_read("data/dpd_divisions.geojson") %>%
   select(DIVISION, geometry)
 
 ##### Transform ArcGIS data for compatibility w/ current report. Transforming dates, renaming columns, adding divisions #####
-data <- data %>%
-  mutate(CreationDate = as.POSIXct(CreationDate / 1000, origin = "1970-01-01", tz = "UTC")) %>%
-  mutate(EditDate = as.POSIXct(EditDate / 1000, origin = "1970-01-01", tz = "UTC")) %>%
-  mutate(activity_date = as.POSIXct(activity_date / 1000, origin = "1970-01-01", tz = "UTC"))
+#data <- newdata %>%
+ #mutate(CreationDate = as.POSIXct(CreationDate / 1000, origin = "1970-01-01", tz = "UTC")) %>%
+  #mutate(EditDate = as.POSIXct(EditDate / 1000, origin = "1970-01-01", tz = "UTC")) %>%
+  #mutate(activity_date = as.POSIXct(activity_date / 1000, origin = "1970-01-01", tz = "UTC"))
 
-cleandata <- data %>%
+newdata <- newdata %>%
+  mutate(CreationDate = format(as.Date(CreationDate, format = "%a, %d %b %Y %H:%M:%S"), "%Y-%m-%d")) %>%
+  mutate(activity_date  = format(as.Date(activity_date, format = "%a, %d %b %Y %H:%M:%S"), "%Y-%m-%d"))
+
+
+newcleandata <- newdata %>%
   rename(lbs_trash = for_trash_removal_how_many_poun,
          people_served = how_many_people_were_served,
          date = activity_date,
@@ -59,10 +68,14 @@ cleandata <- data %>%
          comments = untitled_question_6_other,
          partner = organization_name,
          event_type = activity_type) %>%
-  st_transform(st_crs(impact)) %>%
+  st_transform(st_crs(olddata)) %>%
   st_join(divisions) %>%
-  rename(district = DIVISION)
+  rename(district = DIVISION) %>%
+  mutate(date = as.Date(date)) %>%  
+  filter(date > as.Date("2024-12-15")) %>%
+  st_transform(crs = 4269)
 
+newcleandata <- as.data.frame(newcleandata)
 ##### Manual Entry of Produce Data from comments 
 cleandata$bags <- 0
 cleandata[5,10] <- "Produce Drive"
@@ -75,11 +88,14 @@ cleandata[49,17] <- 60
 
 ##### Combine new data w/ old googlesheet data #####
 
-combined_data <- bind_rows(cleandata, impact) %>%
+combined_data <- olddata %>%
+  mutate(CreationDate = as.character(CreationDate)) %>%
+  bind_rows(newcleandata) %>%
   st_join(divisions, left = TRUE) %>%
   mutate(District = divisions$District) %>%
-  select(1,7,9:17, 25:27) %>%
-  mutate(lbs_trash = na_if(lbs_trash, 0)) 
+  mutate(lbs_trash = na_if(lbs_trash, 0)) %>%
+  mutate(division = coalesce(division, DIVISION)) %>%
+  select(1:12,14,16,25)
 
 ##### Manual Entry of Division #####
 
@@ -102,11 +118,20 @@ combined_data[31,13] <- "NORTHWEST"
 combined_data[45,13] <- "NORTHWEST"
 combined_data[38,4] <- "Produce Drive"
 
-final_data <- combined_data %>%
+newcleandata[6, "district"] <- "SOUTHEAST"
+newcleandata[3, "district"] <- "NORTHEAST"
+newcleandata[1, "district"] <- "SOUTH CENTRAL"
+newcleandata[2, "district"] <- "NORTH CENTRAL"
+
+final_data <- olddata %>%
+  mutate(division = DIVISION) %>%
+  st_transform(crs = 4269) %>%
+  bind_rows(newcleandata) %>%
   mutate(
     month_year = floor_date(date, "month"),
     formatted_month = format(month_year, "%B, %Y")
-  )
+  ) %>%
+  select(!DIVISION)
 
 final_data$date <- as.Date(final_data$date)
 
@@ -128,8 +153,8 @@ final_data <- final_data %>%
   ) %>%
   ungroup() %>%
   mutate(lbs_produce = bags * 10)
-
-
-st_write(final_data, "data/dice_data_november_24.geojson", delete_dsn = TRUE)
+final_data <- st_make_valid(combined_data)
+file.remove("data/dice_data_dec_24.geojson")
+st_write(final_data, "data/dice_data_jan6.geojson", delete_dsn = TRUE)
 
 

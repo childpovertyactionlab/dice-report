@@ -40,7 +40,7 @@ sc_geojson <- geojson_json(sc_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_november_24.geojson")
+impact <- st_read("data/dice_data_jan6.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -50,7 +50,7 @@ impact <- impact %>%
   )
 
 sc_impact <- impact |>
- filter(DIVISION == "SOUTH CENTRAL")
+ filter(division == "SOUTH CENTRAL")
 
 total_lbs_trash <- sum(sc_impact$lbs_trash, na.rm = TRUE)
 
@@ -324,7 +324,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 11/10/24.
+Impact data updated monthly, last update 01/06/2025.
 :::
 
 ::: grid
@@ -963,8 +963,9 @@ highchart() %>%
   hc_title(text = "Violent Crime By Type") %>%
   hc_xAxis(categories = by_type_24_SC$nibrs_crime) %>%
   hc_yAxis(title = list(text = "Incidents")) %>%
-  hc_add_series(name = "2024", data = by_type_24_SC$yr_crime) %>%
   hc_add_series(name = "Previous 3 year average", data = prev_3_yr_type_SC$prev_3) %>%
+  hc_add_series(name = "2024", data = by_type_24_SC$yr_crime) %>%
+  hc_colors(palette_cpal_main) %>%
   hc_plotOptions(column = list(
     grouping = TRUE,
     shadow = FALSE,

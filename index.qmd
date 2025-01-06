@@ -22,9 +22,10 @@ library(stringr)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_november_24.geojson")
+impact <- st_read("data/dice_data_jan6.geojson") %>%
+   filter(!is.na(division))
 
-impact$DIVISION <- str_to_title(impact$DIVISION)
+impact$DIVISION <- str_to_title(impact$division)
 
 impact <- impact %>%
   mutate(
@@ -85,9 +86,11 @@ produce_by_month <- impact %>%
 
 
 produce_by_district<- impact %>%
-  select( lbs_produce, DIVISION) %>%
+  filter(!is.na(lbs_produce)) %>%
+  select(lbs_produce, DIVISION) %>%
   group_by(DIVISION) %>%
   summarise(district_lbs_produce = sum(lbs_produce)) %>%
+  ungroup() %>%
   slice(-n())
 
 
@@ -344,7 +347,7 @@ htmltools::HTML(html_code)
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 11/10/24.
+Impact data updated monthly, last update 01/06/2025.
 :::
 
 ::: grid
@@ -548,8 +551,9 @@ highchart() %>%
   hc_subtitle(text = "By Type") %>%
   hc_xAxis(categories = by_type_24$nibrs_crime) %>%
   hc_yAxis(title = list(text = "Incidents")) %>%
-  hc_add_series(name = "2024", data = by_type_24$Year) %>%
   hc_add_series(name = "Previous 3 year average", data = by_type_prev_3$prev_3) %>%
+  hc_add_series(name = "2024", data = by_type_24$Year) %>%
+  hc_colors(palette_cpal_main) %>%
   hc_plotOptions(column = list(
     grouping = TRUE,
     shadow = FALSE,
