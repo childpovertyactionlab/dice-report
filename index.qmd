@@ -22,7 +22,7 @@ library(stringr)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_jan6.geojson") %>%
+impact <- st_read("data/dice_data_feb4.geojson") %>%
    filter(!is.na(division))
 
 impact$DIVISION <- str_to_title(impact$division)
@@ -347,7 +347,7 @@ htmltools::HTML(html_code)
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 01/06/2025.
+Impact data updated monthly, last update 02/04/2025.
 :::
 
 ::: grid

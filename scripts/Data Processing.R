@@ -40,9 +40,9 @@ impact <- st_read("data/pre_arcgis_data.geojson") %>%
 
 ##### CHANGE FOR NEW UPDATE FILE #####
 
-olddata <- st_read("data/dice_data_dec_24.geojson")
+olddata <- st_read("data/dice_data_jan6.geojson")
 
-newdata <- st_read("data/DecUpdate.geojson")
+newdata <- st_read("data/FebUpdate.geojson")
 
 divisions <- st_read("data/dpd_divisions.geojson") %>%
   st_transform(4269) %>%
@@ -72,7 +72,7 @@ newcleandata <- newdata %>%
   st_join(divisions) %>%
   rename(district = DIVISION) %>%
   mutate(date = as.Date(date)) %>%  
-  filter(date > as.Date("2024-12-15")) %>%
+  filter(date > as.Date("2024-12-22")) %>%  ## Filter for entries newer than olddata
   st_transform(crs = 4269)
 
 newcleandata <- as.data.frame(newcleandata)

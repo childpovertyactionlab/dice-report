@@ -22,7 +22,7 @@ library(highcharter)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_jan6.geojson") %>%
+impact <- st_read("data/dice_data_feb4.geojson") %>%
   filter(event_type %in% c("Clean Up", "Produce Drive"))
 
 impact$DIVISION <- str_to_title(impact$division)
