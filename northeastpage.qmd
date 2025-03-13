@@ -41,7 +41,7 @@ ne_geojson <- geojson_json(ne_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_feb4.geojson")
+impact <- st_read("data/dice_data_march3.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -323,7 +323,7 @@ value_box(
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 02/04/2025. 
+Impact data updated monthly, last update 03/13/2025. 
 :::
 ::: grid
 ::: g-col-12
@@ -663,11 +663,16 @@ January
 February
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="February"}
+![](media/Feb Update/NE_2_clean_1.jpg){.medium-image width="75" height="95" group="February"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/Feb Update/NE_2_clean_2.jpg){.small-image .hidden group="February"}
+:::
 :::
 :::
 

@@ -40,7 +40,7 @@ se_geojson <- geojson_json(se_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_feb4.geojson")
+impact <- st_read("data/dice_data_march3.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -326,7 +326,7 @@ value_box(
 :::
 
 ::: column-margin
-Impact data updated monthly, last update 02/04/2025.
+Impact data updated monthly, last update 03/13/2025.
 :::
 
 ::: grid
@@ -690,11 +690,21 @@ January
 February
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="February"}
+![](media/Feb Update/SE_2_clean_1.jpg){.medium-image width="75" height="95" group="February"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
+:::
+::: g-col-1
+::: col-md-1
+![](media/Feb Update/SE_2_clean_2.png){.small-image .hidden group="February"}
+:::
+:::
+::: g-col-1
+::: col-md-1
+![](media/Feb Update/SE_2_clean_3.png){.small-image .hidden group="February"}
+:::
 :::
 :::
 
@@ -983,10 +993,10 @@ January
 February
 :::
 
-![](media/coming_soon.jpeg){.medium-image group="February2"}
+![](media/Feb Update/SE_3_dist_1.jpg){.medium-image width="75" height="95" group="February2"}
 
 ```{=html}
-<div class="tooltip">Coming Soon</div>
+<div class="tooltip">Click to see more</div>
 ```
 :::
 :::

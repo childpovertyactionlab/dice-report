@@ -8,7 +8,7 @@ impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-
                      sheet = "Sheet1")
 
 df <- impact %>%
-  mutate(full_address = paste(street_address, city, state, zip_code, sep = ", ")) 
+  mutate(full_address = paste0(street_address, city, state, zip_code, sep = ", ")) 
 
 distinct_address <- df %>%
   distinct(full_address, .keep_all = TRUE)

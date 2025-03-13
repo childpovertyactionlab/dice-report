@@ -4,9 +4,9 @@ library(sf)
 library(tidygeocoder)
 library(stringr)
 
-olddata <- st_read("data/dice_data_jan6.geojson")
+olddata <- st_read("data/dice_data_feb4.geojson")
 
-newdata <- st_read("data/FebUpdate.geojson")
+newdata <- st_read("data/MarchUpdate.geojson")
 
 divisions <- st_read("data/dpd_divisions.geojson") %>%
   st_transform(4269) %>%
@@ -30,10 +30,10 @@ newcleandata <- newdata %>%
   st_join(divisions) %>%
   st_transform(crs = 4269)
 
-newcleandata <- newcleandata %>%
+filtercleandata <- newcleandata %>%
   as.data.frame() %>%
-  mutate(date = as.Date(date)) %>%  
-  filter(date > as.Date("2024-12-22"))  ## Filter for entries newer than olddata
+  filter(date > as.Date("2025-01-26")) %>%
+  mutate(CreationDate = as.Date(CreationDate))
 
 attatchment_key <- final_data_2 %>%
   select(objectid, division, event_type)
@@ -41,7 +41,7 @@ attatchment_key <- final_data_2 %>%
 final_data <- olddata %>%
   mutate(DIVISION = division) %>%
   st_transform(crs = 4269) %>%
-  bind_rows(newcleandata) %>%
+  bind_rows(filtercleandata) %>%
   mutate(
     month_year = floor_date(date, "month"),
     formatted_month = format(month_year, "%B, %Y")
@@ -54,9 +54,10 @@ final_datav[124,15] <- "SOUTHEAST"
 
 final_data_2 <- final_datav %>%
   mutate(division = DIVISION) %>%
-  select(!DIVISION)
+  select(!DIVISION) %>%
+  st_make_valid()
   
 ## Remove olddata
-file.remove("data/dice_data_jan6.geojson")
+file.remove("data/dice_data_feb4.geojson")
 
-st_write(final_data_2, "data/dice_data_feb4.geojson", delete_dsn = TRUE)
+st_write(final_data_2, "data/dice_data_march3.geojson")
