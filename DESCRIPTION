@@ -1,0 +1,5 @@
+Depends: R (>= 4.3.3)
+Imports:
+  cpaltemplates
+Remotes:
+  github::childpovertyactionlab/cpaltemplates
