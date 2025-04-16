@@ -13,16 +13,3 @@ The tool includes several maps. Since locations have been predetermined, all add
 
 ### Future Additions ### 
 The tool is designed in a modular way, with uniform sections containing different data. Future initiatives can be added by replicating sections, and adding new columns for outputs in the Google Sheet.  
-
-### Packages Needed ###
-library(cpaltemplates)
-library(tidyverse)
-library(bslib)
-library(bsicons)
-library(sf)
-library(highcharter)
-library(geojsonsf)
-library(geojsonio)
-library(googlesheets4)
-library(leaflet)
-library(htmltools)
