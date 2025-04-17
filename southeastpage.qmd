@@ -40,7 +40,7 @@ se_geojson <- geojson_json(se_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_march3.geojson")
+impact <- st_read("data/dice_data_april7.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%
@@ -56,7 +56,7 @@ se_impact <- impact %>%
 total_lbs_trash <- sum(se_impact$lbs_trash, na.rm = TRUE)
 
 total_bags <- sum(se_impact$bags, na.rm = TRUE)
-cumulative_lbs_produce <- cumsum(se_impact$lbs_produce)
+cumulative_lbs_produce <- cumsum(replace(se_impact$lbs_produce, is.na(se_impact$lbs_produce), 0))
 
 monthly_average_people_served <- se_impact %>%
   filter(people_served != 0) %>%
@@ -76,7 +76,7 @@ produce_data <- se_impact %>%
   select(formatted_month, lbs_produce, month_year) %>%
   arrange(month_year) %>%
   group_by(month_year, formatted_month) %>%
-  summarise(monthly_lbs_produce = sum(lbs_produce)) %>%
+  summarise(monthly_lbs_produce = sum(lbs_produce, na.rm = TRUE)) %>%
  ungroup() %>%  
   mutate(cumulative_lbs_produce = cumsum(monthly_lbs_produce))
 

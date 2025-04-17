@@ -22,7 +22,7 @@ library(stringr)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_march3.geojson") %>%
+impact <- st_read("data/dice_data_april7.geojson") %>%
    filter(!is.na(division))
 
 impact$DIVISION <- str_to_title(impact$division)
@@ -89,7 +89,7 @@ produce_by_district<- impact %>%
   filter(!is.na(lbs_produce)) %>%
   select(lbs_produce, DIVISION) %>%
   group_by(DIVISION) %>%
-  summarise(district_lbs_produce = sum(lbs_produce)) %>%
+  summarise(district_lbs_produce = sum(lbs_produce, na.rm = TRUE)) %>%
   ungroup() %>%
   slice(-n())
 
@@ -347,7 +347,7 @@ htmltools::HTML(html_code)
 :::
 :::
 ::: column-margin
-Impact data updated monthly, last update 03/13/2025.
+Impact data updated monthly, last update 04/08/2025.
 :::
 
 ::: grid

@@ -3,10 +3,11 @@ library(cpaltemplates)
 library(sf)
 library(tidygeocoder)
 library(stringr)
+library(googlesheets4)
 
-olddata <- st_read("data/dice_data_feb4.geojson")
+olddata <- st_read("data/dice_data_march3.geojson")
 
-newdata <- st_read("data/MarchUpdate.geojson")
+newdata <- st_read("data/April Update.geojson")
 
 divisions <- st_read("data/dpd_divisions.geojson") %>%
   st_transform(4269) %>%
@@ -32,8 +33,9 @@ newcleandata <- newdata %>%
 
 filtercleandata <- newcleandata %>%
   as.data.frame() %>%
-  filter(date > as.Date("2025-01-26")) %>%
-  mutate(CreationDate = as.Date(CreationDate))
+  filter(date > as.Date("2025-03-13")) %>%
+  mutate(CreationDate = as.Date(CreationDate)) %>%
+  mutate(date = as.Date(date))
 
 attatchment_key <- final_data_2 %>%
   select(objectid, division, event_type)
@@ -44,15 +46,20 @@ final_data <- olddata %>%
   bind_rows(filtercleandata) %>%
   mutate(
     month_year = floor_date(date, "month"),
-    formatted_month = format(month_year, "%B, %Y")
-  ) 
+    formatted_month = format(month_year, "%B, %Y"),
+    lbs_produce = coalesce(lbs_produce, for_produce_drives_how_many_pou)) 
+
+no_geo <- final_data %>%
+  st_drop_geometry()
+
+write_sheet(no_geo)
 
 final_data$date <- as.Date(final_data$date)
 final_datav <- st_make_valid(final_data)
 final_datav[127,15] <- "SOUTHWEST"
 final_datav[124,15] <- "SOUTHEAST"
 
-final_data_2 <- final_datav %>%
+final_data_2 <- final_data %>%
   mutate(division = DIVISION) %>%
   select(!DIVISION) %>%
   st_make_valid()
@@ -60,4 +67,4 @@ final_data_2 <- final_datav %>%
 ## Remove olddata
 file.remove("data/dice_data_feb4.geojson")
 
-st_write(final_data_2, "data/dice_data_march3.geojson")
+st_write(final_data_2, "data/dice_data_april7.geojson")

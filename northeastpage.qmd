@@ -41,7 +41,7 @@ ne_geojson <- geojson_json(ne_boundaries)
 #gs4_deauth()
 #impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
 
-impact <- st_read("data/dice_data_march3.geojson")
+impact <- st_read("data/dice_data_april7.geojson")
 
 # Filter rows between January 1, 2024, and the current date
 impact <- impact %>%

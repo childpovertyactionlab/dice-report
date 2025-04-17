@@ -6,9 +6,15 @@ library(glue)
 library(highcharter)
 library(lubridate)
 
-incidents <- read.csv("data//crime//Dallas Police Incidents - All Incidents.csv")
+incidents <- st_read("C:\\Users\\erose\\CPAL Dropbox\\Data Library\\City of Dallas\\04_Public Safety\\Dallas Police\\Data\\Incidents\\Processed Data\\ORR Incidents04152025.geojson") %>%
+  st_as_sf()
 
-violent_crime <- incidents %>%
+clean_incidents <- incidents %>%
+  rename(nibrs_crime = NIBRS_Crime,
+         division = Division) %>%
+  st_drop_geometry()
+
+violent_crime <- clean_incidents %>%
   filter(
     nibrs_crime %in% c(
       "AGG ASSAULT - NFV", 
@@ -27,17 +33,17 @@ incidents_by_division_month <- violent_crime %>%
 prev_3_yr_avg <- incidents_by_division_month %>%
   filter(Year %in% c("2021", "2022", "2023")) %>%
   group_by(division, Month) %>%
-  summarise(mean_count = mean(count, na.rm = TRUE), .groups = 'drop') %>%
-  mutate(mean = round(mean_count)) %>%
-  mutate(Month = month(Month, label = TRUE, abbr = FALSE)) 
+  summarise(mean = mean(count, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(mean = round(mean)) %>%
+  mutate(Month = month(Month, label = TRUE, abbr = FALSE))
 
-write.csv(prev_3_yr_avg, "data/crime/prev_3_avg_crime.csv", delete_dsn = TRUE)
+write.csv(prev_3_yr_avg, "data/crime/prev_3_avg_crime.csv")
 
 monthly_avg_2024 <- incidents_by_division_month %>%
   filter(Year == "2024") %>%
   group_by(division, Month) %>%
-  summarise(mean_count = mean(count, na.rm = TRUE), .groups = 'drop') %>%
-  mutate(mean = round(mean_count)) %>%
+  summarise(mean = mean(count, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(mean = round(mean)) %>%
   mutate(Month = month(Month, label = TRUE, abbr = FALSE)) 
 
 write.csv(monthly_avg_2024, "data/monthly_avg_2024_crime.csv")
@@ -56,7 +62,6 @@ by_type_24 <- violent_crime %>%
   group_by(nibrs_crime, division, Year) %>%
   summarise(yr_crime = n(), .groups = 'drop')%>%
   filter(Year == "2024")
-  mutate(across(where(is.numeric), round))
 
 write.csv(by_type_24, "data/crime/by_type_24.csv")
 
