@@ -1,85 +1,85 @@
-"","division","Month","mean"
-"1","Central","January",50
-"2","Central","February",45
-"3","Central","March",64
-"4","Central","April",61
-"5","Central","May",72
-"6","Central","June",66
-"7","Central","July",70
-"8","Central","August",71
-"9","Central","September",52
-"10","Central","October",54
-"11","Central","November",50
-"12","Central","December",53
-"13","North Central","January",46
-"14","North Central","February",29
-"15","North Central","March",43
-"16","North Central","April",39
-"17","North Central","May",41
-"18","North Central","June",36
-"19","North Central","July",41
-"20","North Central","August",34
-"21","North Central","September",31
-"22","North Central","October",35
-"23","North Central","November",36
-"24","North Central","December",37
-"25","Northeast","January",94
-"26","Northeast","February",63
-"27","Northeast","March",89
-"28","Northeast","April",78
-"29","Northeast","May",101
-"30","Northeast","June",86
-"31","Northeast","July",86
-"32","Northeast","August",94
-"33","Northeast","September",75
-"34","Northeast","October",77
-"35","Northeast","November",74
-"36","Northeast","December",74
-"37","Northwest","January",73
-"38","Northwest","February",44
-"39","Northwest","March",67
-"40","Northwest","April",68
-"41","Northwest","May",79
-"42","Northwest","June",67
-"43","Northwest","July",79
-"44","Northwest","August",70
-"45","Northwest","September",67
-"46","Northwest","October",64
-"47","Northwest","November",57
-"48","Northwest","December",66
-"49","South Central","January",91
-"50","South Central","February",72
-"51","South Central","March",95
-"52","South Central","April",86
-"53","South Central","May",102
-"54","South Central","June",82
-"55","South Central","July",90
-"56","South Central","August",79
-"57","South Central","September",80
-"58","South Central","October",75
-"59","South Central","November",73
-"60","South Central","December",70
-"61","Southeast","January",105
-"62","Southeast","February",80
-"63","Southeast","March",96
-"64","Southeast","April",113
-"65","Southeast","May",113
-"66","Southeast","June",126
-"67","Southeast","July",119
-"68","Southeast","August",102
-"69","Southeast","September",97
-"70","Southeast","October",100
-"71","Southeast","November",82
-"72","Southeast","December",102
-"73","Southwest","January",86
-"74","Southwest","February",59
-"75","Southwest","March",77
-"76","Southwest","April",89
-"77","Southwest","May",100
-"78","Southwest","June",88
-"79","Southwest","July",86
-"80","Southwest","August",82
-"81","Southwest","September",82
-"82","Southwest","October",74
-"83","Southwest","November",64
-"84","Southwest","December",75
+"division","Month","mean"
+"Central","January",12
+"Central","February",12
+"Central","March",16
+"Central","April",15
+"Central","May",18
+"Central","June",17
+"Central","July",18
+"Central","August",18
+"Central","September",13
+"Central","October",14
+"Central","November",13
+"Central","December",14
+"North Central","January",11
+"North Central","February",8
+"North Central","March",11
+"North Central","April",10
+"North Central","May",10
+"North Central","June",9
+"North Central","July",10
+"North Central","August",9
+"North Central","September",8
+"North Central","October",9
+"North Central","November",9
+"North Central","December",10
+"Northeast","January",23
+"Northeast","February",16
+"Northeast","March",23
+"Northeast","April",20
+"Northeast","May",25
+"Northeast","June",21
+"Northeast","July",22
+"Northeast","August",23
+"Northeast","September",19
+"Northeast","October",19
+"Northeast","November",18
+"Northeast","December",19
+"Northwest","January",18
+"Northwest","February",11
+"Northwest","March",17
+"Northwest","April",17
+"Northwest","May",20
+"Northwest","June",17
+"Northwest","July",20
+"Northwest","August",18
+"Northwest","September",17
+"Northwest","October",16
+"Northwest","November",14
+"Northwest","December",17
+"South Central","January",22
+"South Central","February",18
+"South Central","March",24
+"South Central","April",22
+"South Central","May",26
+"South Central","June",20
+"South Central","July",23
+"South Central","August",20
+"South Central","September",20
+"South Central","October",19
+"South Central","November",18
+"South Central","December",18
+"Southeast","January",26
+"Southeast","February",20
+"Southeast","March",24
+"Southeast","April",28
+"Southeast","May",28
+"Southeast","June",32
+"Southeast","July",30
+"Southeast","August",26
+"Southeast","September",24
+"Southeast","October",25
+"Southeast","November",21
+"Southeast","December",26
+"Southwest","January",21
+"Southwest","February",15
+"Southwest","March",20
+"Southwest","April",23
+"Southwest","May",25
+"Southwest","June",22
+"Southwest","July",21
+"Southwest","August",21
+"Southwest","September",20
+"Southwest","October",18
+"Southwest","November",16
+"Southwest","December",19

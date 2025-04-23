@@ -40,7 +40,7 @@ impact <- st_read("data/pre_arcgis_data.geojson") %>%
 
 ##### CHANGE FOR NEW UPDATE FILE #####
 
-olddata <- st_read("data/dice_data_jan6.geojson")
+olddata <- st_read("data/dice_data_april7.geojson")
 
 newdata <- st_read("data/FebUpdate.geojson")
 

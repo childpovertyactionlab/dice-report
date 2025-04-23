@@ -19,19 +19,7 @@ library(htmltools)
 library(stringr)
 
 ##### Data #####
-#gs4_deauth()
-#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
-
-impact <- st_read("data/dice_data_april7.geojson") %>%
-   filter(!is.na(division))
-
-impact$DIVISION <- str_to_title(impact$division)
-
-impact <- impact %>%
-  mutate(
-    month_year = floor_date(date, "month"),
-    formatted_month = format(month_year, "%B, %Y")
-  )
+impact <- read.csv("data/dice_data_april.csv")
 
 mapdata <- st_read("data/dpd_divisions.geojson")
 
@@ -69,9 +57,9 @@ trash_data <- impact %>%
 
 
 trash_by_district<- impact %>%
-  select(lbs_trash, DIVISION) %>%
+  select(lbs_trash, division) %>%
   filter(lbs_trash != 0) %>%
-  group_by(DIVISION) %>%
+  group_by(division) %>%
   summarise(district_lbs_trash = sum(lbs_trash))
 
 produce_by_month <- impact %>%
@@ -87,15 +75,15 @@ produce_by_month <- impact %>%
 
 produce_by_district<- impact %>%
   filter(!is.na(lbs_produce)) %>%
-  select(lbs_produce, DIVISION) %>%
-  group_by(DIVISION) %>%
+  select(lbs_produce, division) %>%
+  group_by(division) %>%
   summarise(district_lbs_produce = sum(lbs_produce, na.rm = TRUE)) %>%
   ungroup() %>%
   slice(-n())
 
 
 people_served_data <- impact %>%
-  select(formatted_month, people_served, DIVISION) %>%
+  select(formatted_month, people_served, division) %>%
   filter(people_served != 0) %>%
   group_by(formatted_month) %>%
   summarise(monthly_people_served = sum(people_served)) 
@@ -141,7 +129,7 @@ prev_3_yr_avg <- read.csv("data/crime/prev_3_avg_crime.csv") %>%
   mutate(Month = factor(Month, levels = c("January", "February", "March", "April", "May", "June", 
                                           "July", "August", "September", "October", "November", "December")))
   
-monthly_avg_2024 <- read.csv("data/monthly_avg_2024_crime.csv") %>%
+monthly_avg_2024 <- read.csv("data/crime/monthly_avg_2024_crime.csv") %>%
   group_by(Month) %>%
   summarise(Year = sum(mean, na.rm = TRUE)) %>%
   ungroup() %>%

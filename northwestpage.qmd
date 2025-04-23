@@ -37,17 +37,8 @@ nw_geojson <- geojson_json(nw_boundaries)
 
 
 ##### Data #####
-#gs4_deauth()
-#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
+impact <- read.csv("data/dice_data_april.csv")
 
-impact <- st_read("data/dice_data_april7.geojson")
-
-# Filter rows between January 1, 2024, and the current date
-impact <- impact %>%
-  mutate(
-    month_year = floor_date(date, "month"),
-    formatted_month = format(month_year, "%B, %Y")
-  )
 nw_impact <- impact |>
  filter(division == "NORTHWEST")
 
@@ -1061,5 +1052,5 @@ highchart() %>%
 :::
 :::
 ::: column-margin
-Crime data sourced from Dallas Police Department Open Data Portal. Last updated 11/10/2024.  
+Figures based on data provided by the Dallas Police Department in response to our Open Records Request. Last updated 04/23/2025. 
 :::

@@ -6,8 +6,10 @@ library(glue)
 library(highcharter)
 library(lubridate)
 
-incidents <- st_read("C:\\Users\\erose\\CPAL Dropbox\\Data Library\\City of Dallas\\04_Public Safety\\Dallas Police\\Data\\Incidents\\Processed Data\\ORR Incidents04152025.geojson") %>%
-  st_as_sf()
+incidents <- st_read("C:\\Users\\erose\\CPAL Dropbox\\Data Library\\City of Dallas\\04_Public Safety\\Dallas Police\\Data\\Incidents\\Processed Data\\ORR Dallas Police Incidents Patch.geojson") 
+
+incidents2024 <- incidents %>%
+  filter(Year == 2024)
 
 clean_incidents <- incidents %>%
   rename(nibrs_crime = NIBRS_Crime,
@@ -46,10 +48,10 @@ monthly_avg_2024 <- incidents_by_division_month %>%
   mutate(mean = round(mean)) %>%
   mutate(Month = month(Month, label = TRUE, abbr = FALSE)) 
 
-write.csv(monthly_avg_2024, "data/monthly_avg_2024_crime.csv")
+write.csv(monthly_avg_2024, "data/crime/monthly_avg_2024_crime.csv")
 
 by_type_prev_3 <- violent_crime%>%
-  group_by(nibrs_crime, division, Year) %>%
+  group_by(division, Year, nibrs_crime) %>%
   summarise(yr_crime = n(), .groups = 'drop') %>%
   group_by(nibrs_crime, division) %>%
   mutate(prev_3 = mean(yr_crime)) %>%
@@ -59,11 +61,80 @@ by_type_prev_3 <- violent_crime%>%
 write.csv(by_type_prev_3, "data/crime/by_type_prev_3.csv")
 
 by_type_24 <- violent_crime %>%
-  group_by(nibrs_crime, division, Year) %>%
-  summarise(yr_crime = n(), .groups = 'drop')%>%
-  filter(Year == "2024")
+  filter(Year == "2024") %>%
+  group_by(nibrs_crime, division) %>%
+  summarise(yr_crime = n(), .groups = 'drop') 
+  
 
 write.csv(by_type_24, "data/crime/by_type_24.csv")
+
+
+clean_incidents <- incidents %>%
+  rename(nibrs_crime = NIBRS_Crime,
+         division = Division) %>%
+  st_drop_geometry()
+
+# 2. Filter for violent crime and valid division
+violent_crime <- clean_incidents %>%
+  filter(
+    nibrs_crime %in% c("AGG ASSAULT - NFV", "MURDER & NONNEGLIGENT MANSLAUGHTER", 
+                       "ROBBERY-INDIVIDUAL", "ROBBERY-BUSINESS"),
+    division != ""
+  )
+
+# 3. Monthly counts by division and crime type
+incidents_by_division_month <- violent_crime %>%
+  group_by(division, Year, Month, nibrs_crime) %>%
+  summarise(count = n(), .groups = "drop")
+
+# 4. Create complete combination grid
+all_combos <- expand_grid(
+  division = unique(violent_crime$division),
+  Year = 2021:2024,
+  Month = 1:12,
+  nibrs_crime = unique(violent_crime$nibrs_crime)
+)
+
+# 5. Join and fill in missing combinations with 0
+incidents_full <- all_combos %>%
+  left_join(incidents_by_division_month, by = c("division", "Year", "Month", "nibrs_crime")) %>%
+  mutate(count = replace_na(count, 0),
+         Month = month(Month, label = TRUE, abbr = FALSE))
+
+# 6. Calculate monthly average for 2021–2023
+prev_3_yr_avg <- incidents_full %>%
+  filter(Year %in% 2021:2023) %>%
+  group_by(division, Month) %>%
+  summarise(mean = round(mean(count, na.rm = TRUE)), .groups = "drop")
+
+write.csv(prev_3_yr_avg, "data/crime/prev_3_avg_crime.csv", row.names = FALSE)
+
+# 7. Calculate monthly average for 2024
+monthly_avg_2024 <- incidents_full %>%
+  filter(Year == 2024) %>%
+  group_by(division, Month) %>%
+  summarise(mean = round(mean(count, na.rm = TRUE)), .groups = "drop")
+
+write.csv(monthly_avg_2024, "data/crime/monthly_avg_2024_crime.csv", row.names = FALSE)
+
+# 8. Yearly totals by crime type and division for 2021–2023 average
+by_type_prev_3 <- incidents_full %>%
+  filter(Year %in% 2021:2023) %>%
+  group_by(division, nibrs_crime, Year) %>%
+  summarise(year_total = sum(count), .groups = "drop") %>%
+  group_by(division, nibrs_crime) %>%
+  summarise(prev_3 = round(mean(year_total)), .groups = "drop")
+
+write.csv(by_type_prev_3, "data/crime/by_type_prev_3.csv", row.names = FALSE)
+
+# 9. Yearly totals by crime type and division for 2024
+by_type_24 <- incidents_full %>%
+  filter(Year == 2024) %>%
+  group_by(division, nibrs_crime) %>%
+  summarise(yr_crime = sum(count), .groups = "drop")
+
+write.csv(by_type_24, "data/crime/by_type_24.csv", row.names = FALSE)
+
 
 ##### Northeast Crime #####
 

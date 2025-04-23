@@ -19,34 +19,15 @@ library(googlesheets4)
 library(highcharter)
 
 ##### Data #####
-#gs4_deauth()
-#impact <- read_sheet("https://docs.google.com/spreadsheets/d/1TInROva7mCNM7qvTA-6GFrkA4zIHcYNpy2eGhsgyg-8/edit#gid=0")
-
-impact <- st_read("data/dice_data_feb4.geojson") %>%
-  filter(event_type %in% c("Clean Up", "Produce Drive"))
-
-impact$DIVISION <- str_to_title(impact$division)
-
-##### Filter/Transform Impact Data #####
-start_date <- as.Date("2024-01-01")
-current_date <- lubridate::floor_date(lubridate::today(), "month") - lubridate::days(1)
-
-# Filter rows between January 1, 2024, and the current date
-impact <- impact %>%
-  filter(date >= start_date & date < current_date) %>%
-  mutate(
-    month_year = floor_date(date, "month"),
-    formatted_month = format(month_year, "%B, %Y")
-  )
-
-impact$lbs_produce <- impact$bags * 10
-
-impact[79,2] <- "Robbin Hood INC"
-impact[78,2] <- "United Peoples Coalition"
-impact[77,2] <- "Pop Up Comfortt"
-impact[76,2] <- "United Peoples Coalition"
+impact <- read.csv("data/dice_data_april.csv")
 
 ##### Organization Data #####
+
+### Learn with Train ### 
+lwt <- impact %>%
+  filter(partner == "Learn With Train ") 
+lwt_events <- nrow(lwt)
+lwt_people_served <- sum(lwt$people_served, na.rm = TRUE)
 
 ### Oak Cliff Veggie ### 
 oak_cliff_veggie <- impact %>%
@@ -68,9 +49,8 @@ oak_cliff_veggie_cumsum <- oak_cliff_veggie %>%
   ungroup() %>%
   mutate(cumulative_weight = cumsum(monthly_weight))
 ### Robin Hood INC ### 
-robin_hood_inc <- bind_rows(
-  impact %>% filter(partner %in% c("Robbin Hood INC", "Robbin Hood Inc")),
-  oak_cliff_veggie) 
+robin_hood_inc <- 
+  impact %>% filter(partner %in% c("Robbin Hood INC", "Robbin Hood Inc", "Robbin Hood ", "Robbin Hood. Inc ", "Robbin Hood Inc.", "Robbin Hood Inc ", "Robbin Hood INC and Oak Cliff Veggie Project")) 
 
 rh_lbs_trash <- sum(robin_hood_inc$lbs_trash, na.rm = TRUE)
 rh_lbs_produce <- sum(robin_hood_inc$lbs_produce, na.rm = TRUE)
@@ -88,7 +68,7 @@ robin_hood_cumsum <- robin_hood_inc %>%
   
 ### Not My Son ### 
 not_my_son <- impact %>%
-  filter(partner %in% c("Not My Son", "Not My Son Limited")) 
+  filter(partner %in% c("Not My Son", "Not My Son Limited ", "Tramonica Brown ")) 
 
 nms_lbs_trash <- sum(not_my_son$lbs_trash, na.rm = TRUE)
 nms_lbs_produce <- sum(not_my_son$lbs_produce, na.rm = TRUE)
@@ -107,12 +87,19 @@ not_my_son_cumsum <- not_my_son %>%
 ### United Peoples Coalition ###
 united_peoples_coalition <- impact %>%
   filter(partner %in% c(
-    "United Peoples Coalition", 
-    "United people’s coalition", 
-    "UPC", 
-    "UNITED PEOPLE'S COALITION", 
-    "United Peoples Coalition “Bonnie View”",
-    "United Peoples Coalition (UPC)"
+   "United Peoples Coalition",
+   "United People’s Coalition ",
+   "United peoples coalition ",
+   "United People Coalition",
+   "UPC ",
+   "United Peoples Coalition “Bonnie View”",
+   "United peoples coalition",
+   "United People's Coalition ",
+   "United people’s coalition ",
+   "United Peoples Coalition ",
+   "UPC",
+   "UNITED PEOPLE'S COALITION ",
+   "United people’s coalition"
   )) 
 upc_lbs_trash <- sum(united_peoples_coalition$lbs_trash, na.rm = TRUE)
 upc_lbs_produce <- sum(united_peoples_coalition$lbs_produce, na.rm = TRUE)
@@ -130,7 +117,7 @@ united_cumsum <- united_peoples_coalition %>%
 
 ### Goldmark Cultural Center ###
 goldmark_cultural <- impact %>%
-  filter(partner == "Goldmark Cultural Center") 
+  filter(partner %in% c("Goldmark Cultural Center", "Goldmark Cultural Center "))
 
 gcc_lbs_trash <- sum(goldmark_cultural$lbs_trash, na.rm = TRUE)
 gcc_lbs_produce <- sum(goldmark_cultural$lbs_produce, na.rm = TRUE)
@@ -148,7 +135,7 @@ goldmark_cumsum <- goldmark_cultural %>%
 
 ### Pop Up Comfortt ###
 pop_up_comfortt <- impact %>%
-  filter(partner %in% c("Pop Up Comfortt", "Pop Up Comfort")) 
+  filter(partner %in% c("Pop Up Comfortt", "Pop Up Comfort", "Pop Up Comfort ")) 
 
 pc_lbs_trash <- sum(pop_up_comfortt$lbs_trash, na.rm = TRUE)
 pc_lbs_produce <- sum(pop_up_comfortt$lbs_produce, na.rm = TRUE)
@@ -166,7 +153,7 @@ pop_up_cumsum <- pop_up_comfortt %>%
 
 ### Serun Foundation ###
 serun <- impact %>%
-  filter(partner %in% c("Serun Foundation", "Serun")) 
+  filter(partner %in% c("Serun Foundation", "Serun", "The SERUN Foundation")) 
 sf_lbs_trash <- sum(serun$lbs_trash, na.rm = TRUE)
 sf_lbs_produce <- sum(serun$lbs_produce, na.rm = TRUE)
 sf_people_served <- sum(serun$people_served, na.rm = TRUE)
@@ -182,8 +169,10 @@ serun_cumsum <- serun %>%
   mutate(cumulative_weight = cumsum(monthly_weight)) 
 
 ### Bachman Lake Together ###
+# Filter to just Bachman Lake Together
 bachman_lt <- impact %>%
-  filter(partner == "Bachman Lake Together") 
+  filter(partner == "Bachman Lake Together")
+
 blt_lbs_trash <- sum(bachman_lt$lbs_trash, na.rm = TRUE)
 blt_lbs_produce <- sum(bachman_lt$lbs_produce, na.rm = TRUE)
 blt_people_served <- sum(bachman_lt$people_served, na.rm = TRUE)
@@ -815,6 +804,51 @@ highchart() %>%
   )) |> 
   hc_legend(enabled = FALSE)
 
+```
+:::
+:::
+
+### Learn with Train
+
+::: grid
+::: g-col-12
+```{=html}
+<p style="text-align: center;font-weight: bold; color: black">Contributions of Learn with Train</p>
+```
+:::
+:::
+
+::: grid
+::: g-col-6
+```{r}
+lwt_people_served <- formatC(lwt_people_served, format = "d", big.mark = ",")
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  lwt_people_served, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("person-fill"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">Youth Served </div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
+```
+:::
+
+::: g-col-6
+```{r}
+html_code <- paste0(
+  '<div style="display: flex; flex-direction: column; align-items: center; height: 150px; border: 1px solid #042d33; border-radius: 5px; background-color: #042d33; color: white; position: relative;">',
+  '<div style="position: absolute; top: 15%; width: 100%; display: flex; flex-direction: column; align-items: center;">',
+  '<div style="display: flex; align-items: center; font-size: 2em; font-weight: bold;">', 
+  lwt_events, 
+  '<span style="font-size: 1.25em; margin-left: 10px;">', bsicons::bs_icon("hammer"), '</span></div>',
+  '</div>',
+  '<div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">D.I.C.E Events Supported</div>',
+  '</div>'
+)
+htmltools::HTML(html_code)
 ```
 :::
 :::
