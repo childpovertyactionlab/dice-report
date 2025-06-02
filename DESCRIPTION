@@ -3,3 +3,5 @@ Imports:
   cpaltemplates
 Remotes:
   github::childpovertyactionlab/cpaltemplates
+Config/Needs/build:
+  quarto (>= 1.7)

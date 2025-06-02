@@ -1,0 +1,1 @@
+CMD ["quarto", "render", "/app/src", "--no-cache"]
